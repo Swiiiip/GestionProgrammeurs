@@ -19,7 +19,7 @@ public class Constants {
 
     public static final String DB_PASSWORD = "adm";
 
-    public static final List<String> ListAttributs(ProgrammeurBean prog){
+    public static List<String> ListAttributs(ProgrammeurBean prog){
         return Arrays.asList(
                 String.valueOf(prog.getId()),
                 prog.getLastName(),

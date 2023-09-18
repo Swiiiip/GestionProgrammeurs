@@ -2,8 +2,6 @@ package exec;
 
 import data.ActionsBDDImpl;
 import data.ProgrammeurBean;
-
-import java.awt.print.PrinterGraphics;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
@@ -178,10 +176,10 @@ public class Menu extends ActionsBDDImpl {
         int birthYear = sc.nextInt();
 
         System.out.print("Salaire du programmeur : ");
-        Float salary = sc.nextFloat();
+        float salary = sc.nextFloat();
 
         System.out.print("Prime du programmeur : ");
-        Float prime = sc.nextFloat();
+        float prime = sc.nextFloat();
 
         return new ProgrammeurBean(firstName, lastName, address, pseudo, manager, hobby, birthYear, salary, prime);
 
