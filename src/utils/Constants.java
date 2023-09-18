@@ -44,11 +44,11 @@ public class Constants {
         }
     }
 
-    public static String GETALLPROG = "SELECT * FROM Programmeur";
-    public static String GETPROGBYID = "SELECT * FROM Programmeur WHERE Id = ?";
+    public static final String GETALLPROG = "SELECT * FROM Programmeur";
+    public static final String GETPROGBYID = "SELECT * FROM Programmeur WHERE Id = ?";
     public static final String DELETEPROGBYID = "Delete FROM Programmeur WHERE Id = ?";
     public static final String ADDPROG = "INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Manager, Hobby, BirthYear, Salary, Prime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    public static String SETSALARYBYID = "UPDATE Programmeur SET salary = ? WHERE Id = ?";
+    public static final String SETSALARYBYID = "UPDATE Programmeur SET salary = ? WHERE Id = ?";
 
 
 
