@@ -2,13 +2,12 @@ package exec;
 
 import data.ActionsBDDImpl;
 import data.ProgrammeurBean;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
 public class Menu extends ActionsBDDImpl {
 
-    private static Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
     public void start() {
         int choice;
@@ -126,16 +125,14 @@ public class Menu extends ActionsBDDImpl {
 
     public int getChoice() {
         Scanner sc = new Scanner(System.in);
-        int choice = sc.nextInt();
 
-        return choice;
+        return sc.nextInt();
     }
 
     public float getSalary(){
         Scanner sc = new Scanner(System.in);
-        float salary = sc.nextFloat();
 
-        return salary;
+        return sc.nextFloat();
     }
 
     public void displayError(String message){
