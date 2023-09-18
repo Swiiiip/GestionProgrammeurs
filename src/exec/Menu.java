@@ -130,8 +130,6 @@ public class Menu extends ActionsBDDImpl {
     }
 
     public float getSalary(){
-        Scanner sc = new Scanner(System.in);
-
         return sc.nextFloat();
     }
 
@@ -151,8 +149,6 @@ public class Menu extends ActionsBDDImpl {
     }
 
     public ProgrammeurBean getProg(){
-        Scanner sc = new Scanner(System.in);
-
         System.out.print("Nom du programmeur : ");
         String firstName = sc.next();
 
