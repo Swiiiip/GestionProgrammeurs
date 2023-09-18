@@ -13,8 +13,7 @@ public class ProgrammeurBean {
     private float salary;
     private float prime;
 
-    public ProgrammeurBean(long id, String lastName, String firstName, String address, String pseudo, String manager, String hobby, int birthYear, float salary, float prime) {
-        this.id = id;
+    public ProgrammeurBean(String lastName, String firstName, String address, String pseudo, String manager, String hobby, int birthYear, float salary, float prime) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.address = address;
@@ -23,6 +22,46 @@ public class ProgrammeurBean {
         this.hobby = hobby;
         this.birthYear = birthYear;
         this.salary = salary;
+        this.prime = prime;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+
+    public void setBirthYear(int birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public void setSalary(float salary) {
+        this.salary = salary;
+    }
+
+    public void setPrime(float prime) {
         this.prime = prime;
     }
 
@@ -69,12 +108,12 @@ public class ProgrammeurBean {
     @Override
     public String toString() {
 
-        String columnFormat = "%-" + Constants.messageLen + "." + Constants.messageLen +"s";
+        String columnFormat = "%-" + Constants.MSGLEN + "." + Constants.MSGLEN +"s";
 
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0; i<Constants.strings.size(); i++){
-            sb.append(String.format(columnFormat, Constants.strings.get(i)));
+        for(int i = 0; i<Constants.ATTRIBUTES.size(); i++){
+            sb.append(String.format(columnFormat, Constants.ATTRIBUTES.get(i)));
             sb.append(" : ").append(Constants.ListAttributs(this).get(i));
 
             sb.append("\n");
