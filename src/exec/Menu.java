@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Menu extends ActionsBDDImpl {
 
-    private final Scanner sc = new Scanner(System.in);
+    private static final Scanner sc = new Scanner(System.in);
 
     public void start() {
         int choice;
