@@ -80,16 +80,15 @@ public class ActionsBDDImpl implements ActionsBDD {
     public void addProg(ProgrammeurBean programmeur) throws SQLException {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.ADDPROG);
 
-        statement.setLong(1, programmeur.getId());
-        statement.setString(2, programmeur.getLastName());
-        statement.setString(3, programmeur.getFirstName());
-        statement.setString(4, programmeur.getAddress());
-        statement.setString(5, programmeur.getPseudo());
-        statement.setString(6, programmeur.getManager());
-        statement.setString(7, programmeur.getHobby());
-        statement.setInt(8, programmeur.getBirthYear());
-        statement.setFloat(9, programmeur.getSalary());
-        statement.setFloat(10, programmeur.getPrime());
+        statement.setString(1, programmeur.getLastName());
+        statement.setString(2, programmeur.getFirstName());
+        statement.setString(3, programmeur.getAddress());
+        statement.setString(4, programmeur.getPseudo());
+        statement.setString(5, programmeur.getManager());
+        statement.setString(6, programmeur.getHobby());
+        statement.setInt(7, programmeur.getBirthYear());
+        statement.setFloat(8, programmeur.getSalary());
+        statement.setFloat(9, programmeur.getPrime());
 
         statement.executeUpdate();
         statement.close();
