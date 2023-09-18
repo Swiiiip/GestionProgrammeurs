@@ -2,6 +2,8 @@ package exec;
 
 import data.ActionsBDDImpl;
 import data.ProgrammeurBean;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,7 +28,7 @@ public class Menu extends ActionsBDDImpl {
                     try {
                         List<ProgrammeurBean> progs = getAllProg();
                         displayAllProgs(progs);
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         displayError("Il n'y a aucun programmeurs dans notre base de données...");
                     }
                     break;
@@ -38,7 +40,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             prog = getProgById(id);
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             id = 0;
                             displayError("Recherche KO. Saisissez à nouveau l'id : ");
                         }
@@ -54,7 +56,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             deleteProgById(id);
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             id = 0;
                             displayError("Suppression KO. Saisissez à nouveau l'id : ");
                         }
@@ -67,7 +69,7 @@ public class Menu extends ActionsBDDImpl {
                     try {
                         prog = getProg();
                         addProg(prog);
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         displayError("Ajout KO. Connexion à la base de données interrompue!");
                     }
 
@@ -81,7 +83,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             getProgById(id);
-                        } catch (Exception e) {
+                        } catch (SQLException e) {
                             id = 0;
                             displayError("Programmeur introuvable. Saisissez à nouveau l'id : ");
                         }
@@ -91,7 +93,7 @@ public class Menu extends ActionsBDDImpl {
 
                     try{
                         setSalaryById(id, salary);
-                    } catch(Exception e) {
+                    } catch(SQLException e) {
                         displayError("Modification KO. Connexion à la base de données interrompue!");
                     }
 

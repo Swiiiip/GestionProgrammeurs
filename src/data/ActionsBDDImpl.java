@@ -4,12 +4,13 @@ import utils.Constants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ActionsBDDImpl implements ActionsBDD {
 
-    private ProgrammeurBean createProg(ResultSet result) throws Exception {
+    private ProgrammeurBean createProg(ResultSet result) throws SQLException {
         ProgrammeurBean prog = null;
 
         prog.setId(result.getLong("Id"));
@@ -27,7 +28,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public List<ProgrammeurBean> getAllProg() throws Exception {
+    public List<ProgrammeurBean> getAllProg() throws SQLException {
         List<ProgrammeurBean> programmeurs = new ArrayList<>();
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETALLPROG);
@@ -44,7 +45,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public ProgrammeurBean getProgById(long Id) throws Exception {
+    public ProgrammeurBean getProgById(long Id) throws SQLException {
         ProgrammeurBean prog = null;
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETPROGBYID);
@@ -65,7 +66,7 @@ public class ActionsBDDImpl implements ActionsBDD {
 
 
     @Override
-    public void deleteProgById(long id) throws Exception {
+    public void deleteProgById(long id) throws SQLException {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.DELETEPROGBYID);
 
         statement.setLong (1, id);
@@ -76,7 +77,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public void addProg(ProgrammeurBean programmeur) throws Exception {
+    public void addProg(ProgrammeurBean programmeur) throws SQLException {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.ADDPROG);
 
         statement.setLong(1, programmeur.getId());
@@ -97,7 +98,7 @@ public class ActionsBDDImpl implements ActionsBDD {
 
 
     @Override
-    public void setSalaryById(long id, double newSalary) throws Exception {
+    public void setSalaryById(long id, double newSalary) throws SQLException {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.SETSALARYBYID);
 
         statement.setDouble(1, newSalary);
@@ -111,6 +112,13 @@ public class ActionsBDDImpl implements ActionsBDD {
 
     @Override
     public void exit() {
+        try {
+            if (Constants.CONNECTION != null) {
+                Constants.CONNECTION.close();
+            }
+        } catch (SQLException e) {
+            System.err.print("Erreur lors de la fermeture de la connexion à la base de données");
+        }
         System.exit(0);
     }
 }

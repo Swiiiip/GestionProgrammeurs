@@ -14,10 +14,9 @@ public class Constants {
     public static final int MSGLEN = ATTRIBUTES.stream().map(String::length).max(Integer::compareTo).get();
 
     public static final String DB_URL = "jdbc:mysql://localhost:3306/APTN61_BD";
-
     public static final String DB_ID = "adm";
-
     public static final String DB_PASSWORD = "adm";
+
 
     public static List<String> ListAttributs(ProgrammeurBean prog){
         return Arrays.asList(
@@ -40,6 +39,7 @@ public class Constants {
         try {
             CONNECTION = DriverManager.getConnection(DB_URL, DB_ID, DB_PASSWORD);
         } catch (SQLException e) {
+            System.err.println("La connexion à la base de données à échouée!");
             throw new RuntimeException(e);
         }
     }
