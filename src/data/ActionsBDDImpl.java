@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ActionsBDDImpl implements ActionsBDD {
 
-    private ProgrammeurBean createProg(ResultSet result) throws SQLException {
+    private ProgrammeurBean createProg(ResultSet result) throws Exception {
         ProgrammeurBean prog = null;
 
         prog.setId(result.getLong("Id"));
@@ -28,7 +28,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public List<ProgrammeurBean> getAllProg() throws SQLException {
+    public List<ProgrammeurBean> getAllProg() throws Exception {
         List<ProgrammeurBean> programmeurs = new ArrayList<>();
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETALLPROG);
@@ -45,7 +45,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public ProgrammeurBean getProgById(long Id) throws SQLException {
+    public ProgrammeurBean getProgById(long Id) throws Exception {
         ProgrammeurBean prog = null;
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETPROGBYID);
@@ -66,7 +66,7 @@ public class ActionsBDDImpl implements ActionsBDD {
 
 
     @Override
-    public void deleteProgById(long id) throws SQLException {
+    public void deleteProgById(long id) throws Exception {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.DELETEPROGBYID);
 
         statement.setLong (1, id);
@@ -77,7 +77,7 @@ public class ActionsBDDImpl implements ActionsBDD {
     }
 
     @Override
-    public void addProg(ProgrammeurBean programmeur) throws SQLException {
+    public void addProg(ProgrammeurBean programmeur) throws Exception {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.ADDPROG);
 
         statement.setLong(1, programmeur.getId());
@@ -98,7 +98,7 @@ public class ActionsBDDImpl implements ActionsBDD {
 
 
     @Override
-    public void setSalaryById(long id, double newSalary) throws SQLException {
+    public void setSalaryById(long id, double newSalary) throws Exception {
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.SETSALARYBYID);
 
         statement.setDouble(1, newSalary);

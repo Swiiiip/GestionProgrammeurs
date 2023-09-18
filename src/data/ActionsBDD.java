@@ -5,15 +5,15 @@ import java.util.List;
 
 public interface ActionsBDD {
 
-    List<ProgrammeurBean> getAllProg() throws SQLException;
+    List<ProgrammeurBean> getAllProg() throws Exception;
 
-    ProgrammeurBean getProgById(long Id) throws SQLException;
+    ProgrammeurBean getProgById(long Id) throws Exception;
 
-    void deleteProgById(long Id) throws SQLException;
+    void deleteProgById(long Id) throws Exception;
 
-    void addProg(ProgrammeurBean programmeur) throws SQLException;
+    void addProg(ProgrammeurBean programmeur) throws Exception;
 
-    void setSalaryById(long Id, double newSalary) throws SQLException;
+    void setSalaryById(long Id, double newSalary) throws Exception;
 
     void exit();
 }

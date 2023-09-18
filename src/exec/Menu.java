@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu extends ActionsBDDImpl {
+
+    private static Scanner sc = new Scanner(System.in);
+
     public void start() {
-        boolean on = true;
         int choice;
         int id;
         ProgrammeurBean prog = null;
@@ -25,7 +27,7 @@ public class Menu extends ActionsBDDImpl {
                     try {
                         List<ProgrammeurBean> progs = getAllProg();
                         displayAllProgs(progs);
-                    } catch (SQLException e) {
+                    } catch (Exception e) {
                         displayError("Il n'y a aucun programmeurs dans notre base de données...");
                     }
                     break;
@@ -37,7 +39,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             prog = getProgById(id);
-                        } catch (SQLException e) {
+                        } catch (Exception e) {
                             id = 0;
                             displayError("Recherche KO. Saisissez à nouveau l'id : ");
                         }
@@ -53,7 +55,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             deleteProgById(id);
-                        } catch (SQLException e) {
+                        } catch (Exception e) {
                             id = 0;
                             displayError("Suppression KO. Saisissez à nouveau l'id : ");
                         }
@@ -66,7 +68,7 @@ public class Menu extends ActionsBDDImpl {
                     try {
                         prog = getProg();
                         addProg(prog);
-                    } catch (SQLException e) {
+                    } catch (Exception e) {
                         displayError("Ajout KO. Connexion à la base de données interrompue!");
                     }
 
@@ -80,7 +82,7 @@ public class Menu extends ActionsBDDImpl {
                         id = getChoice();
                         try {
                             getProgById(id);
-                        } catch (SQLException e) {
+                        } catch (Exception e) {
                             id = 0;
                             displayError("Programmeur introuvable. Saisissez à nouveau l'id : ");
                         }
@@ -90,7 +92,7 @@ public class Menu extends ActionsBDDImpl {
 
                     try{
                         setSalaryById(id, salary);
-                    } catch(SQLException e) {
+                    } catch(Exception e) {
                         displayError("Modification KO. Connexion à la base de données interrompue!");
                     }
 
@@ -98,6 +100,7 @@ public class Menu extends ActionsBDDImpl {
                     break;
 
                 case 6:
+                    System.out.print("\nAu revoir !");
                     exit();
                     break;
 
@@ -105,8 +108,9 @@ public class Menu extends ActionsBDDImpl {
                     displayError("/!\\ ERREUR /!\\ | Veuillez saisir un entier entre 1 et 6 !");
                     break;
             }
-        }while(on);
+        }while(choice<1 || choice >6);
 
+        sc.close();
     }
 
     public void displayMenu() {
@@ -123,7 +127,6 @@ public class Menu extends ActionsBDDImpl {
     public int getChoice() {
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
-        sc.close();
 
         return choice;
     }
@@ -131,7 +134,6 @@ public class Menu extends ActionsBDDImpl {
     public float getSalary(){
         Scanner sc = new Scanner(System.in);
         float salary = sc.nextFloat();
-        sc.close();
 
         return salary;
     }
