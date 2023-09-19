@@ -12,20 +12,17 @@ public class Menu extends ActionsBDDImpl {
     private static final Scanner sc = new Scanner(System.in);
     private int choice;
     private int id;
-
     private ProgrammeurBean prog;
-
-    private boolean on;
 
     public Menu(){
         this.choice = 0;
         this.id = 0;
         this.prog = null;
-        this.on = true;
     }
 
     public void start() {
 
+        boolean on = true;
         do{
             displayMenu();
             try{
@@ -112,6 +109,7 @@ public class Menu extends ActionsBDDImpl {
 
                 case 6:
                     System.out.print("\nAu revoir !");
+                    on = false;
                     exit();
                     break;
 
@@ -119,7 +117,7 @@ public class Menu extends ActionsBDDImpl {
                     displayError("/!\\ ERREUR /!\\ | Veuillez saisir un entier entre 1 et 6 !");
                     break;
             }
-        }while(this.on);
+        }while(on);
 
         sc.close();
     }
