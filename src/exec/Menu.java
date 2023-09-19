@@ -11,11 +11,9 @@ import java.util.Scanner;
 /**
  * La classe Menu gère un menu interactif permettant à l'utilisateur d'effectuer
  * différentes opérations sur une base de données de programmeurs.
- *
  * L'utilisateur peut afficher tous les programmeurs, afficher un programmeur en
  * particulier, supprimer un programmeur, ajouter un programmeur, modifier le salaire
  * d'un programmeur ou quitter le programme.
- *
  * Cette classe étend ActionsBDDImpl, ce qui suggère qu'elle implémente des actions
  * liées à la base de données.
  *
