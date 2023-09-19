@@ -10,20 +10,30 @@ import java.util.Scanner;
 public class Menu extends ActionsBDDImpl {
 
     private static final Scanner sc = new Scanner(System.in);
+    private int choice;
+    private int id;
+
+    private ProgrammeurBean prog;
+
+    private boolean on;
+
+    public Menu(){
+        this.choice = 0;
+        this.id = 0;
+        this.prog = null;
+        this.on = true;
+    }
 
     public void start() {
-        int choice;
-        int id;
-        ProgrammeurBean prog = null;
 
         do{
             displayMenu();
             try{
-                choice = getChoice();
+                this.choice = getChoice();
             } catch (Exception e) {
-                choice = 0;
+                this.choice = 0;
             }
-            switch (choice) {
+            switch (this.choice) {
                 case 1:
                     try {
                         List<ProgrammeurBean> progs = getAllProg();
@@ -37,38 +47,38 @@ public class Menu extends ActionsBDDImpl {
                     System.out.print("Id du programmeur à afficher : ");
 
                     do{
-                        id = getChoice();
+                        this.id = getChoice();
                         try {
-                            prog = getProgById(id);
+                            this.prog = getProgById(id);
                         } catch (SQLException e) {
-                            id = 0;
+                            this.id = 0;
                             displayError("Recherche KO. Saisissez à nouveau l'id : ");
                         }
-                    }while(id == 0);
+                    }while(this.id == 0);
 
-                    displayProg(prog);
+                    displayProg(this.prog);
                     break;
 
                 case 3:
                     System.out.print("Id du programmeur à supprimer : ");
 
                     do{
-                        id = getChoice();
+                        this.id = getChoice();
                         try {
-                            deleteProgById(id);
+                            deleteProgById(this.id);
                         } catch (SQLException e) {
-                            id = 0;
+                            this.id = 0;
                             displayError("Suppression KO. Saisissez à nouveau l'id : ");
                         }
-                    }while(id == 0);
+                    }while(this.id == 0);
 
                     System.out.println("SUPPRESSION REUSSIE !\n");
                     break;
 
                 case 4:
                     try {
-                        prog = getProg();
-                        addProg(prog);
+                        this.prog = getProg();
+                        addProg(this.prog);
                     } catch (SQLException e) {
                         displayError("Ajout KO. Connexion à la base de données interrompue!");
                     }
@@ -80,19 +90,19 @@ public class Menu extends ActionsBDDImpl {
                     System.out.print("Id du programmeur : ");
 
                     do{
-                        id = getChoice();
+                        this.id = getChoice();
                         try {
-                            getProgById(id);
+                            getProgById(this.id);
                         } catch (SQLException e) {
-                            id = 0;
+                            this.id = 0;
                             displayError("Programmeur introuvable. Saisissez à nouveau l'id : ");
                         }
-                    }while(id == 0);
+                    }while(this.id == 0);
 
                     float salary = getSalary();
 
                     try{
-                        setSalaryById(id, salary);
+                        setSalaryById(this.id, salary);
                     } catch(SQLException e) {
                         displayError("Modification KO. Connexion à la base de données interrompue!");
                     }
@@ -109,7 +119,7 @@ public class Menu extends ActionsBDDImpl {
                     displayError("/!\\ ERREUR /!\\ | Veuillez saisir un entier entre 1 et 6 !");
                     break;
             }
-        }while(choice<1 || choice >6);
+        }while(this.on);
 
         sc.close();
     }
