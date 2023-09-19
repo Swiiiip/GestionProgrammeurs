@@ -6,6 +6,9 @@ import java.util.List;
 /**
  * L'interface ActionsBDD définit un ensemble de méthodes pour effectuer des
  * opérations liées à une base de données de programmeurs.
+ *
+ * @author Alonso Cédric
+ * @author Hatoum Jade
  */
 public interface ActionsBDD {
 
