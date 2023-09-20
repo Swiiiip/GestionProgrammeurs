@@ -7,7 +7,7 @@ GestionProgrammeurs
 
 ## Description du projet :
 
-Ce projet sert comme gestion d'une BDD des programmeurs.<br>
+Ce projet permet la gestion d'une BDD de programmeurs.<br>
 Depuis un menu, il permet d'afficher différents types de données, de les modifier, de les supprimer, et d'en ajouter.
 
 
