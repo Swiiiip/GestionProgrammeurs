@@ -25,7 +25,7 @@ public class ActionsBDDImpl implements ActionsBDD {
      * @return Un objet ProgrammeurBean initialisé avec les données du ResultSet.
      * @throws SQLException Si une erreur SQL survient lors de la récupération des données.
      */
-    private ProgrammeurBean createProg(ResultSet result) throws SQLException {
+    private ProgrammeurBean initProgFromDB(ResultSet result) throws SQLException {
         ProgrammeurBean prog = new ProgrammeurBean();
 
         prog.setId(result.getLong("Id"));
@@ -50,7 +50,7 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            programmeurs.add(createProg(resultSet));
+            programmeurs.add(initProgFromDB(resultSet));
         }
 
         resultSet.close();
@@ -70,7 +70,7 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
-            prog = createProg(resultSet);
+            prog = initProgFromDB(resultSet);
         }
 
         resultSet.close();
