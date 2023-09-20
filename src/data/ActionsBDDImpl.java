@@ -18,31 +18,7 @@ import java.util.List;
  */
 public class ActionsBDDImpl implements ActionsBDD {
 
-    /**
-     * Crée un objet ProgrammeurBean à partir d'un ResultSet.
-     *
-     * @param result Le ResultSet contenant les données du programmeur.
-     * @return Un objet ProgrammeurBean initialisé avec les données du ResultSet.
-     * @throws SQLException Si une erreur SQL survient lors de la récupération des données.
-     */
-    private ProgrammeurBean initProgFromDB(ResultSet result) throws SQLException {
-        ProgrammeurBean prog = new ProgrammeurBean();
-
-        prog.setId(result.getLong("Id"));
-        prog.setFirstName(result.getString("firstName"));
-        prog.setLastName(result.getString("LastName"));
-        prog.setAddress(result.getString("Address"));
-        prog.setPseudo(result.getString("Pseudo"));
-        prog.setManager(result.getString("Manager"));
-        prog.setHobby(result.getString("Hobby"));
-        prog.setBirthYear(result.getInt("BirthYear"));
-        prog.setSalary(result.getFloat("Salary"));
-        prog.setPrime(result.getFloat("Prime"));
-
-        return prog;
-    }
-
-    @Override
+       @Override
     public List<ProgrammeurBean> getAllProg() throws SQLException {
         List<ProgrammeurBean> programmeurs = new ArrayList<>();
 
@@ -50,7 +26,19 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            programmeurs.add(initProgFromDB(resultSet));
+            ProgrammeurBean prog = new ProgrammeurBean();;
+            prog.setId(resultSet.getLong("Id"));
+            prog.setFirstName(resultSet.getString("FirstName"));
+            prog.setLastName(resultSet.getString("LastName"));
+            prog.setAddress(resultSet.getString("Address"));
+            prog.setPseudo(resultSet.getString("Pseudo"));
+            prog.setManager(resultSet.getString("Manager"));
+            prog.setHobby(resultSet.getString("Hobby"));
+            prog.setBirthYear(resultSet.getInt("BirthYear"));
+            prog.setSalary(resultSet.getFloat("Salary"));
+            prog.setPrime(resultSet.getFloat("Prime"));
+
+            programmeurs.add(prog);
         }
 
         resultSet.close();
@@ -61,7 +49,7 @@ public class ActionsBDDImpl implements ActionsBDD {
 
     @Override
     public ProgrammeurBean getProgById(long Id) throws SQLException {
-        ProgrammeurBean prog = null;
+        ProgrammeurBean prog = new ProgrammeurBean();
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETPROGBYID);
 
@@ -70,13 +58,23 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
-            prog = initProgFromDB(resultSet);
+            prog.setId(resultSet.getLong("Id"));
+            prog.setFirstName(resultSet.getString("FirstName"));
+            prog.setLastName(resultSet.getString("LastName"));
+            prog.setAddress(resultSet.getString("Address"));
+            prog.setPseudo(resultSet.getString("Pseudo"));
+            prog.setManager(resultSet.getString("Manager"));
+            prog.setHobby(resultSet.getString("Hobby"));
+            prog.setBirthYear(resultSet.getInt("BirthYear"));
+            prog.setSalary(resultSet.getFloat("Salary"));
+            prog.setPrime(resultSet.getFloat("Prime"));
+            return prog;
         }
 
         resultSet.close();
         statement.close();
 
-        return prog;
+        return null;
     }
 
     @Override

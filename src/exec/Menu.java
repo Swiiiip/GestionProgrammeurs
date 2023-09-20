@@ -51,7 +51,7 @@ public class Menu extends ActionsBDDImpl {
     public Menu(){
         this.choice = 0;
         this.id = 0;
-        this.prog = null;
+        this.prog = new ProgrammeurBean();;
     }
 
     /**
@@ -85,6 +85,10 @@ public class Menu extends ActionsBDDImpl {
                         this.id = getChoice();
                         try {
                             this.prog = getProgById(id);
+
+                            if(prog==null)
+                                throw new SQLException();
+
                         } catch (SQLException e) {
                             this.id = 0;
                             displayError("Recherche KO. Saisissez à nouveau l'id : ");
@@ -100,6 +104,11 @@ public class Menu extends ActionsBDDImpl {
                     do{
                         this.id = getChoice();
                         try {
+                            this.prog = getProgById(this.id);
+
+                            if(prog==null)
+                                throw new SQLException();
+
                             deleteProgById(this.id);
                         } catch (SQLException e) {
                             this.id = 0;
@@ -127,7 +136,10 @@ public class Menu extends ActionsBDDImpl {
                     do{
                         this.id = getChoice();
                         try {
-                            getProgById(this.id);
+                            prog = getProgById(this.id);
+
+                            if(prog==null)
+                                throw new SQLException();
                         } catch (SQLException e) {
                             this.id = 0;
                             displayError("Programmeur introuvable. Saisissez à nouveau l'id : ");
@@ -196,6 +208,7 @@ public class Menu extends ActionsBDDImpl {
      * @return Le montant du salaire saisi par l'utilisateur.
      */
     public float getSalary() {
+        System.out.print("Nouveau salaire de ce programmeur: ");
         return sc.nextFloat();
     }
 
@@ -205,7 +218,7 @@ public class Menu extends ActionsBDDImpl {
      * @param message Le message d'erreur à afficher.
      */
     public void displayError(String message){
-        System.err.println("\n" + message+"\n");
+        System.err.print("\n" + message);
     }
 
     /**
@@ -228,7 +241,7 @@ public class Menu extends ActionsBDDImpl {
      * @param prog ProgrammeurBean contenant les informations à afficher.
      */
     public void displayProg(ProgrammeurBean prog){
-        System.out.println(prog);
+        System.out.print(prog);
         System.out.println("---------------------------------------------------------------------------------------\n");
     }
 
@@ -250,7 +263,7 @@ public class Menu extends ActionsBDDImpl {
         String lastName = sc.next();
 
         System.out.print("Adresse du programmeur : ");
-        String address = sc.next();
+        String address = sc.nextLine();
 
         System.out.print("Pseudo du programmeur : ");
         String pseudo = sc.next();
@@ -259,7 +272,7 @@ public class Menu extends ActionsBDDImpl {
         String manager = sc.next();
 
         System.out.print("Hobby du programmeur : ");
-        String hobby = sc.next();
+        String hobby = sc.nextLine();
 
         System.out.print("Année de naissance du programmeur : ");
         int birthYear = sc.nextInt();

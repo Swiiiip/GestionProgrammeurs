@@ -63,7 +63,6 @@ public class ProgrammeurBean {
      */
     private float prime;
 
-
     /**
      * Constructeur de la classe ProgrammeurBean pour initialiser un objet ProgrammeurBean
      * avec les informations spécifiées.

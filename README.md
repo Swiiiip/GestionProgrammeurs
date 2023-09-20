@@ -16,10 +16,10 @@ Depuis un menu, il permet d'afficher différents types de données, de les modif
 >⚠️ Ce guide est destiné aux utilisateurs de Windows, IntelliJ et MySQL.
 
 Ceci dit, vérifiez que vous ayez bien téléchargé :
-+ IntelliJ IDEA
-+ JDK
-+ MySQL Workbench
-+ MySQL Server
++ [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=windows)
++ [JDK](https://www.jetbrains.com/idea/guide/tips/download-jdk/)
++ [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (< 8.0.22 pour les utilisateurs non-anglophones)
++ [MySQL Server](https://dev.mysql.com/downloads/mysql/)
 -----------------
 ## Setup le projet :
 
