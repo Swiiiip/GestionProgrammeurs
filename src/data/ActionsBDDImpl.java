@@ -26,7 +26,7 @@ public class ActionsBDDImpl implements ActionsBDD {
      * @throws SQLException Si une erreur SQL survient lors de la récupération des données.
      */
     private ProgrammeurBean createProg(ResultSet result) throws SQLException {
-        ProgrammeurBean prog = null;
+        ProgrammeurBean prog = new ProgrammeurBean();
 
         prog.setId(result.getLong("Id"));
         prog.setFirstName(result.getString("firstName"));

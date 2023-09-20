@@ -36,7 +36,7 @@ public class Constants {
      * @param prog L'objet ProgrammeurBean à partir duquel extraire les attributs.
      * @return Une liste de chaînes représentant les attributs de l'objet ProgrammeurBean.
      */
-    public static List<String> ListAttributs(ProgrammeurBean prog) {
+    public static List<String> ListAttributes(ProgrammeurBean prog) {
         return Arrays.asList(
                 String.valueOf(prog.getId()),
                 prog.getLastName(),

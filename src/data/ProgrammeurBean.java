@@ -91,6 +91,18 @@ public class ProgrammeurBean {
         this.prime = prime;
     }
 
+    public ProgrammeurBean() {
+        this.lastName = null;
+        this.firstName = null;
+        this.address = null;
+        this.pseudo = null;
+        this.manager = null;
+        this.hobby = null;
+        this.birthYear = 0;
+        this.salary = 0;
+        this.prime = 0;
+    }
+
     /**
      * Obtient l'identifiant unique du programmeur.
      *
@@ -284,7 +296,7 @@ public class ProgrammeurBean {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < Constants.ATTRIBUTES.size(); i++) {
             sb.append(String.format(columnFormat, Constants.ATTRIBUTES.get(i)));
-            sb.append(" : ").append(Constants.ListAttributs(this).get(i));
+            sb.append(" : ").append(Constants.ListAttributes(this).get(i));
             sb.append("\n");
         }
         return sb.toString();
