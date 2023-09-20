@@ -26,7 +26,7 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            ProgrammeurBean prog = new ProgrammeurBean();;
+            ProgrammeurBean prog = new ProgrammeurBean();
             prog.setId(resultSet.getLong("Id"));
             prog.setFirstName(resultSet.getString("FirstName"));
             prog.setLastName(resultSet.getString("LastName"));

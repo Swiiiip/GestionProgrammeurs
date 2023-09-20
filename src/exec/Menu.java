@@ -51,7 +51,7 @@ public class Menu extends ActionsBDDImpl {
     public Menu(){
         this.choice = 0;
         this.id = 0;
-        this.prog = new ProgrammeurBean();;
+        this.prog = new ProgrammeurBean();
     }
 
     /**
