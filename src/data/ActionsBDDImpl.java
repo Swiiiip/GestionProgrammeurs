@@ -18,6 +18,31 @@ import java.util.List;
  */
 public class ActionsBDDImpl implements ActionsBDD {
 
+
+    /**
+     * Mappe les données récupérées de la requête SQL dans l'objet ProgrammeurBean.
+     *
+     * @param res Le ResultSet contenant les données de la requête SQL.
+     * @return une instance de ProgrammeurBean contenant les données mappées.
+     * @throws SQLException Si une erreur SQL survient lors de l'accès à la base de données.
+     */
+    private ProgrammeurBean mapFromSQLToJava(ResultSet res) throws SQLException {
+        ProgrammeurBean prog = new ProgrammeurBean();
+
+        prog.setId(res.getLong("Id"));
+        prog.setFirstName(res.getString("FirstName"));
+        prog.setLastName(res.getString("LastName"));
+        prog.setAddress(res.getString("Address"));
+        prog.setPseudo(res.getString("Pseudo"));
+        prog.setManager(res.getString("Manager"));
+        prog.setHobby(res.getString("Hobby"));
+        prog.setBirthYear(res.getInt("BirthYear"));
+        prog.setSalary(res.getFloat("Salary"));
+        prog.setPrime(res.getFloat("Prime"));
+
+        return prog;
+    }
+
        @Override
     public List<ProgrammeurBean> getAllProg() throws SQLException {
         List<ProgrammeurBean> programmeurs = new ArrayList<>();
@@ -26,30 +51,16 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            ProgrammeurBean prog = new ProgrammeurBean();
-            prog.setId(resultSet.getLong("Id"));
-            prog.setFirstName(resultSet.getString("FirstName"));
-            prog.setLastName(resultSet.getString("LastName"));
-            prog.setAddress(resultSet.getString("Address"));
-            prog.setPseudo(resultSet.getString("Pseudo"));
-            prog.setManager(resultSet.getString("Manager"));
-            prog.setHobby(resultSet.getString("Hobby"));
-            prog.setBirthYear(resultSet.getInt("BirthYear"));
-            prog.setSalary(resultSet.getFloat("Salary"));
-            prog.setPrime(resultSet.getFloat("Prime"));
-
+            ProgrammeurBean prog = mapFromSQLToJava(resultSet);
             programmeurs.add(prog);
         }
-
-        resultSet.close();
-        statement.close();
 
         return programmeurs;
     }
 
     @Override
     public ProgrammeurBean getProgById(long Id) throws SQLException {
-        ProgrammeurBean prog = new ProgrammeurBean();
+        ProgrammeurBean prog;
 
         PreparedStatement statement = Constants.CONNECTION.prepareStatement(Constants.GETPROGBYID);
 
@@ -58,16 +69,7 @@ public class ActionsBDDImpl implements ActionsBDD {
         ResultSet resultSet = statement.executeQuery();
 
         if (resultSet.next()) {
-            prog.setId(resultSet.getLong("Id"));
-            prog.setFirstName(resultSet.getString("FirstName"));
-            prog.setLastName(resultSet.getString("LastName"));
-            prog.setAddress(resultSet.getString("Address"));
-            prog.setPseudo(resultSet.getString("Pseudo"));
-            prog.setManager(resultSet.getString("Manager"));
-            prog.setHobby(resultSet.getString("Hobby"));
-            prog.setBirthYear(resultSet.getInt("BirthYear"));
-            prog.setSalary(resultSet.getFloat("Salary"));
-            prog.setPrime(resultSet.getFloat("Prime"));
+            prog = mapFromSQLToJava(resultSet);
             return prog;
         }
 
