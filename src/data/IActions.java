@@ -66,7 +66,11 @@ public interface IActions {
 
     Map<Integer, Float> getAvgSalaryByAgeProg() throws SQLException;
 
-    int getNbProg();
+    int getNbProg() throws SQLException;
+
+    Map<ProgrammeurBean, Integer> getRankProgBySalary() throws SQLException;
+
+    int getCorrelationBetweenAgeAndSalaryProg() throws SQLException;
 
     List<ManagerBean> getAllManager() throws SQLException;
 
@@ -80,6 +84,7 @@ public interface IActions {
 
     void setManagerSalaryById(long id, double newSalary) throws SQLException;
 
+    Map<Float, Integer> getSalaryHistogramManager() throws SQLException;
 
     /*---------------------------- EXIT ----------------------------*/
 

@@ -42,9 +42,9 @@ public class RequetesSQL {
             "FROM Programmeur " +
             "GROUP BY Age " +
             "ORDER BY Age";
-    public static final String GETNBPROG = "SELECT COUNT(*) AS NombreProgrammeurs FROM Programmeur";
+    public static final String GETNBPROG = "SELECT COUNT(*) AS nbProgrammeur FROM Programmeur";
 
-    public static final String GETRANKPROGBYSALARY = "SELECT FirstName, LastName, Salary, " +
+    public static final String GETRANKPROGBYSALARY = "SELECT *, " +
             "DENSE_RANK() OVER (ORDER BY Salary DESC) AS ClassementSalaire " +
             "FROM Programmeur ORDER BY Salary DESC";
 
@@ -72,7 +72,7 @@ public class RequetesSQL {
     public static final String SETMANAGERSALARYBYID = "UPDATE Manager SET Salary = ? WHERE Id = ?";
 
     public static final String GETHISTOSALARYMANAGER = "SELECT FLOOR(Salary / 1000) * 1000 AS PlageSalaire, " +
-            "COUNT(*) AS NombreDeGestionnaires " +
+            "COUNT(*) AS nbManager " +
             "FROM Manager " +
             "GROUP BY PlageSalaire " +
             "ORDER BY PlageSalaire";

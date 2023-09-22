@@ -209,8 +209,56 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public int getNbProg(){
-        return 0;
+    public int getNbProg() throws SQLException{
+        int nbProg = 0;
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETNBPROG);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next())
+            nbProg = resultSet.getInt("nbProgrammeur");
+
+        resultSet.close();
+        statement.close();
+
+        return nbProg;
+    }
+
+    @Override
+    public Map<ProgrammeurBean, Integer> getRankProgBySalary() throws SQLException{
+        Map<ProgrammeurBean, Integer> rankProgBySalary = new HashMap<>();
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETRANKPROGBYSALARY);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        while(resultSet.next()){
+            ProgrammeurBean prog = mapProgrammeur(resultSet);
+            int ranking = resultSet.getInt("ClassementSalaire");
+
+            rankProgBySalary.put(prog, ranking);
+        }
+        resultSet.close();
+        statement.close();
+        
+        return rankProgBySalary;
+    }
+
+    @Override
+    public int getCorrelationBetweenAgeAndSalaryProg() throws SQLException{
+        int correlation = 0;
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETCORRELATIONBETWEENAGEANDSALARYPROG);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if(resultSet.next())
+            correlation = resultSet.getInt("CorrelationAgeSalaire");
+
+        resultSet.close();
+        statement.close();
+
+        return correlation;
     }
 
     /*---------------------------- MANAGER ----------------------------*/
@@ -325,6 +373,27 @@ public class ActionsBD implements IActions {
         statement.executeUpdate();
 
         statement.close();
+    }
+
+    @Override
+    public Map<Float, Integer> getSalaryHistogramManager() throws SQLException{
+        Map<Float, Integer> salaryHistogramManager = new HashMap<>();
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETHISTOSALARYMANAGER);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            float salaryRange = resultSet.getFloat("PlageSalaire");
+            int managerCount = resultSet.getInt("nbManager");
+
+            salaryHistogramManager.put(salaryRange, managerCount);
+        }
+
+        resultSet.close();
+        statement.close();
+
+        return salaryHistogramManager;
     }
 
 
