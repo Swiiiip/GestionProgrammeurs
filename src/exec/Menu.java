@@ -1,6 +1,7 @@
 package exec;
 
-import data.ActionsBDDImpl;
+import data.ActionsBD;
+import data.ManagerBean;
 import data.ProgrammeurBean;
 
 import java.sql.SQLException;
@@ -22,7 +23,9 @@ import java.util.Scanner;
  * @author Alonso Cédric
  * @author Hatoum Jade
  */
-public class Menu extends ActionsBDDImpl {
+public class Menu {
+
+    ActionsBD actions = new ActionsBD();
 
     /**
      * Scanner utilisé pour lire l'entrée utilisateur.
@@ -71,7 +74,7 @@ public class Menu extends ActionsBDDImpl {
             switch (this.choice) {
                 case 1:
                     try {
-                        List<ProgrammeurBean> progs = getAllProg();
+                        List<ProgrammeurBean> progs = this.actions.getAllProg();
                         displayAllProgs(progs);
                     } catch (SQLException e) {
                         displayError("Il n'y a aucun programmeurs dans notre base de données...");
@@ -84,7 +87,7 @@ public class Menu extends ActionsBDDImpl {
                     do{
                         this.id = getChoice();
                         try {
-                            this.prog = getProgById(id);
+                            this.prog = this.actions.getProgById(id);
 
                             if(prog==null)
                                 throw new SQLException();
@@ -104,12 +107,12 @@ public class Menu extends ActionsBDDImpl {
                     do{
                         this.id = getChoice();
                         try {
-                            this.prog = getProgById(this.id);
+                            this.prog = this.actions.getProgById(this.id);
 
                             if(prog==null)
                                 throw new SQLException();
 
-                            deleteProgById(this.id);
+                            this.actions.deleteProgById(this.id);
                         } catch (SQLException e) {
                             this.id = 0;
                             displayError("Suppression KO. Saisissez à nouveau l'id : ");
@@ -122,7 +125,7 @@ public class Menu extends ActionsBDDImpl {
                 case 4:
                     try {
                         this.prog = getProg();
-                        addProg(this.prog);
+                        this.actions.addProg(this.prog);
                     } catch (SQLException e) {
                         displayError("Ajout KO. Connexion à la base de données interrompue!");
                     }
@@ -136,7 +139,7 @@ public class Menu extends ActionsBDDImpl {
                     do{
                         this.id = getChoice();
                         try {
-                            prog = getProgById(this.id);
+                            prog = this.actions.getProgById(this.id);
 
                             if(prog==null)
                                 throw new SQLException();
@@ -149,7 +152,7 @@ public class Menu extends ActionsBDDImpl {
                     float salary = getSalary();
 
                     try{
-                        setSalaryById(this.id, salary);
+                        this.actions.setProgSalaryById(this.id, salary);
                     } catch(SQLException e) {
                         displayError("Modification KO. Connexion à la base de données interrompue!");
                     }
@@ -160,7 +163,7 @@ public class Menu extends ActionsBDDImpl {
                 case 6:
                     System.out.print("\nAu revoir !");
                     on = false;
-                    exit();
+                    this.actions.exit();
                     break;
 
                 default:
@@ -256,6 +259,7 @@ public class Menu extends ActionsBDDImpl {
      *         saisies par l'utilisateur pour le nouveau programmeur.
      */
     public ProgrammeurBean getProg(){
+        ManagerBean manager = null;
         System.out.print("Nom du programmeur : ");
         String firstName = sc.next();
 
@@ -268,8 +272,20 @@ public class Menu extends ActionsBDDImpl {
         System.out.print("Pseudo du programmeur : ");
         String pseudo = sc.next();
 
-        System.out.print("Responsable du programmeur : ");
-        String manager = sc.next();
+
+        do {
+            System.out.print("Responsable du programmeur : ");
+            String lastNameManager = sc.next();
+            String firstNameManager = sc.next();
+            try {
+                manager = this.actions.getManagerByFullName(lastNameManager, firstNameManager);
+
+                if (manager == null)
+                    throw new SQLException();
+            } catch (SQLException e) {
+                displayError("Aucun responsable avec ce nom et prénom existe!");
+            }
+        }while(manager==null);
 
         System.out.print("Hobby du programmeur : ");
         String hobby = sc.nextLine();

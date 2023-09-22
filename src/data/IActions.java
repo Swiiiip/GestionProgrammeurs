@@ -2,6 +2,7 @@ package data;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * L'interface ActionsBDD définit un ensemble de méthodes pour effectuer des
@@ -10,7 +11,9 @@ import java.util.List;
  * @author Alonso Cédric
  * @author Hatoum Jade
  */
-public interface ActionsBDD {
+public interface IActions {
+
+    /*---------------------------- PROGRAMMEUR ----------------------------*/
 
     /**
      * Récupère la liste de tous les programmeurs présents dans la base de données.
@@ -52,7 +55,33 @@ public interface ActionsBDD {
      * @param newSalary Le nouveau salaire à attribuer au programmeur.
      * @throws SQLException Si une erreur SQL survient lors de la mise à jour dans la base de données.
      */
-    void setSalaryById(long Id, double newSalary) throws SQLException;
+    void setProgSalaryById(long Id, double newSalary) throws SQLException;
+
+
+    /*---------------------------- MANAGER ----------------------------*/
+
+    ProgrammeurBean getProgWithMaxSalary() throws SQLException;
+
+    ProgrammeurBean getProgWithMinSalary() throws SQLException;
+
+    Map<Integer, Float> getAvgSalaryByAgeProg() throws SQLException;
+
+    int getNbProg();
+
+    List<ManagerBean> getAllManager() throws SQLException;
+
+    ManagerBean getManagerById(long id) throws SQLException;
+
+    ManagerBean getManagerByFullName(String lastName, String firstName) throws SQLException;
+
+    void deleteManagerById(long id) throws SQLException;
+
+    void addManager(ManagerBean manager) throws SQLException;
+
+    void setManagerSalaryById(long id, double newSalary) throws SQLException;
+
+
+    /*---------------------------- EXIT ----------------------------*/
 
     /**
      * Termine l'application et la connexion à la base de données
