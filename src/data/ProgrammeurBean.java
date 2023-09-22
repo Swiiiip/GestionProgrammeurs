@@ -1,5 +1,8 @@
 package data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * La classe ProgrammeurBean représente un programmeur avec ses attributs tels que
  * le nom, le prénom, l'adresse, le pseudo, le responsable, le hobby, l'année de
@@ -9,6 +12,7 @@ package data;
  * @author Alonso Cédric
  * @author Hatoum Jade
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProgrammeurBean extends Personne{
 
     /**
@@ -53,6 +57,7 @@ public class ProgrammeurBean extends Personne{
      *
      * @return Le pseudo du programmeur.
      */
+    @JsonProperty("pseudo")
     public String getPseudo() {
         return pseudo;
     }
@@ -71,6 +76,7 @@ public class ProgrammeurBean extends Personne{
      *
      * @return Le responsable du programmeur.
      */
+    @JsonProperty("manager")
     public ManagerBean getManager() {
         return manager;
     }
@@ -84,22 +90,5 @@ public class ProgrammeurBean extends Personne{
         this.manager = manager;
     }
 
-    /**
-     * Convertit les informations du programmeur en une chaîne de caractères
-     * formatée avec des colonnes alignées, en utilisant les constantes de
-     * formatage de la classe Constants.
-     *
-     * @return Une représentation sous forme de chaîne de caractères des informations du programmeur.
-     */
-    @Override
-    public String toString() {
-        StringBuilder json = new StringBuilder(super.toString());
-
-        json.append("\t\"pseudo\": \"").append(this.pseudo).append("\", ");
-        json.append("\t\"manager\": \"").append(this.manager).append("\", ");
-        json.append("\n}\n");
-
-        return json.toString();
-    }
 }
 

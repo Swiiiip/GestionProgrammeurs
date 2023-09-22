@@ -1,5 +1,11 @@
 package data;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
     private String firstName;
@@ -35,6 +41,7 @@ public abstract class Personne {
      *
      * @return L'identifiant unique du personne.
      */
+    @JsonProperty("id")
     public int getId() {
         return id;
     }
@@ -53,6 +60,7 @@ public abstract class Personne {
      *
      * @return Le nom du personne.
      */
+    @JsonProperty("lastName")
     public String getLastName() {
         return lastName;
     }
@@ -71,6 +79,7 @@ public abstract class Personne {
      *
      * @return Le prénom du personne.
      */
+    @JsonProperty("firstName")
     public String getFirstName() {
         return firstName;
     }
@@ -89,6 +98,7 @@ public abstract class Personne {
      *
      * @return L'adresse du personne.
      */
+    @JsonProperty("address")
     public String getAddress() {
         return address;
     }
@@ -107,6 +117,7 @@ public abstract class Personne {
      *
      * @return Le hobby du personne.
      */
+    @JsonProperty("hobby")
     public String getHobby() {
         return hobby;
     }
@@ -125,6 +136,7 @@ public abstract class Personne {
      *
      * @return L'année de naissance du personne.
      */
+    @JsonProperty("birthYear")
     public int getBirthYear() {
         return birthYear;
     }
@@ -143,6 +155,7 @@ public abstract class Personne {
      *
      * @return Le salaire du personne.
      */
+    @JsonProperty("salary")
     public float getSalary() {
         return salary;
     }
@@ -161,6 +174,7 @@ public abstract class Personne {
      *
      * @return La prime du personne.
      */
+    @JsonProperty("prime")
     public float getPrime() {
         return prime;
     }
@@ -176,18 +190,17 @@ public abstract class Personne {
 
     @Override
     public String toString() {
-        StringBuilder json = new StringBuilder();
-        json.append("{\n");
-        json.append("\t\"id\": ").append(this.id).append(", ");
-        json.append("\t\"firstName\": \"").append(this.firstName).append("\", ");
-        json.append("\t\"lastName\": \"").append(this.lastName).append("\", ");
-        json.append("\t\"address\": \"").append(this.address).append("\", ");
-        json.append("\t\"hobby\": \"").append(this.hobby).append("\", ");
-        json.append("\t\"birthYear\": ").append(this.birthYear).append(", ");
-        json.append("\t\"salary\": ").append(this.salary).append(", ");
-        json.append("\t\"prime\": ").append(this.prime);
-        return json.toString();
+        return this.toJson();
     }
 
+    public String toJson() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
+            return objectMapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
 }
