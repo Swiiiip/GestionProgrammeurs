@@ -271,7 +271,7 @@ public class ActionsBD implements IActions {
         manager.setFirstName(res.getString("FirstName"));
         manager.setAddress(res.getString("Address"));
         manager.setHobby(res.getString("Hobby"));
-        manager.setDepartment(res.getString("Departement"));
+        manager.setDepartment(res.getString("Department"));
         manager.setBirthYear(res.getInt("BirthYear"));
         manager.setSalary(res.getFloat("Salary"));
         manager.setPrime(res.getFloat("Prime"));
