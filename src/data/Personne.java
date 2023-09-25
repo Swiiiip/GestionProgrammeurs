@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.time.LocalDate;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
@@ -37,9 +39,9 @@ public abstract class Personne {
     }
 
     /**
-     * Obtient l'identifiant unique du personne.
+     * Obtient l'identifiant unique de la personne.
      *
-     * @return L'identifiant unique du personne.
+     * @return L'identifiant unique de la personne.
      */
     @JsonProperty("id")
     public int getId() {
@@ -47,9 +49,9 @@ public abstract class Personne {
     }
 
     /**
-     * Définit l'identifiant unique du personne.
+     * Définit l'identifiant unique de la personne.
      *
-     * @param id L'identifiant unique du personne.
+     * @param id L'identifiant unique de la personne.
      */
     public void setId(int id) {
         this.id = id;
@@ -66,18 +68,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit le nom du personne.
+     * Définit le nom de la personne.
      *
-     * @param lastName Le nom du personne.
+     * @param lastName Le nom de la personne.
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
     /**
-     * Obtient le prénom du personne.
+     * Obtient le prénom de la personne.
      *
-     * @return Le prénom du personne.
+     * @return Le prénom de la personne.
      */
     @JsonProperty("firstName")
     public String getFirstName() {
@@ -85,18 +87,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit le prénom du personne.
+     * Définit le prénom de la personne.
      *
-     * @param firstName Le prénom du personne.
+     * @param firstName Le prénom de la personne.
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
     /**
-     * Obtient l'adresse du personne.
+     * Obtient l'adresse de la personne.
      *
-     * @return L'adresse du personne.
+     * @return L'adresse de la personne.
      */
     @JsonProperty("address")
     public String getAddress() {
@@ -104,18 +106,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit l'adresse du personne.
+     * Définit l'adresse de la personne.
      *
-     * @param address L'adresse du personne.
+     * @param address L'adresse de la personne.
      */
     public void setAddress(String address) {
         this.address = address;
     }
 
     /**
-     * Obtient le hobby du personne.
+     * Obtient le hobby de la personne.
      *
-     * @return Le hobby du personne.
+     * @return Le hobby de la personne.
      */
     @JsonProperty("hobby")
     public String getHobby() {
@@ -123,18 +125,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit le hobby du personne.
+     * Définit le hobby de la personne.
      *
-     * @param hobby Le hobby du personne.
+     * @param hobby Le hobby de la personne.
      */
     public void setHobby(String hobby) {
         this.hobby = hobby;
     }
 
     /**
-     * Obtient l'année de naissance du personne.
+     * Obtient l'année de naissance de la personne.
      *
-     * @return L'année de naissance du personne.
+     * @return L'année de naissance de la personne.
      */
     @JsonProperty("birthYear")
     public int getBirthYear() {
@@ -142,18 +144,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit l'année de naissance du personne.
+     * Définit l'année de naissance de la personne.
      *
-     * @param birthYear L'année de naissance du personne.
+     * @param birthYear L'année de naissance de la personne.
      */
     public void setBirthYear(int birthYear) {
         this.birthYear = birthYear;
     }
 
     /**
-     * Obtient le salaire du personne.
+     * Obtient le salaire de la personne.
      *
-     * @return Le salaire du personne.
+     * @return Le salaire de la personne.
      */
     @JsonProperty("salary")
     public float getSalary() {
@@ -161,18 +163,18 @@ public abstract class Personne {
     }
 
     /**
-     * Définit le salaire du personne.
+     * Définit le salaire de la personne.
      *
-     * @param salary Le salaire du personne.
+     * @param salary Le salaire de la personne.
      */
     public void setSalary(float salary) {
         this.salary = salary;
     }
 
     /**
-     * Obtient la prime du personne.
+     * Obtient la prime de la personne.
      *
-     * @return La prime du personne.
+     * @return La prime de la personne.
      */
     @JsonProperty("prime")
     public float getPrime() {
@@ -180,12 +182,21 @@ public abstract class Personne {
     }
 
     /**
-     * Définit la prime du personne.
+     * Définit la prime de la personne.
      *
-     * @param prime La prime du personne.
+     * @param prime La prime de la la personne.
      */
     public void setPrime(float prime) {
         this.prime = prime;
+    }
+
+    /**
+     * Définit l'âge de la personne en fonction de sa date de naissance
+     * @return L'âge de la personne
+     */
+    public int getAge(){
+        return LocalDate.now().getYear() - this.birthYear;
+
     }
 
     @Override
