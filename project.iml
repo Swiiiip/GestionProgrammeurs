@@ -7,8 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="mysql-connector-j-8.1.0" level="project" />
     <orderEntry type="library" name="json-20140107" level="project" />
-    <orderEntry type="library" name="jackson-jar" level="project" />
+    <orderEntry type="library" name="jackson-annotations-2.15.2" level="project" />
   </component>
 </module>

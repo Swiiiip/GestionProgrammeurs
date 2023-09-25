@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="APTN61_BD@localhost" uuid="40000fde-fe53-446e-8e4c-77423a836931">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/APTN61_BD</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="APTN61_BD@localhost [2]" uuid="173aaa8c-42bd-4367-8888-4f709c8a7c78">
+    <data-source source="LOCAL" name="APTN61_BD@localhost" uuid="cf606ce7-c59e-4948-b241-e7a76b578fd3">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

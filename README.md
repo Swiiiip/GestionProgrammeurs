@@ -47,6 +47,11 @@ Ceci dit, vérifiez que vous ayez bien téléchargé :
   + Sélectionner le fichier .jar dans le dossier dézippé : mysql-connector-java-[version].jar
   + IntelliJ vous propose d'implémenter les drivers JDBC sur le projet / module
   + Vos drivers sont installés !
++ Pour les librairies Jackson :
+  + **Pour Windows:** [Ici](https://jar-download.com/artifacts/com.fasterxml.jackson.core) > Download > Clique droit > 7-zip > Extraire ici
+  + Sur IntelliJ, ouvrir le projet, puis File > Project Structure > Libraries > "+" > Java
+  + Sélectionner les fichiers .jar dans le dossier dézippé : jackson-annotations-2.15.2.jar, jackson-core-2.15.2.jar et jackson-databind-2.15.2.jar
+  + Vous pouvez utiliser Jacskon !
 
 + *[OPTIONNEL]* : Pour manipuler la BDD depuis IntelliJ :
   + Cliquer sur Database (en haut à droite par défaut)
