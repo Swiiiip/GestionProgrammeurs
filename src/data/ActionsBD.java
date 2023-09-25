@@ -111,11 +111,16 @@ public class ActionsBD implements IActions {
         resultSet.close();
         statement.close();
 
+        if(prog == null)
+            throw new SQLException();
+
         return prog;
     }
 
     @Override
     public void deleteProgById(long id) throws SQLException {
+        this.getProgById(id);
+
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEPROGBYID);
 
         statement.setLong(1, id);
@@ -145,6 +150,8 @@ public class ActionsBD implements IActions {
 
     @Override
     public void setProgSalaryById(long id, double newSalary) throws SQLException {
+        this.getProgById(id);
+
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.SETPROGSALARYBYID);
 
         statement.setDouble(1, newSalary);
@@ -225,8 +232,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public Map<ProgrammeurBean, Integer> getRankProgBySalary() throws SQLException{
-        Map<ProgrammeurBean, Integer> rankProgBySalary = new HashMap<>();
+    public Map<Integer, ProgrammeurBean> getRankProgBySalary() throws SQLException{
+        Map<Integer, ProgrammeurBean> rankProgBySalary = new HashMap<>();
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETRANKPROGBYSALARY);
 
@@ -236,7 +243,7 @@ public class ActionsBD implements IActions {
             ProgrammeurBean prog = mapProgrammeur(resultSet);
             int ranking = resultSet.getInt("ClassementSalaire");
 
-            rankProgBySalary.put(prog, ranking);
+            rankProgBySalary.put(ranking, prog);
         }
         resultSet.close();
         statement.close();
@@ -312,6 +319,9 @@ public class ActionsBD implements IActions {
         resultSet.close();
         statement.close();
 
+        if (manager == null)
+            throw new SQLException();
+
         return manager;
     }
 
@@ -332,11 +342,16 @@ public class ActionsBD implements IActions {
         resultSet.close();
         statement.close();
 
+        if (manager == null)
+            throw new SQLException();
+
         return manager;
     }
 
    @Override
     public void deleteManagerById(long id) throws SQLException {
+        this.getManagerById(id);
+
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEMANAGERBYID);
 
         statement.setLong(1, id);
@@ -365,6 +380,8 @@ public class ActionsBD implements IActions {
 
     @Override
     public void setManagerSalaryById(long id, double newSalary) throws SQLException {
+        this.getManagerById(id);
+
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.SETMANAGERSALARYBYID);
 
         statement.setDouble(1, newSalary);

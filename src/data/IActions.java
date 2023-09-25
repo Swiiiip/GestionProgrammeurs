@@ -68,7 +68,7 @@ public interface IActions {
 
     int getNbProg() throws SQLException;
 
-    Map<ProgrammeurBean, Integer> getRankProgBySalary() throws SQLException;
+    Map<Integer, ProgrammeurBean> getRankProgBySalary() throws SQLException;
 
     int getCorrelationBetweenAgeAndSalaryProg() throws SQLException;
 

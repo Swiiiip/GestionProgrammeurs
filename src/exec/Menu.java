@@ -88,10 +88,6 @@ public class Menu {
                         this.id = getChoice();
                         try {
                             this.prog = this.actions.getProgById(id);
-
-                            if(prog==null)
-                                throw new SQLException();
-
                         } catch (SQLException e) {
                             this.id = 0;
                             displayError("Recherche KO. Saisissez à nouveau l'id : ");
@@ -107,11 +103,6 @@ public class Menu {
                     do{
                         this.id = getChoice();
                         try {
-                            this.prog = this.actions.getProgById(this.id);
-
-                            if(prog==null)
-                                throw new SQLException();
-
                             this.actions.deleteProgById(this.id);
                         } catch (SQLException e) {
                             this.id = 0;
@@ -139,10 +130,7 @@ public class Menu {
                     do{
                         this.id = getChoice();
                         try {
-                            prog = this.actions.getProgById(this.id);
-
-                            if(prog==null)
-                                throw new SQLException();
+                            this.actions.getProgById(this.id);
                         } catch (SQLException e) {
                             this.id = 0;
                             displayError("Programmeur introuvable. Saisissez à nouveau l'id : ");
