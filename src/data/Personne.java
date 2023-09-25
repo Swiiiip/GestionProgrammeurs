@@ -144,6 +144,16 @@ public abstract class Personne {
     }
 
     /**
+     * Définit l'âge de la personne en fonction de sa date de naissance
+     * @return L'âge de la personne
+     */
+    @JsonProperty("age")
+    public int getAge(){
+        return LocalDate.now().getYear() - this.birthYear;
+
+    }
+
+    /**
      * Définit l'année de naissance de la personne.
      *
      * @param birthYear L'année de naissance de la personne.
@@ -190,14 +200,6 @@ public abstract class Personne {
         this.prime = prime;
     }
 
-    /**
-     * Définit l'âge de la personne en fonction de sa date de naissance
-     * @return L'âge de la personne
-     */
-    public int getAge(){
-        return LocalDate.now().getYear() - this.birthYear;
-
-    }
 
     @Override
     public String toString() {

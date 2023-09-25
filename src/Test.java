@@ -13,15 +13,17 @@ public class Test {
 
     private ManagerBean manager;
 
-    private List<ProgrammeurBean> progs = new ArrayList<>();
+    private List<ProgrammeurBean> progs;
 
-    private List<ManagerBean> managers = new ArrayList<>();
+    private List<ManagerBean> managers;
     private final ActionsBD actionsBD = new ActionsBD();
-    public static void main(String[] args) {
 
+    public Test(){
+        this.progs = new ArrayList<>();
+        this.managers = new ArrayList<>();
     }
 
-    private void getAllProg(){
+    public void getAllProg(){
         try {
             this.progs = this.actionsBD.getAllProg();
         } catch (SQLException e) {
@@ -32,7 +34,7 @@ public class Test {
             System.out.println(p);
     }
 
-    private void getProgById(int Id){
+    public void getProgById(int Id){
         try {
             this.prog = this.actionsBD.getProgById(Id);
         } catch (SQLException e) {
@@ -218,7 +220,7 @@ public class Test {
 
         for (Map.Entry<Float, Integer> entry : salaryHisto.entrySet())
             System.out.println("Salaire : " + entry.getKey() +
-                    ", Age : " + entry.getValue());
+                    ", Nb programmeur : " + entry.getValue());
     }
 
     /*---------------------------- EXIT ----------------------------*/
@@ -226,5 +228,15 @@ public class Test {
     public void exit(){
         this.actionsBD.exit();
     }
+
+
+
+    /*---------------------------- MAIN ----------------------------*/
+    public static void main(String[] args) {
+        Test test = new Test();
+        test.getAllProg();
+    }
+
+
 
 }
