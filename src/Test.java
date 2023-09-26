@@ -1,6 +1,8 @@
 import data.ActionsBD;
 import data.ManagerBean;
 import data.ProgrammeurBean;
+import utils.Departments;
+import utils.Hobbies;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -249,6 +251,8 @@ public class Test {
     public static void main(String[] args) {
         Test test = new Test();
         test.getAllProg();
+
+        System.out.println(Hobbies.generateRandomHobby() + " " + Departments.generateRandomDepartment());
     }
 
 
