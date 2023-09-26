@@ -74,8 +74,6 @@ public class DataGenerator {
                 preparedStatementManager.executeUpdate();
             }
 
-            System.out.println("Données des gestionnaires insérées avec succès.");
-
             // Génération des données pour les programmeurs
             String insertProgrammerQuery = "INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -110,8 +108,6 @@ public class DataGenerator {
 
                 preparedStatementProgrammer.executeUpdate();
             }
-
-            System.out.println("Données des programmeurs insérées avec succès.");
 
             preparedStatementManager.close();
             preparedStatementProgrammer.close();
