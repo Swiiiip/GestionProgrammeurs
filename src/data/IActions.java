@@ -26,19 +26,19 @@ public interface IActions {
     /**
      * Récupère un programmeur spécifique à partir de son identifiant.
      *
-     * @param Id L'identifiant unique du programmeur à récupérer.
+     * @param id L'identifiant unique du programmeur à récupérer.
      * @return Un objet ProgrammeurBean représentant le programmeur correspondant à l'Id.
      * @throws SQLException Si une erreur SQL survient lors de l'accès à la base de données.
      */
-    ProgrammeurBean getProgById(long Id) throws SQLException;
+    ProgrammeurBean getProgById(int id) throws SQLException;
 
     /**
      * Supprime un programmeur de la base de données en utilisant son identifiant.
      *
-     * @param Id L'identifiant unique du programmeur à supprimer.
+     * @param id L'identifiant unique du programmeur à supprimer.
      * @throws SQLException Si une erreur SQL survient lors de la suppression dans la base de données.
      */
-    void deleteProgById(long Id) throws SQLException;
+    void deleteProgById(int id) throws SQLException;
 
     /**
      * Ajoute un nouveau programmeur à la base de données.
@@ -51,11 +51,11 @@ public interface IActions {
     /**
      * Modifie le salaire d'un programmeur en utilisant son identifiant.
      *
-     * @param Id L'identifiant unique du programmeur dont le salaire doit être modifié.
+     * @param id L'identifiant unique du programmeur dont le salaire doit être modifié.
      * @param newSalary Le nouveau salaire à attribuer au programmeur.
      * @throws SQLException Si une erreur SQL survient lors de la mise à jour dans la base de données.
      */
-    void setProgSalaryById(long Id, double newSalary) throws SQLException;
+    void setProgSalaryById(int id, float newSalary) throws SQLException;
 
 
     /*---------------------------- MANAGER ----------------------------*/
@@ -70,19 +70,19 @@ public interface IActions {
 
     Map<Integer, ProgrammeurBean> getRankProgBySalary() throws SQLException;
 
-    int getCorrelationBetweenAgeAndSalaryProg() throws SQLException;
+    double getCorrelationBetweenAgeAndSalaryProg() throws SQLException;
 
     List<ManagerBean> getAllManager() throws SQLException;
 
-    ManagerBean getManagerById(long id) throws SQLException;
+    ManagerBean getManagerById(int id) throws SQLException;
 
     ManagerBean getManagerByFullName(String lastName, String firstName) throws SQLException;
 
-    void deleteManagerById(long id) throws SQLException;
+    void deleteManagerById(int id) throws SQLException;
 
     void addManager(ManagerBean manager) throws SQLException;
 
-    void setManagerSalaryById(long id, double newSalary) throws SQLException;
+    void setManagerSalaryById(int id, float newSalary) throws SQLException;
 
     Map<Float, Integer> getSalaryHistogramManager() throws SQLException;
 

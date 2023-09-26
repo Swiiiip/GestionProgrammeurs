@@ -96,7 +96,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ProgrammeurBean getProgById(long Id) throws SQLException {
+    public ProgrammeurBean getProgById(int Id) throws SQLException {
         ProgrammeurBean prog = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETPROGBYID);
@@ -118,7 +118,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void deleteProgById(long id) throws SQLException {
+    public void deleteProgById(int id) throws SQLException {
         this.getProgById(id);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEPROGBYID);
@@ -149,7 +149,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void setProgSalaryById(long id, double newSalary) throws SQLException {
+    public void setProgSalaryById(int id, float newSalary) throws SQLException {
         this.getProgById(id);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.SETPROGSALARYBYID);
@@ -251,21 +251,48 @@ public class ActionsBD implements IActions {
         return rankProgBySalary;
     }
 
-    @Override
-    public int getCorrelationBetweenAgeAndSalaryProg() throws SQLException{
-        int correlation = 0;
+    private static double calculateMean(List<Double> data) {
+        double sum = 0.0;
+        for (double value : data) {
+            sum += value;
+        }
+        return sum / data.size();
+    }
 
+    @Override
+    public double getCorrelationBetweenAgeAndSalaryProg() throws SQLException{
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETCORRELATIONBETWEENAGEANDSALARYPROG);
 
         ResultSet resultSet = statement.executeQuery();
 
-        if(resultSet.next())
-            correlation = resultSet.getInt("CorrelationAgeSalaire");
+        List<Double> birthYears = new ArrayList<>();
+        List<Double> salaries = new ArrayList<>();
+
+        while (resultSet.next()) {
+            birthYears.add(resultSet.getDouble("BirthYear"));
+            salaries.add(resultSet.getDouble("Salary"));
+        }
+
+        double meanBirthYear = calculateMean(birthYears);
+        double meanSalary = calculateMean(salaries);
+
+        double numerator = 0.0;
+        double denominatorX = 0.0;
+        double denominatorY = 0.0;
+
+        for (int i = 0; i < birthYears.size(); i++) {
+            double diffX = birthYears.get(i) - meanBirthYear;
+            double diffY = salaries.get(i) - meanSalary;
+
+            numerator += (diffX * diffY);
+            denominatorX += (diffX * diffX);
+            denominatorY += (diffY * diffY);
+        }
 
         resultSet.close();
         statement.close();
 
-        return correlation;
+        return numerator / (Math.sqrt(denominatorX) * Math.sqrt(denominatorY));
     }
 
     /*---------------------------- MANAGER ----------------------------*/
@@ -304,7 +331,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ManagerBean getManagerById(long id) throws SQLException {
+    public ManagerBean getManagerById(int id) throws SQLException {
         ManagerBean manager = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETMANAGERBYID);
@@ -349,7 +376,7 @@ public class ActionsBD implements IActions {
     }
 
    @Override
-    public void deleteManagerById(long id) throws SQLException {
+    public void deleteManagerById(int id) throws SQLException {
         this.getManagerById(id);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEMANAGERBYID);
@@ -379,7 +406,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void setManagerSalaryById(long id, double newSalary) throws SQLException {
+    public void setManagerSalaryById(int id, float newSalary) throws SQLException {
         this.getManagerById(id);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.SETMANAGERSALARYBYID);

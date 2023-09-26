@@ -46,6 +46,21 @@ ADD CONSTRAINT U_Prog_fullName UNIQUE(LastName, FirstName);
 ALTER TABLE Manager
 ADD CONSTRAINT U_Manager_fullName UNIQUE(LastName, FirstName);
 
+CREATE TRIGGER CheckManagerIDExists
+    BEFORE INSERT ON Programmeur FOR EACH ROW
+BEGIN
+    DECLARE manager_count INT;
+
+    SELECT COUNT(*) INTO manager_count FROM Manager WHERE Id = NEW.Id_manager;
+
+    IF manager_count = 0 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'L\'ID du manager spécifié n\'existe pas.';
+    END IF;
+END;
+##Normalement la contrainte Foreign Key doit vérifier si l'id du manager correspond bien à un manager déjà sauvegardé en bd
+
+
 
 INSERT INTO Manager (LastName, FirstName, Address, Hobby, Department, BirthYear, Salary, Prime)
     VALUES

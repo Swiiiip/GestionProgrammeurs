@@ -48,8 +48,10 @@ public class RequetesSQL {
             "DENSE_RANK() OVER (ORDER BY Salary DESC) AS ClassementSalaire " +
             "FROM Programmeur ORDER BY Salary DESC";
 
-    public static final String GETCORRELATIONBETWEENAGEANDSALARYPROG = "SELECT CORR(BirthYear, Salary) AS CorrelationAgeSalaire " +
-            "FROM Programmeur";
+    public static final String GETCORRELATIONBETWEENAGEANDSALARYPROG = "SELECT BirthYear, Salary " +
+                    "FROM Programmeur";
+
+
 
 
     public static final String GETALLMANAGER = "SELECT * FROM Manager";

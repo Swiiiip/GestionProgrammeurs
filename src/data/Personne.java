@@ -2,11 +2,13 @@ package data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDate;
 
+@JsonPropertyOrder({"id", "firstName", "lastName", "age", "address", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
@@ -58,9 +60,9 @@ public abstract class Personne {
     }
 
     /**
-     * Obtient le nom du personne.
+     * Obtient le nom de la personne.
      *
-     * @return Le nom du personne.
+     * @return Le nom de la personne.
      */
     @JsonProperty("lastName")
     public String getLastName() {
@@ -94,6 +96,17 @@ public abstract class Personne {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
+    /**
+     * Définit l'âge de la personne en fonction de sa date de naissance
+     * @return L'âge de la personne
+     */
+    @JsonProperty("age")
+    public int getAge(){
+        return LocalDate.now().getYear() - this.birthYear;
+
+    }
+
 
     /**
      * Obtient l'adresse de la personne.
@@ -143,15 +156,6 @@ public abstract class Personne {
         return birthYear;
     }
 
-    /**
-     * Définit l'âge de la personne en fonction de sa date de naissance
-     * @return L'âge de la personne
-     */
-    @JsonProperty("age")
-    public int getAge(){
-        return LocalDate.now().getYear() - this.birthYear;
-
-    }
 
     /**
      * Définit l'année de naissance de la personne.

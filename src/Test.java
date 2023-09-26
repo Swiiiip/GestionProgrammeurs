@@ -9,10 +9,6 @@ import java.util.Map;
 
 public class Test {
 
-    private ProgrammeurBean prog;
-
-    private ManagerBean manager;
-
     private List<ProgrammeurBean> progs;
 
     private List<ManagerBean> managers;
@@ -34,19 +30,22 @@ public class Test {
             System.out.println(p);
     }
 
-    public void getProgById(int Id){
+    public void getProgById(){
+        ProgrammeurBean prog;
+        int id = 1;
         try {
-            this.prog = this.actionsBD.getProgById(Id);
+            prog = this.actionsBD.getProgById(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        System.out.println(this.prog);
+        System.out.println(prog);
     }
 
-    public void deleteProgById(int Id){
+    public void deleteProgById(){
+        int id = 1;
         try {
-            actionsBD.deleteProgById(Id);
+            actionsBD.deleteProgById(id);
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -54,7 +53,8 @@ public class Test {
         this.getAllProg();
     }
 
-    public void addProg(ProgrammeurBean programmeur) {
+    public void addProg() {
+        ProgrammeurBean programmeur = new ProgrammeurBean();
         try{
             this.actionsBD.addProg(programmeur);
         } catch (SQLException e){
@@ -64,19 +64,22 @@ public class Test {
         this.getAllProg();
     }
 
-    public void setProgSalaryById(int id, double newSalary){
+    public void setProgSalaryById(){
+        int id = 1;
+        float newSalary = 1001f;
         try {
             this.actionsBD.setProgSalaryById(id, newSalary);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        this.getProgById(id);
+        this.getProgById();
     }
 
     public void getProgWithMaxSalary() {
+        ProgrammeurBean prog;
         try {
-            this.prog = this.actionsBD.getProgWithMaxSalary();
+            prog = this.actionsBD.getProgWithMaxSalary();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -85,8 +88,9 @@ public class Test {
     }
 
     public void getProgWithMinSalary(){
+        ProgrammeurBean prog;
         try {
-            this.prog = this.actionsBD.getProgWithMinSalary();
+            prog = this.actionsBD.getProgWithMinSalary();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -117,7 +121,8 @@ public class Test {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Il y a " + nbProg + "nb progs");
+        System.out.print("Il y a " + nbProg);
+        System.out.println(nbProg > 1 ? " progs." : "prog.");
     }
 
     public void getRankProgBySalary() {
@@ -134,7 +139,7 @@ public class Test {
     }
 
     public void getCorrelationBetweenAgeAndSalaryProg() {
-        int correlation;
+        double correlation;
         try {
             correlation = this.actionsBD.getCorrelationBetweenAgeAndSalaryProg();
         } catch (SQLException e) {
@@ -159,29 +164,35 @@ public class Test {
             System.out.println(m);
     }
 
-    public void getManagerById(int id){
+    public void getManagerById(){
+        ManagerBean manager;
+        int id = 1;
         try {
-            this.manager = this.actionsBD.getManagerById(id);
+            manager = this.actionsBD.getManagerById(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        System.out.println(this.manager);
+        System.out.println(manager);
     }
 
-    public void getManagerByFullName(String lastName, String firstName){
+    public void getManagerByFullName(){
+        String lastName = "Alonso";
+        String firstName = "Cédric";
+        ManagerBean manager;
         try {
-            this.manager = this.actionsBD.getManagerByFullName(lastName, firstName);
+            manager = this.actionsBD.getManagerByFullName(lastName, firstName);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        System.out.println(this.manager);
+        System.out.println(manager);
     }
 
-    public void deleteManagerById(int Id){
+    public void deleteManagerById(){
+        int id=1;
         try {
-            actionsBD.deleteManagerById(Id);
+            actionsBD.deleteManagerById(id);
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -189,7 +200,8 @@ public class Test {
         this.getAllManager();
     }
 
-    public void addManager(ManagerBean manager) {
+    public void addManager() {
+        ManagerBean manager = new ManagerBean("Alonso", "Cédric", "10 Rue Json", "Java", 2002, 2129.3f, 220, "JavaDoc");
         try {
             this.actionsBD.addManager(manager);
         } catch (SQLException e) {
@@ -199,14 +211,16 @@ public class Test {
         this.getAllManager();
     }
 
-    public void setManagerSalaryById(int id, double newSalary) {
+    public void setManagerSalaryById() {
+        int id = 1;
+        float newSalary = 1000;
         try {
             this.actionsBD.setManagerSalaryById(id, newSalary);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        this.getManagerById(id);
+        this.getManagerById();
     }
 
     public void getSalaryHistogramManager() {
