@@ -78,4 +78,9 @@ public class RequetesSQL {
             "FROM Manager " +
             "GROUP BY PlageSalaire " +
             "ORDER BY PlageSalaire";
+
+
+    public static final String DELETEALLPROGS = "DELETE FROM Programmeur";
+
+    public static final String DELETEALLMANAGERS = "DELETE FROM Manager";
 }

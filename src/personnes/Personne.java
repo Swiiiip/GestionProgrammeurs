@@ -1,4 +1,4 @@
-package data;
+package personnes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,9 +30,9 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(String firstName, String lastName, String address, String hobby, int birthYear, float salary, float prime) {
-        this.firstName = firstName;
+    public Personne(String lastName, String firstName, String address, String hobby, int birthYear, float salary, float prime) {
         this.lastName = lastName;
+        this.firstName = firstName;
         this.address = address;
         this.hobby = hobby;
         this.birthYear = birthYear;

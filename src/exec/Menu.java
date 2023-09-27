@@ -1,8 +1,8 @@
 package exec;
 
 import data.ActionsBD;
-import data.ManagerBean;
-import data.ProgrammeurBean;
+import personnes.ManagerBean;
+import personnes.ProgrammeurBean;
 
 import java.sql.SQLException;
 import java.util.List;

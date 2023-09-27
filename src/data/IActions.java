@@ -1,5 +1,8 @@
 package data;
 
+import personnes.ManagerBean;
+import personnes.ProgrammeurBean;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -92,4 +95,10 @@ public interface IActions {
      * Termine l'application et la connexion à la base de données
      */
     void exit();
+
+    /*---------------------------- RESET ----------------------------*/
+
+    void deleteALLProgs() throws SQLException;
+
+    void deleteALLManagers() throws SQLException;
 }

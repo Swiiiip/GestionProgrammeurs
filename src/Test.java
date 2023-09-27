@@ -1,6 +1,6 @@
 import data.ActionsBD;
-import data.ManagerBean;
-import data.ProgrammeurBean;
+import personnes.ManagerBean;
+import personnes.ProgrammeurBean;
 import utils.Departments;
 import utils.Hobbies;
 

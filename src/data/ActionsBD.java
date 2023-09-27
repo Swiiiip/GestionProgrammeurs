@@ -1,6 +1,8 @@
 package data;
 
 import connexion.Connexion;
+import personnes.ManagerBean;
+import personnes.ProgrammeurBean;
 import utils.RequetesSQL;
 
 import java.sql.PreparedStatement;
@@ -452,6 +454,23 @@ public class ActionsBD implements IActions {
         } catch (SQLException e) {
             System.err.print("Erreur lors de la fermeture de la connexion à la base de données");
         }
-        System.exit(0);
+    }
+
+    /*---------------------------- RESET ----------------------------*/
+
+    @Override
+    public void deleteALLProgs() throws SQLException{
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEALLPROGS);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    @Override
+    public void deleteALLManagers() throws SQLException{
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEALLMANAGERS);
+
+        statement.executeUpdate();
+        statement.close();
     }
 }
