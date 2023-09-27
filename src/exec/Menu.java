@@ -76,8 +76,9 @@ public class Menu {
                     try {
                         List<ProgrammeurBean> progs = this.actions.getAllProg();
                         displayAllProgs(progs);
-                    } catch (SQLException e) {
-                        displayError("Il n'y a aucun programmeurs dans notre base de données...");
+                        System.out.println(progs.size() + " programmeurs trouvés.\n");
+                    } catch (Exception e) {
+                        displayError(e.getMessage());
                     }
                     break;
 
@@ -174,7 +175,7 @@ public class Menu {
      * de sélectionner l'action souhaitée en saisissant le numéro correspondant.
      */
     public void displayMenu() {
-        System.out.println("\n<<<<<<<<<<<<  MENU  >>>>>>>>>>>>\n");
+        System.out.println("\n\n<<<<<<<<<<<<  MENU  >>>>>>>>>>>>\n");
         System.out.println("1. Afficher tous les programmeurs");
         System.out.println("2. Afficher un programmeur");
         System.out.println("3. Supprimer un programmeur");

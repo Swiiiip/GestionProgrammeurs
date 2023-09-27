@@ -34,8 +34,8 @@ public class Connexion {
 
     /**
      * Constructeur de la classe Connexion avec des valeurs par défaut.
-     * L'url JDBC par défaut est configuré sur du 'localhost', le port par défaut pour MySQL '3306',avec la BDD sélectionnée par défaut : BDTPJAVA
-     * L'utilisateur est identique au mot de passe : 'tp2java'
+     * L'url JDBC par défaut est configuré sur du 'localhost', le port par défaut pour MySQL '3306',avec la BDD sélectionnée par défaut : APTN61_BD
+     * L'utilisateur est identique au mot de passe : 'adm'
      */
     public Connexion(){
         this("jdbc:mysql://localhost:3306/APTN61_BD", "adm", "adm");

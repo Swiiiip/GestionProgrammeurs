@@ -91,6 +91,9 @@ public class ActionsBD implements IActions {
             programmeurs.add(prog);
         }
 
+        if(programmeurs.isEmpty())
+            throw new SQLException("Il n'y a aucun programmeurs dans notre base de données...");
+
         statement.close();
         resultSet.close();
 
@@ -98,7 +101,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ProgrammeurBean getProgById(int Id) throws SQLException {
+    public ProgrammeurBean getProgById(int Id) throws SQLException { //TODO : Vérifier si le programmeur existe
         ProgrammeurBean prog = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETPROGBYID);
@@ -120,7 +123,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void deleteProgById(int id) throws SQLException {
+    public void deleteProgById(int id) throws SQLException { //TODO : Vérifier si le programmeur existe
         this.getProgById(id);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEPROGBYID);
