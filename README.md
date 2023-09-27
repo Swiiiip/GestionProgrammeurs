@@ -18,7 +18,6 @@ Depuis un menu, il permet d'afficher différents types de données, de les modif
 Ceci dit, vérifiez que vous ayez bien téléchargé :
 + [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=windows)
 + [JDK](https://www.jetbrains.com/idea/guide/tips/download-jdk/)
-+ A REDIGER : telecharger la libraire jackson fasterxml contenant core, annotation et datacience (que selectionner annotation et datascience en integrant les librairies) : https://jar-download.com/artifacts/com.fasterxml.jackson.core/jackson-databind/2.15.2 
 + [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) (< 8.0.22 pour les utilisateurs non-anglophones)
 + [MySQL Server](https://dev.mysql.com/downloads/mysql/)
 -----------------
