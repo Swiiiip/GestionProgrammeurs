@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "gender", "age", "address", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class Personne {
+public class Personne {
     private int id;
     private String firstName;
     private String lastName;
@@ -122,12 +122,12 @@ public abstract class Personne {
 
     /**
      * Définit l'âge de la personne en fonction de sa date de naissance
+     *
      * @return L'âge de la personne
      */
     @JsonProperty("age")
     public int getAge(){
         return LocalDate.now().getYear() - this.birthYear;
-
     }
 
 
@@ -240,6 +240,7 @@ public abstract class Personne {
 
             return objectMapper.writeValueAsString(this);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "{}";
         }
     }

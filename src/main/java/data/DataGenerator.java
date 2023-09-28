@@ -20,16 +20,19 @@ import java.util.*;
 
 public class DataGenerator{
 
-    private static final int NBPROGS = 1000;
-    private static final int NBMANAGERS = 50;
+    private final int nbProgs;
+    private final int nbManagers;
     private static final String APIURL = "https://randomuser.me/api";
     private static final Random RANDOM = new Random();
     private final static ActionsBD ACTIONSBD = new ActionsBD();
 
-    public DataGenerator(){
+    public DataGenerator(int nbProgs, int nbManagers){
+        this.nbProgs = nbProgs;
+        this.nbManagers = nbManagers;
+        loadData();
     }
     
-    static{
+    private void loadData(){
         try{
             ACTIONSBD.deleteALLProgs();
             ACTIONSBD.deleteALLManagers();
@@ -47,7 +50,7 @@ public class DataGenerator{
             throw new SecurityException();
         }
 
-        for (int i = 0; i < NBMANAGERS; i++) {
+        for (int i = 0; i < nbManagers; i++) {
             Manager manager;
             try {
                 manager = getManagerFromAPI();
@@ -56,18 +59,20 @@ public class DataGenerator{
                 throw new SecurityException();
             }
             try {
-                if (!isEuropean(manager.getLastName()) && !isEuropean(manager.getFirstName()))
+                if (isEuropean(manager.getLastName()) && isEuropean(manager.getFirstName()))
                     i--;
-                else
+                else {
                     ACTIONSBD.addManager(manager);
-                } catch (SQLException e) {
+                    System.out.println("Ajout du manager id : " + manager.getId());
+                }
+            } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + i + " a échouée.");
                 System.out.println(e.getMessage());
                 throw new SecurityException();
             }
         }
 
-        for (int i = 0; i < NBPROGS; i++) {
+        for (int i = 0; i < nbProgs; i++) {
             Programmeur prog;
             try {
                 prog = getProgFromAPI();
@@ -77,10 +82,12 @@ public class DataGenerator{
                 throw new SecurityException();
             }
             try {
-                if (!isEuropean(prog.getLastName()) && !isEuropean(prog.getFirstName()))
+                if (isEuropean(prog.getLastName()) && isEuropean(prog.getFirstName()))
                     i--;
-                else
+                else {
                     ACTIONSBD.addProg(prog);
+                    System.out.println("Ajout du programmeur id : " + prog.getId());
+                }
             } catch (SQLException e) {
                 System.err.println("L'ajout du programmeur " + i + " a échouée.");
                 System.out.println(e.getMessage());
@@ -89,10 +96,8 @@ public class DataGenerator{
         }
 
         ACTIONSBD.exit();
-
     }
-
-    private static Programmeur getProgFromAPI() throws Exception {
+    private Programmeur getProgFromAPI() throws Exception {
         String jsonData = getJsonDataFromApi();
 
         String lastName = parseLastNameFromJson(jsonData);
@@ -100,7 +105,7 @@ public class DataGenerator{
         String gender = parseGenderFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
-        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
+        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(nbManagers) + 1);
         String pseudo = parsePseudoFromJson(jsonData);
 
         int birthYear = parseBirthYearFromJson(jsonData);
@@ -123,7 +128,7 @@ public class DataGenerator{
                 prime);
     }
 
-    private static Manager getManagerFromAPI() throws  Exception {
+    private Manager getManagerFromAPI() throws  Exception {
 
         String jsonData = getJsonDataFromApi();
         String lastName = parseLastNameFromJson(jsonData);
@@ -154,7 +159,7 @@ public class DataGenerator{
                 department);
     }
 
-    private static String getJsonDataFromApi() throws IOException, URISyntaxException {
+    private String getJsonDataFromApi() throws IOException, URISyntaxException {
         URI uri = new URI(APIURL);
         URL url = uri.toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -173,7 +178,7 @@ public class DataGenerator{
         return response.toString();
     }
 
-    private static String parseLastNameFromJson(String jsonData) throws IOException {
+    private String parseLastNameFromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
@@ -181,7 +186,7 @@ public class DataGenerator{
         return nameNode.get("last").asText();
     }
 
-    private static String parseFirstNameFromJson(String jsonData) throws IOException {
+    private String parseFirstNameFromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
@@ -190,19 +195,19 @@ public class DataGenerator{
     }
 
 
-    private static String parseAddressFromJson(String jsonData) throws IOException {
+    private String parseAddressFromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode locationNode = rootNode.get("results").get(0).get("location");
-        String street = locationNode.get("street").asText();
+        int streetNumber = locationNode.get("street").get("number").asInt();
+        String streetName = locationNode.get("street").get("name").asText();
         String city = locationNode.get("city").asText();
-        String state = locationNode.get("state").asText();
-        String postcode = locationNode.get("postcode").asText();
-        
-        return street + ", " + city + ", " + state + " " + postcode;
+        String country = locationNode.get("country").asText();
+
+        return streetNumber + " " + streetName + ", " + city + ", " + country;
     }
 
-    private static int parseBirthYearFromJson(String jsonData) throws IOException {
+    private int parseBirthYearFromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode birthYearNode = rootNode.get("results").get(0).get("dob");
@@ -212,7 +217,7 @@ public class DataGenerator{
         return LocalDate.now().getYear() - age;
     }
 
-    private static String parsePseudoFromJson(String jsonData) throws IOException{
+    private String parsePseudoFromJson(String jsonData) throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode loginNode = rootNode.get("results").get(0).get("login");
@@ -220,7 +225,7 @@ public class DataGenerator{
         return loginNode.get("username").asText();
     }
 
-    private static String parseGenderFromJson(String jsonData) throws IOException{
+    private String parseGenderFromJson(String jsonData) throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
         JsonNode genderNode = rootNode.get("results").get(0).get("gender");
@@ -228,7 +233,7 @@ public class DataGenerator{
         return genderNode.asText();
     }
 
-    private static List<Character> genererCaracteresEuropeens() {
+    private List<Character> genererCaracteresEuropeens() {
         List<Character> caracteresEuropeens = new ArrayList<>();
 
         for (int codePoint = 0x20; codePoint <= 0x7E; codePoint++) {
@@ -247,16 +252,16 @@ public class DataGenerator{
         return caracteresEuropeens;
     }
 
-    private static boolean isEuropean(String texte) {
+    private boolean isEuropean(String texte) {
         List<Character> caracteresEuropeens = genererCaracteresEuropeens();
         for (char c : texte.toCharArray())
             if (!caracteresEuropeens.contains(c))
-                return false;
+                return true;
 
-        return true;
+        return false;
     }
 
-    private static boolean isWoman(String gender) {
+    private boolean isWoman(String gender) {
         return gender.equals("female");
     }
 

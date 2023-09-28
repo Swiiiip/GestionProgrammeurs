@@ -1,7 +1,6 @@
 package exec;
 
 import data.ActionsBD;
-import data.DataGenerator;
 import personnes.Manager;
 import personnes.Programmeur;
 
@@ -56,7 +55,6 @@ public class Menu {
         this.choice = 0;
         this.id = 0;
         this.prog = new Programmeur();
-        new DataGenerator();
     }
 
     /**
@@ -235,7 +233,7 @@ public class Menu {
      * @param prog ProgrammeurBean contenant les informations à afficher.
      */
     public void displayProg(Programmeur prog){
-        System.out.print(prog);
+        System.out.println(prog);
         System.out.println("---------------------------------------------------------------------------------------\n");
     }
 
