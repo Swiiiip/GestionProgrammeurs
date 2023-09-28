@@ -65,6 +65,7 @@ public class ActionsBD implements IActions {
         prog.setId(res.getInt("Id"));
         prog.setFirstName(res.getString("FirstName"));
         prog.setLastName(res.getString("LastName"));
+        prog.setGender(res.getString("Gender"));
         prog.setAddress(res.getString("Address"));
         prog.setPseudo(res.getString("Pseudo"));
 
@@ -141,13 +142,14 @@ public class ActionsBD implements IActions {
 
         statement.setString(1, prog.getLastName());
         statement.setString(2, prog.getFirstName());
-        statement.setString(3, prog.getAddress());
-        statement.setString(4, prog.getPseudo());
-        statement.setInt(5, prog.getManager().getId());
-        statement.setString(6, prog.getHobby());
-        statement.setInt(7, prog.getBirthYear());
-        statement.setFloat(8, prog.getSalary());
-        statement.setFloat(9, prog.getPrime());
+        statement.setString(3, prog.getGender());
+        statement.setString(4, prog.getAddress());
+        statement.setString(5, prog.getPseudo());
+        statement.setInt(6, prog.getManager().getId());
+        statement.setString(7, prog.getHobby());
+        statement.setInt(8, prog.getBirthYear());
+        statement.setFloat(9, prog.getSalary());
+        statement.setFloat(10, prog.getPrime());
 
         statement.executeUpdate();
         statement.close();
@@ -308,6 +310,7 @@ public class ActionsBD implements IActions {
         manager.setId(res.getInt("Id"));
         manager.setLastName(res.getString("LastName"));
         manager.setFirstName(res.getString("FirstName"));
+        manager.setGender(res.getString("Gender"));
         manager.setAddress(res.getString("Address"));
         manager.setHobby(res.getString("Hobby"));
         manager.setDepartment(res.getString("Department"));
@@ -399,12 +402,13 @@ public class ActionsBD implements IActions {
 
         statement.setString(1, manager.getLastName());
         statement.setString(2, manager.getFirstName());
-        statement.setString(3, manager.getAddress());
-        statement.setString(4, manager.getHobby());
-        statement.setString(5, manager.getDepartment());
-        statement.setInt(6, manager.getBirthYear());
-        statement.setFloat(7, manager.getSalary());
-        statement.setFloat(8, manager.getPrime());
+        statement.setString(3, manager.getGender());
+        statement.setString(4, manager.getAddress());
+        statement.setString(5, manager.getHobby());
+        statement.setString(6, manager.getDepartment());
+        statement.setInt(7, manager.getBirthYear());
+        statement.setFloat(8, manager.getSalary());
+        statement.setFloat(9, manager.getPrime());
 
         statement.executeUpdate();
         statement.close();

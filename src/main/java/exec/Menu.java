@@ -78,7 +78,7 @@ public class Menu {
                     try {
                         List<Programmeur> progs = this.actions.getAllProg();
                         displayAllProgs(progs);
-                        System.out.println(progs.size() + " programmeurs trouvés.\n");
+                        System.out.println(progs.size() + " programmeurs trouvés.");
                     } catch (Exception e) {
                         displayError(e.getMessage());
                     }
@@ -257,6 +257,9 @@ public class Menu {
         System.out.print("Prénom du programmeur : ");
         String lastName = sc.next();
 
+        System.out.print("Genre du programmeur : ");
+        String gender = sc.next();
+
         System.out.print("Adresse du programmeur : ");
         String address = sc.nextLine();
 
@@ -290,7 +293,7 @@ public class Menu {
         System.out.print("Prime du programmeur : ");
         float prime = sc.nextFloat();
 
-        return new Programmeur(firstName, lastName, address, pseudo, manager, hobby, birthYear, salary, prime);
+        return new Programmeur(firstName, lastName, gender, address, pseudo, manager, hobby, birthYear, salary, prime);
     }
 
 }

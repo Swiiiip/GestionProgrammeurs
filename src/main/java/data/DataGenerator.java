@@ -56,12 +56,13 @@ public class DataGenerator{
                 throw new SecurityException();
             }
             try {
-                if (!estEnEurope(manager.getLastName()) && !estEnEurope(manager.getFirstName()))
+                if (!isEuropean(manager.getLastName()) && !isEuropean(manager.getFirstName()))
                     i--;
                 else
                     ACTIONSBD.addManager(manager);
-            } catch (SQLException e) {
+                } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + i + " a échouée.");
+                System.out.println(e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -76,7 +77,7 @@ public class DataGenerator{
                 throw new SecurityException();
             }
             try {
-                if (!estEnEurope(prog.getLastName()) && !estEnEurope(prog.getFirstName()))
+                if (!isEuropean(prog.getLastName()) && !isEuropean(prog.getFirstName()))
                     i--;
                 else
                     ACTIONSBD.addProg(prog);
@@ -96,6 +97,7 @@ public class DataGenerator{
 
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
+        String gender = parseGenderFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
         Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
@@ -106,11 +108,12 @@ public class DataGenerator{
         float salary = 2000.0f + (age * 75.0f);
         float prime = RANDOM.nextFloat() * 500.0f;
 
-        if (isWoman(jsonData))
+        if (isWoman(gender))
             salary *= 0.90f;
 
         return new Programmeur(lastName,
                 firstName,
+                gender,
                 address,
                 pseudo,
                 manager,
@@ -125,6 +128,7 @@ public class DataGenerator{
         String jsonData = getJsonDataFromApi();
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
+        String gender = parseGenderFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         int birthYear = parseBirthYearFromJson(jsonData);
 
@@ -136,11 +140,12 @@ public class DataGenerator{
         float salary = 3000.0f + (age *150.0f);
         float prime = RANDOM.nextFloat() * 1000.0f;
 
-        if (isWoman(jsonData))
+        if (isWoman(gender))
             salary *= 0.90f;
 
         return new Manager(lastName,
                 firstName,
+                gender,
                 address,
                 hobby,
                 birthYear,
@@ -215,6 +220,14 @@ public class DataGenerator{
         return loginNode.get("username").asText();
     }
 
+    private static String parseGenderFromJson(String jsonData) throws IOException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode genderNode = rootNode.get("results").get(0).get("gender");
+
+        return genderNode.asText();
+    }
+
     private static List<Character> genererCaracteresEuropeens() {
         List<Character> caracteresEuropeens = new ArrayList<>();
 
@@ -234,7 +247,7 @@ public class DataGenerator{
         return caracteresEuropeens;
     }
 
-    private static boolean estEnEurope(String texte) {
+    private static boolean isEuropean(String texte) {
         List<Character> caracteresEuropeens = genererCaracteresEuropeens();
         for (char c : texte.toCharArray())
             if (!caracteresEuropeens.contains(c))
@@ -243,12 +256,8 @@ public class DataGenerator{
         return true;
     }
 
-    private static boolean isWoman(String jsonData) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(jsonData);
-        JsonNode genderNode = rootNode.get("results").get(0).get("gender");
-
-        return genderNode.asText().equals("female");
+    private static boolean isWoman(String gender) {
+        return gender.equals("female");
     }
 
 }

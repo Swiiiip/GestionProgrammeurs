@@ -8,12 +8,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDate;
 
-@JsonPropertyOrder({"id", "firstName", "lastName", "age", "address", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"id", "firstName", "lastName", "gender", "age", "address", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
     private String firstName;
     private String lastName;
+    private String gender;
     private String address;
     private String hobby;
     private int birthYear;
@@ -23,6 +24,7 @@ public abstract class Personne {
     public Personne() {
         this.lastName = null;
         this.firstName = null;
+        this.gender = null;
         this.address = null;
         this.hobby = null;
         this.birthYear = 0;
@@ -30,9 +32,10 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(String lastName, String firstName, String address, String hobby, int birthYear, float salary, float prime) {
+    public Personne(String lastName, String firstName, String gender, String address, String hobby, int birthYear, float salary, float prime) {
         this.lastName = lastName;
         this.firstName = firstName;
+        this.gender = gender;
         this.address = address;
         this.hobby = hobby;
         this.birthYear = birthYear;
@@ -96,6 +99,26 @@ public abstract class Personne {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
+    /**
+     * Obtient le genre de la personne.
+     *
+     * @return Le genre de la personne.
+     */
+    @JsonProperty("gender")
+    public String getGender() {
+        return gender;
+    }
+
+    /**
+     * Définit le genre de la personne.
+     *
+     * @param gender Le genre de la personne.
+     */
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
 
     /**
      * Définit l'âge de la personne en fonction de sa date de naissance

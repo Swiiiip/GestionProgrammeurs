@@ -28,8 +28,8 @@ public class RequetesSQL {
     /**
      * Requête SQL pour ajouter un nouveau programmeur dans la base de données.
      */
-    public static final String ADDPROG = "INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String ADDPROG = "INSERT INTO Programmeur (LastName, FirstName, Gender, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
      * Requête SQL pour mettre à jour le salaire d'un programmeur par son ID.
@@ -68,8 +68,8 @@ public class RequetesSQL {
 
     public static final String DELETEMANAGERBYID = "DELETE FROM Manager WHERE Id = ?";
 
-    public static final String ADDMANAGER = "INSERT INTO Manager (LastName, FirstName, Address, Hobby, Department, BirthYear, Salary, Prime) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    public static final String ADDMANAGER = "INSERT INTO Manager (LastName, FirstName, Gender, Address, Hobby, Department, BirthYear, Salary, Prime) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String SETMANAGERSALARYBYID = "UPDATE Manager SET Salary = ? WHERE Id = ?";
 

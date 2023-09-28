@@ -200,7 +200,7 @@ public class ActionsTests {
     }
     @Test
     public void addManager() {
-        Manager manager = new Manager("Alonso", "Cédric", "10 Rue Json", "Java", 2002, 2129.3f, 220, "JavaDoc");
+        Manager manager = new Manager("Alonso", "Cédric", "Male", "10 Rue Json", "Java", 2002, 2129.3f, 220, "JavaDoc");
         try {
             this.actionsBD.addManager(manager);
         } catch (SQLException e) {
