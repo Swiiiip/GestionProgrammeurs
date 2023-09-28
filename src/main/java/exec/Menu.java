@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 
 /**
- * La classe Menu gère un menu interactif permettant à l'utilisateur d'effectuer
+ * La classe Menu gère un menu intéractif permettant à l'utilisateur d'effectuer
  * différentes opérations sur une base de données de programmeurs.
  *
  * L'utilisateur peut afficher tous les programmeurs, afficher un programmeur en
@@ -183,7 +183,7 @@ public class Menu extends ActionsBDDImpl {
      * de sélectionner l'action souhaitée en saisissant le numéro correspondant.
      */
     public void displayMenu() {
-        System.out.println("\n<<<<<<<<<<<<  MENU  >>>>>>>>>>>>\n");
+        System.out.println("\n\n<<<<<<<<<<<<  MENU  >>>>>>>>>>>>\n");
         System.out.println("1. Afficher tous les programmeurs");
         System.out.println("2. Afficher un programmeur");
         System.out.println("3. Supprimer un programmeur");

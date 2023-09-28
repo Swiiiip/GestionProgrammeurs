@@ -1,5 +1,6 @@
 package data;
 
+import javafx.application.Platform;
 import utils.Constants;
 
 import java.sql.PreparedStatement;
@@ -7,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javafx.application.Platform.exit;
 
 /**
  * Cette classe implémente l'interface ActionsBDD et fournit des méthodes pour effectuer
@@ -129,6 +132,7 @@ public class ActionsBDDImpl implements ActionsBDD {
         } catch (SQLException e) {
             System.err.print("Erreur lors de la fermeture de la connexion à la base de données");
         }
+
         System.exit(0);
     }
 }

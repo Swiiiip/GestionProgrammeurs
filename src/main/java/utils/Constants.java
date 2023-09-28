@@ -75,6 +75,7 @@ public class Constants {
         try {
             CONNECTION = DriverManager.getConnection(DB_URL, DB_ID, DB_PASSWORD);
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             System.err.println("La connexion à la base de données a échoué !");
             System.err.println("Le programme doit fermer !");
             throw new SecurityException();
