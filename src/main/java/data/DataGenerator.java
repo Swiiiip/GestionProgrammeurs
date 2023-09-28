@@ -55,7 +55,7 @@ public class DataGenerator{
             try {
                 manager = getManagerFromAPI();
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le manager " + i + " a échouée.");
+                System.err.println("La récupération des données pour le manager " + (i+1) + " a échouée.");
                 throw new SecurityException();
             }
             try {
@@ -63,10 +63,10 @@ public class DataGenerator{
                     i--;
                 else {
                     ACTIONSBD.addManager(manager);
-                    System.out.println("Ajout du manager id : " + manager.getId());
+                    System.out.println("Ajout du manager id : " + (i+1));
                 }
             } catch (SQLException e) {
-                System.err.println("L'ajout du manager " + i + " a échouée.");
+                System.err.println("L'ajout du manager " + (i+1)+ " a échouée.");
                 System.out.println(e.getMessage());
                 throw new SecurityException();
             }
@@ -78,7 +78,7 @@ public class DataGenerator{
                 prog = getProgFromAPI();
 
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le programmeur " + i + " a échouée.");
+                System.err.println("La récupération des données pour le programmeur " + (i+1) + " a échouée.");
                 throw new SecurityException();
             }
             try {
@@ -86,10 +86,10 @@ public class DataGenerator{
                     i--;
                 else {
                     ACTIONSBD.addProg(prog);
-                    System.out.println("Ajout du programmeur id : " + prog.getId());
+                    System.out.println("Ajout du programmeur id : " + (i+1));
                 }
             } catch (SQLException e) {
-                System.err.println("L'ajout du programmeur " + i + " a échouée.");
+                System.err.println("L'ajout du programmeur " + (i+1) + " a échouée.");
                 System.out.println(e.getMessage());
                 throw new SecurityException();
             }

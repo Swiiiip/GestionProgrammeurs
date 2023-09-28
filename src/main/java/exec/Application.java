@@ -4,9 +4,9 @@ import data.DataGenerator;
 
 public class Application {
 
-    public static int NBPROGS = 0;
+    public static int NBPROGS;
 
-    public static int NBMANAGERS = 0;
+    public static int NBMANAGERS;
 
     public static void main(String[] args) {
         AppliManagement application = new AppliManagement();

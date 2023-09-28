@@ -31,6 +31,41 @@ public class AppliManagement extends Application{
      * @param args the arguments
      */
     private static void validationArgs(String[] args) throws IllegalArgumentException {
+       for (int i = 0; i < args.length; i++) {
+            switch (i) {
+                case 0:
+                    int nbProgs;
+                    try {
+                        nbProgs = Integer.parseInt(args[i]);
+
+                        if (nbProgs <= 0)
+                            throw new IllegalArgumentException("I need a positiv int");
+
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid format : I need a int");
+                    }
+                    NBPROGS = nbProgs;
+                    System.out.println(NBPROGS);
+                    break;
+
+                case 1:
+                    int nbManagers;
+                    try {
+                        nbManagers = Integer.parseInt(args[i]);
+
+                        if (nbManagers <= 0)
+                            throw new IllegalArgumentException("I need a positiv int");
+
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid format : I need a int");
+                    }
+                    NBMANAGERS = nbManagers;
+                    break;
+
+                default:
+                    break;
+            }
+        }
         if (args.length < 2) {
             String msg = "Missing arguments : ";
             switch (args.length) {
@@ -44,50 +79,15 @@ public class AppliManagement extends Application{
             }
             throw new IllegalArgumentException(msg);
         }
-        else {
-            for (int i = 0; i < args.length; i++) {
-                switch (i) {
-                    case 0:
-                        int nbProgs;
-                        try {
-                            nbProgs = Integer.parseInt(args[i]);
-
-                            if (nbProgs <= 0)
-                                throw new IllegalArgumentException("I need a positiv int");
-
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("Invalid format : I need a int");
-                        }
-                        NBPROGS = nbProgs;
-                        break;
-
-                    case 1:
-                        int nbManagers;
-                        try {
-                            nbManagers = Integer.parseInt(args[i]);
-
-                            if (nbManagers <= 0)
-                                throw new IllegalArgumentException("I need a positiv int");
-
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("Invalid format : I need a int");
-                        }
-                        NBMANAGERS = nbManagers;
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-        }
     }
+
 
     /**
      * loads the initialization menu
      */
     private void loadMenu() {
-        displaySuccess("MAIN MENU");
         Scanner scanner = new Scanner(System.in);
+        displaySuccess("MAIN MENU");
         System.out.println("[0] - Exit\n");
 
         if (NBPROGS == 0) {
@@ -96,39 +96,40 @@ public class AppliManagement extends Application{
             do {
                 System.out.print("Choose number of programmeurs: ");
                 try{
-                    nbProgs = scanner.nextInt();
+                    nbProgs = Integer.parseInt(scanner.next());
                     exit(String.valueOf(nbProgs));
-                } catch (NumberFormatException e){
+
+                    if (nbProgs <= 0)
+                        displayError("The minimum number is 1.");
+                } catch (Exception e){
                     nbProgs = 0;
+                    displayError("The minimum number is 1.");
                 }
-            } while(validData(nbProgs));
+            } while(nbProgs <= 0);
             NBPROGS = nbProgs;
         } else
-            System.out.println("\nThe number of programmeurs in the database is : " + NBPROGS + "\n");
+            System.out.println("\nFor this instance, you set up : " + NBPROGS + " programmeurs\n");
 
         if (NBMANAGERS == 0) {
             int nbManager;
             do {
                 System.out.print("Choose number of managers: ");
                 try{
-                    nbManager = scanner.nextInt();
+                    nbManager = Integer.parseInt(scanner.next());
                     exit(String.valueOf(nbManager));
-                } catch (NumberFormatException e){
+
+                    if (nbManager <= 0)
+                        displayError("The minimum number is 1.");
+                } catch (Exception e){
                     nbManager = 0;
+                    displayError("The minimum number is 1.");
             }
-            } while (validData(nbManager));
+            } while (nbManager <= 0);
             NBMANAGERS = nbManager;
             System.out.println();
         }else
-            System.out.println("\nThe number of managers in the database is : " + NBMANAGERS + "\n");
+            System.out.println("\nFor this instance, you set up : " + NBMANAGERS + " managers\n");
 
-    }
-
-    private boolean validData(int data) {
-        if(data <= 0 ){
-            displayError("The minimum number is 1.");
-            return true;
-        }  else return false;
     }
 
     /**
@@ -144,7 +145,7 @@ public class AppliManagement extends Application{
      * @param msg the message to display
      */
     public static void displayError(String msg){
-        System.out.println("Error: " + msg + "\n");
+        System.err.println(msg);
     }
 
     /**
