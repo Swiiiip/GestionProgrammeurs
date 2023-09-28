@@ -20,7 +20,6 @@ import java.util.*;
 
 public class DataGenerator{
 
-    private int INDEX = 0;
     private final int NBPROGS;
     private final int NBMANAGERS;
     private static final String APIURL = "https://randomuser.me/api";
@@ -267,7 +266,6 @@ public class DataGenerator{
     }
 
     private String getColor(){
-        int precedantIndex = INDEX;
         String[] colors = {
                 "\u001B[91m",  // Rouge vif
                 "\u001B[92m",  // Vert vif
@@ -278,11 +276,10 @@ public class DataGenerator{
                 "\u001B[97m",  // Blanc vif
         };
 
-        do{
-            INDEX = RANDOM.nextInt(colors.length);
-        } while(INDEX == precedantIndex);
+        int index = RANDOM.nextInt(colors.length);
 
-        return colors[INDEX];
+
+        return colors[index];
     }
 
 }
