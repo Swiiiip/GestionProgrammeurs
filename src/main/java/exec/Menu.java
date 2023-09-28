@@ -1,6 +1,8 @@
 package exec;
 
 import data.ActionsBD;
+import data.DataGenerator;
+import javafx.scene.chart.PieChart;
 import personnes.ManagerBean;
 import personnes.ProgrammeurBean;
 
@@ -55,6 +57,7 @@ public class Menu {
         this.choice = 0;
         this.id = 0;
         this.prog = new ProgrammeurBean();
+        DataGenerator dataGenerator = new DataGenerator();
     }
 
     /**

@@ -2,6 +2,7 @@ package data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.scene.chart.PieChart;
 import personnes.ManagerBean;
 import personnes.ProgrammeurBean;
 import utils.Departments;
@@ -25,6 +26,10 @@ public class DataGenerator {
     private static final String APIURL = "https://randomuser.me/api";
     private static final Random RANDOM = new Random();
     private final static ActionsBD ACTIONSBD = new ActionsBD();
+
+    public DataGenerator(){
+
+    }
     
     static{
         try{
