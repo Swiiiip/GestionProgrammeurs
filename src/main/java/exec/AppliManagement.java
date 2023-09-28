@@ -15,8 +15,8 @@ public class AppliManagement extends Application{
     public void start(String[] args){
         try {
             validationArgs(args);
-            displaySuccess("\nArguments :" + "\n  >nombre de programmeurs : " + NBPROGS +
-                    "\n  >nombre de managers : " + NBMANAGERS);
+            displaySuccess("\nArguments :" + "\n\t>nombre de programmeurs : " + NBPROGS +
+                    "\n\t>nombre de managers : " + NBMANAGERS);
         }
         catch(IllegalArgumentException e) {
             displayError(e);
@@ -45,7 +45,6 @@ public class AppliManagement extends Application{
                         throw new IllegalArgumentException("Invalid format : I need a int");
                     }
                     NBPROGS = nbProgs;
-                    System.out.println(NBPROGS);
                     break;
 
                 case 1:

@@ -20,15 +20,16 @@ import java.util.*;
 
 public class DataGenerator{
 
-    private final int nbProgs;
-    private final int nbManagers;
+    private int INDEX = 0;
+    private final int NBPROGS;
+    private final int NBMANAGERS;
     private static final String APIURL = "https://randomuser.me/api";
     private static final Random RANDOM = new Random();
     private final static ActionsBD ACTIONSBD = new ActionsBD();
 
     public DataGenerator(int nbProgs, int nbManagers){
-        this.nbProgs = nbProgs;
-        this.nbManagers = nbManagers;
+        this.NBPROGS = nbProgs;
+        this.NBMANAGERS = nbManagers;
         loadData();
     }
     
@@ -50,7 +51,7 @@ public class DataGenerator{
             throw new SecurityException();
         }
 
-        for (int i = 0; i < nbManagers; i++) {
+        for (int i = 0; i < NBMANAGERS; i++) {
             Manager manager;
             try {
                 manager = getManagerFromAPI();
@@ -63,7 +64,7 @@ public class DataGenerator{
                     i--;
                 else {
                     ACTIONSBD.addManager(manager);
-                    System.out.println("Ajout du manager id : " + (i+1));
+                    System.out.println(getColor() + "Ajout du manager id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + (i+1)+ " a échouée.");
@@ -72,7 +73,7 @@ public class DataGenerator{
             }
         }
 
-        for (int i = 0; i < nbProgs; i++) {
+        for (int i = 0; i < NBPROGS; i++) {
             Programmeur prog;
             try {
                 prog = getProgFromAPI();
@@ -86,7 +87,7 @@ public class DataGenerator{
                     i--;
                 else {
                     ACTIONSBD.addProg(prog);
-                    System.out.println("Ajout du programmeur id : " + (i+1));
+                    System.out.println(getColor() + "Ajout du programmeur id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
                 System.err.println("L'ajout du programmeur " + (i+1) + " a échouée.");
@@ -105,7 +106,7 @@ public class DataGenerator{
         String gender = parseGenderFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
-        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(nbManagers) + 1);
+        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
         String pseudo = parsePseudoFromJson(jsonData);
 
         int birthYear = parseBirthYearFromJson(jsonData);
@@ -263,6 +264,25 @@ public class DataGenerator{
 
     private boolean isWoman(String gender) {
         return gender.equals("female");
+    }
+
+    private String getColor(){
+        int precedantIndex = INDEX;
+        String[] colors = {
+                "\u001B[91m",  // Rouge vif
+                "\u001B[92m",  // Vert vif
+                "\u001B[93m",  // Jaune vif
+                "\u001B[94m",  // Bleu vif
+                "\u001B[95m",  // Magenta vif
+                "\u001B[96m",  // Cyan vif
+                "\u001B[97m",  // Blanc vif
+        };
+
+        do{
+            INDEX = RANDOM.nextInt(colors.length);
+        } while(INDEX == precedantIndex);
+
+        return colors[INDEX];
     }
 
 }
