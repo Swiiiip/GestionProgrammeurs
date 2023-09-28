@@ -15,17 +15,17 @@ public class Connexion {
     /**
      * URL de la base de données.
      */
-    private String db_url;
+    private final String db_url;
 
     /**
      * Identifiant pour la connexion à la base de données.
      */
-    private String db_user;
+    private final String db_user;
 
     /**
      * Mot de passe pour la connexion à la base de données.
      */
-    private String db_pwd;
+    private final String db_pwd;
 
     /**
      * Connexion à la base de données.

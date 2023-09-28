@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Hatoum Jade
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProgrammeurBean extends Personne{
+public class Programmeur extends Personne{
 
     /**
      * Pseudo du programmeur.
@@ -23,7 +23,7 @@ public class ProgrammeurBean extends Personne{
     /**
      * Responsable du programmeur.
      */
-    private ManagerBean manager;
+    private Manager manager;
 
 
     /**
@@ -40,14 +40,14 @@ public class ProgrammeurBean extends Personne{
      * @param salary     Le salaire du programmeur.
      * @param prime      La prime du programmeur.
      */
-    public ProgrammeurBean(String lastName, String firstName, String address, String pseudo,
-                           ManagerBean manager, String hobby, int birthYear, float salary, float prime) {
+    public Programmeur(String lastName, String firstName, String address, String pseudo,
+                       Manager manager, String hobby, int birthYear, float salary, float prime) {
         super(lastName,firstName,address,hobby,birthYear,salary,prime);
         this.pseudo = pseudo;
         this.manager = manager;
     }
 
-    public ProgrammeurBean() {
+    public Programmeur() {
         super();
         this.pseudo = null;
         this.manager = null;
@@ -77,7 +77,7 @@ public class ProgrammeurBean extends Personne{
      * @return Le responsable du programmeur.
      */
     @JsonProperty("manager")
-    public ManagerBean getManager() {
+    public Manager getManager() {
         return manager;
     }
 
@@ -86,7 +86,7 @@ public class ProgrammeurBean extends Personne{
      *
      * @param manager Le responsable du programmeur.
      */
-    public void setManager(ManagerBean manager) {
+    public void setManager(Manager manager) {
         this.manager = manager;
     }
 

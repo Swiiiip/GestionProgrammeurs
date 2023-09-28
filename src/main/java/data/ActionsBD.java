@@ -1,8 +1,8 @@
 package data;
 
 import connexion.Connexion;
-import personnes.ManagerBean;
-import personnes.ProgrammeurBean;
+import personnes.Manager;
+import personnes.Programmeur;
 import utils.RequetesSQL;
 
 import java.sql.PreparedStatement;
@@ -59,8 +59,8 @@ public class ActionsBD implements IActions {
      * @return une instance de ProgrammeurBean contenant les données mappées.
      * @throws SQLException Si une erreur SQL survient lors de l'accès à la base de données.
      */
-    private ProgrammeurBean mapProgrammeur(ResultSet res) throws SQLException {
-        ProgrammeurBean prog = new ProgrammeurBean();
+    private Programmeur mapProgrammeur(ResultSet res) throws SQLException {
+        Programmeur prog = new Programmeur();
 
         prog.setId(res.getInt("Id"));
         prog.setFirstName(res.getString("FirstName"));
@@ -68,7 +68,7 @@ public class ActionsBD implements IActions {
         prog.setAddress(res.getString("Address"));
         prog.setPseudo(res.getString("Pseudo"));
 
-        ManagerBean manager = getManagerById(res.getInt("Id_manager"));
+        Manager manager = getManagerById(res.getInt("Id_manager"));
         prog.setManager(manager);
 
         prog.setHobby(res.getString("Hobby"));
@@ -80,14 +80,14 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public List<ProgrammeurBean> getAllProg() throws SQLException {
-        List<ProgrammeurBean> programmeurs = new ArrayList<>();
+    public List<Programmeur> getAllProg() throws SQLException {
+        List<Programmeur> programmeurs = new ArrayList<>();
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETALLPROG);
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            ProgrammeurBean prog = mapProgrammeur(resultSet);
+            Programmeur prog = mapProgrammeur(resultSet);
             programmeurs.add(prog);
         }
 
@@ -101,8 +101,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ProgrammeurBean getProgById(int Id) throws SQLException { //TODO : Vérifier si le programmeur existe
-        ProgrammeurBean prog = null;
+    public Programmeur getProgById(int Id) throws SQLException { //TODO : Vérifier si le programmeur existe
+        Programmeur prog = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETPROGBYID);
 
@@ -136,7 +136,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void addProg(ProgrammeurBean prog) throws SQLException {
+    public void addProg(Programmeur prog) throws SQLException {
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.ADDPROG);
 
         statement.setString(1, prog.getLastName());
@@ -168,8 +168,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ProgrammeurBean getProgWithMaxSalary() throws SQLException{
-        ProgrammeurBean prog = null;
+    public Programmeur getProgWithMaxSalary() throws SQLException{
+        Programmeur prog = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETPROGWITHMAXSALARY);
 
@@ -185,8 +185,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ProgrammeurBean getProgWithMinSalary() throws SQLException{
-        ProgrammeurBean prog = null;
+    public Programmeur getProgWithMinSalary() throws SQLException{
+        Programmeur prog = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETPROGWITHMINSALARY);
 
@@ -237,15 +237,15 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public Map<Integer, ProgrammeurBean> getRankProgBySalary() throws SQLException{
-        Map<Integer, ProgrammeurBean> rankProgBySalary = new HashMap<>();
+    public Map<Integer, Programmeur> getRankProgBySalary() throws SQLException{
+        Map<Integer, Programmeur> rankProgBySalary = new HashMap<>();
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETRANKPROGBYSALARY);
 
         ResultSet resultSet = statement.executeQuery();
 
         while(resultSet.next()){
-            ProgrammeurBean prog = mapProgrammeur(resultSet);
+            Programmeur prog = mapProgrammeur(resultSet);
             int ranking = resultSet.getInt("ClassementSalaire");
 
             rankProgBySalary.put(ranking, prog);
@@ -302,8 +302,8 @@ public class ActionsBD implements IActions {
 
     /*---------------------------- MANAGER ----------------------------*/
 
-    private ManagerBean mapManager(ResultSet res) throws SQLException {
-        ManagerBean manager = new ManagerBean();
+    private Manager mapManager(ResultSet res) throws SQLException {
+        Manager manager = new Manager();
 
         manager.setId(res.getInt("Id"));
         manager.setLastName(res.getString("LastName"));
@@ -318,14 +318,14 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public List<ManagerBean> getAllManager() throws SQLException {
-        List<ManagerBean> managers = new ArrayList<>();
+    public List<Manager> getAllManager() throws SQLException {
+        List<Manager> managers = new ArrayList<>();
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETALLMANAGER);
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            ManagerBean manager = mapManager(resultSet);
+            Manager manager = mapManager(resultSet);
             managers.add(manager);
         }
 
@@ -336,8 +336,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ManagerBean getManagerById(int id) throws SQLException {
-        ManagerBean manager = null;
+    public Manager getManagerById(int id) throws SQLException {
+        Manager manager = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETMANAGERBYID);
 
@@ -358,8 +358,8 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public ManagerBean getManagerByFullName(String lastName, String firstName) throws SQLException {
-        ManagerBean manager = null;
+    public Manager getManagerByFullName(String lastName, String firstName) throws SQLException {
+        Manager manager = null;
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.GETMANAGERBYFULLNAME);
 
@@ -394,7 +394,7 @@ public class ActionsBD implements IActions {
     }
 
     @Override
-    public void addManager(ManagerBean manager) throws SQLException {
+    public void addManager(Manager manager) throws SQLException {
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.ADDMANAGER);
 
         statement.setString(1, manager.getLastName());
@@ -450,12 +450,8 @@ public class ActionsBD implements IActions {
 
     @Override
     public void exit() {
-        try {
-            if (this.getConnexion().getConnexion() != null) {
-                this.getConnexion().getConnexion().close();
-            }
-        } catch (SQLException e) {
-            System.err.print("Erreur lors de la fermeture de la connexion à la base de données");
+        if (this.getConnexion() != null) {
+            this.getConnexion().close();
         }
     }
 
@@ -472,6 +468,22 @@ public class ActionsBD implements IActions {
     @Override
     public void deleteALLManagers() throws SQLException{
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.DELETEALLMANAGERS);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    @Override
+    public void resetIndexProg() throws SQLException{
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.RESETINDEXPROG);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    @Override
+    public void resetIndexManager() throws SQLException{
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.RESETINDEXMANAGER);
 
         statement.executeUpdate();
         statement.close();

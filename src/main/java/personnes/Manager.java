@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ManagerBean extends Personne {
+public class Manager extends Personne {
 
     private String department;
 
-    public ManagerBean() {
+    public Manager() {
         super();
     }
 
-    public ManagerBean(String lastName, String firstName, String address, String hobby, int birthYear, float salary,
-                       float prime, String department) {
+    public Manager(String lastName, String firstName, String address, String hobby, int birthYear, float salary,
+                   float prime, String department) {
         super(lastName, firstName, address, hobby, birthYear, salary, prime);
         this.department = department;
     }

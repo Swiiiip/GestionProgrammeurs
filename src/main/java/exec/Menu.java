@@ -2,9 +2,8 @@ package exec;
 
 import data.ActionsBD;
 import data.DataGenerator;
-import javafx.scene.chart.PieChart;
-import personnes.ManagerBean;
-import personnes.ProgrammeurBean;
+import personnes.Manager;
+import personnes.Programmeur;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,7 +46,7 @@ public class Menu {
     /**
      * Objet ProgrammeurBean pour stocker les données d'un programmeur.
      */
-    private ProgrammeurBean prog;
+    private Programmeur prog;
 
     /**
      * Constructeur par défaut de la classe Menu. Initialise les variables de choix,
@@ -56,8 +55,8 @@ public class Menu {
     public Menu(){
         this.choice = 0;
         this.id = 0;
-        this.prog = new ProgrammeurBean();
-        DataGenerator dataGenerator = new DataGenerator();
+        this.prog = new Programmeur();
+        new DataGenerator();
     }
 
     /**
@@ -77,7 +76,7 @@ public class Menu {
             switch (this.choice) {
                 case 1:
                     try {
-                        List<ProgrammeurBean> progs = this.actions.getAllProg();
+                        List<Programmeur> progs = this.actions.getAllProg();
                         displayAllProgs(progs);
                         System.out.println(progs.size() + " programmeurs trouvés.\n");
                     } catch (Exception e) {
@@ -219,12 +218,12 @@ public class Menu {
     /**
      * Affiche les informations de tous les programmeurs contenus dans une liste.
      * Pour afficher les détails de chaque programmeur individuellement, cette méthode
-     * utilise la méthode {@link #displayProg(ProgrammeurBean)}.
+     * utilise la méthode {@link #displayProg(Programmeur)}.
      *
      * @param progs Liste des programmeurs à afficher.
      */
-    public void displayAllProgs(List<ProgrammeurBean> progs){
-        for(ProgrammeurBean prog : progs){
+    public void displayAllProgs(List<Programmeur> progs){
+        for(Programmeur prog : progs){
             displayProg(prog);
         }
     }
@@ -235,7 +234,7 @@ public class Menu {
      *
      * @param prog ProgrammeurBean contenant les informations à afficher.
      */
-    public void displayProg(ProgrammeurBean prog){
+    public void displayProg(Programmeur prog){
         System.out.print(prog);
         System.out.println("---------------------------------------------------------------------------------------\n");
     }
@@ -250,8 +249,8 @@ public class Menu {
      * @return Un nouvel objet ProgrammeurBean initialisé avec les informations
      *         saisies par l'utilisateur pour le nouveau programmeur.
      */
-    public ProgrammeurBean getProg(){
-        ManagerBean manager = null;
+    public Programmeur getProg(){
+        Manager manager = null;
         System.out.print("Nom du programmeur : ");
         String firstName = sc.next();
 
@@ -291,7 +290,7 @@ public class Menu {
         System.out.print("Prime du programmeur : ");
         float prime = sc.nextFloat();
 
-        return new ProgrammeurBean(firstName, lastName, address, pseudo, manager, hobby, birthYear, salary, prime);
+        return new Programmeur(firstName, lastName, address, pseudo, manager, hobby, birthYear, salary, prime);
     }
 
 }

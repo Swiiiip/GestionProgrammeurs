@@ -40,14 +40,6 @@ ALTER TABLE Manager AUTO_INCREMENT = 1;
 ALTER TABLE Programmeur
 ADD CONSTRAINT FK_programmeur FOREIGN KEY(Id_manager) REFERENCES Manager(Id) ON DELETE NO ACTION;
 
-ALTER TABLE Programmeur
-ADD CONSTRAINT U_Prog_fullName UNIQUE(LastName, FirstName);
-
-ALTER TABLE Manager
-ADD CONSTRAINT U_Manager_fullName UNIQUE(LastName, FirstName);
-
-DELIMITER //
-
 INSERT INTO Manager (LastName, FirstName, Address, Hobby, Department, BirthYear, Salary, Prime)
     VALUES
         ('Achvar', 'Didier', '2 rue de la théorie du signal', 'les signaux', 'Théorie du signal', 1976, 3470, 123),

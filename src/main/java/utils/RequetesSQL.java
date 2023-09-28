@@ -28,7 +28,7 @@ public class RequetesSQL {
     /**
      * Requête SQL pour ajouter un nouveau programmeur dans la base de données.
      */
-    public static final String ADDPROG = "INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Manager, Hobby, BirthYear, Salary, Prime)" +
+    public static final String ADDPROG = "INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     /**
@@ -83,4 +83,8 @@ public class RequetesSQL {
     public static final String DELETEALLPROGS = "DELETE FROM Programmeur";
 
     public static final String DELETEALLMANAGERS = "DELETE FROM Manager";
+
+    public static final String RESETINDEXPROG = "ALTER TABLE Programmeur AUTO_INCREMENT = 1";
+
+    public static final String RESETINDEXMANAGER = "ALTER TABLE Manager AUTO_INCREMENT = 1";
 }

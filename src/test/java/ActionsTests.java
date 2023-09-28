@@ -1,28 +1,19 @@
-package exec;
-
 import data.ActionsBD;
-import personnes.ManagerBean;
-import personnes.ProgrammeurBean;
-import utils.Departments;
-import utils.Hobbies;
+import org.junit.jupiter.api.Test;
+import personnes.Manager;
+import personnes.Programmeur;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Test {
+public class ActionsTests {
 
-    private List<ProgrammeurBean> progs;
-
-    private List<ManagerBean> managers;
+    private List<Programmeur> progs;
+    private List<Manager> managers;
     private final ActionsBD actionsBD = new ActionsBD();
 
-    public Test(){
-        this.progs = new ArrayList<>();
-        this.managers = new ArrayList<>();
-    }
-
+    @Test
     public void getAllProg(){
         try {
             this.progs = this.actionsBD.getAllProg();
@@ -30,12 +21,13 @@ public class Test {
             throw new RuntimeException(e);
         }
 
-        for(ProgrammeurBean p : this.progs)
+        for(Programmeur p : this.progs)
             System.out.println(p);
     }
 
+    @Test
     public void getProgById(){
-        ProgrammeurBean prog;
+        Programmeur prog;
         int id = 1;
         try {
             prog = this.actionsBD.getProgById(id);
@@ -46,6 +38,7 @@ public class Test {
         System.out.println(prog);
     }
 
+    @Test
     public void deleteProgById(){
         int id = 1;
         try {
@@ -57,8 +50,10 @@ public class Test {
         this.getAllProg();
     }
 
+    @Test
     public void addProg() {
-        ProgrammeurBean programmeur = new ProgrammeurBean();
+        Programmeur programmeur = new Programmeur();
+        programmeur.setManager(new Manager());
         try{
             this.actionsBD.addProg(programmeur);
         } catch (SQLException e){
@@ -67,7 +62,7 @@ public class Test {
 
         this.getAllProg();
     }
-
+    @Test
     public void setProgSalaryById(){
         int id = 1;
         float newSalary = 1001f;
@@ -79,9 +74,9 @@ public class Test {
 
         this.getProgById();
     }
-
+    @Test
     public void getProgWithMaxSalary() {
-        ProgrammeurBean prog;
+        Programmeur prog;
         try {
             prog = this.actionsBD.getProgWithMaxSalary();
         } catch (SQLException e) {
@@ -90,9 +85,9 @@ public class Test {
 
         System.out.println(prog);
     }
-
+    @Test
     public void getProgWithMinSalary(){
-        ProgrammeurBean prog;
+        Programmeur prog;
         try {
             prog = this.actionsBD.getProgWithMinSalary();
         } catch (SQLException e) {
@@ -101,7 +96,7 @@ public class Test {
 
         System.out.println(prog);
     }
-
+    @Test
     public void getAvgSalaryByAgeProg(){
         Map<Integer, Float> avgSalaryByAge;
 
@@ -116,7 +111,7 @@ public class Test {
                     ", Salaire moyen : " + entry.getValue());
 
     }
-
+    @Test
     public void getNbProg(){
         int nbProg;
         try {
@@ -128,20 +123,20 @@ public class Test {
         System.out.print("Il y a " + nbProg);
         System.out.println(nbProg > 1 ? " progs." : "prog.");
     }
-
+    @Test
     public void getRankProgBySalary() {
-        Map<Integer, ProgrammeurBean> ranking;
+        Map<Integer, Programmeur> ranking;
         try {
             ranking = this.actionsBD.getRankProgBySalary();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        for (Map.Entry<Integer, ProgrammeurBean> entry : ranking.entrySet())
+        for (Map.Entry<Integer, Programmeur> entry : ranking.entrySet())
             System.out.println("Rang : " + entry.getKey() +
                     ", Programmeur : " + entry.getValue());
     }
-
+    @Test
     public void getCorrelationBetweenAgeAndSalaryProg() {
         double correlation;
         try {
@@ -156,7 +151,7 @@ public class Test {
 
     /*---------------------------- MANAGER ----------------------------*/
 
-
+    @Test
     public void getAllManager() {
         try {
             this.managers = this.actionsBD.getAllManager();
@@ -164,12 +159,12 @@ public class Test {
             throw new RuntimeException(e);
         }
 
-        for(ManagerBean m : this.managers)
+        for(Manager m : this.managers)
             System.out.println(m);
     }
-
+    @Test
     public void getManagerById(){
-        ManagerBean manager;
+        Manager manager;
         int id = 1;
         try {
             manager = this.actionsBD.getManagerById(id);
@@ -179,11 +174,11 @@ public class Test {
 
         System.out.println(manager);
     }
-
+    @Test
     public void getManagerByFullName(){
         String lastName = "Alonso";
         String firstName = "Cédric";
-        ManagerBean manager;
+        Manager manager;
         try {
             manager = this.actionsBD.getManagerByFullName(lastName, firstName);
         } catch (SQLException e) {
@@ -192,7 +187,7 @@ public class Test {
 
         System.out.println(manager);
     }
-
+    @Test
     public void deleteManagerById(){
         int id=1;
         try {
@@ -203,9 +198,9 @@ public class Test {
 
         this.getAllManager();
     }
-
+    @Test
     public void addManager() {
-        ManagerBean manager = new ManagerBean("Alonso", "Cédric", "10 Rue Json", "Java", 2002, 2129.3f, 220, "JavaDoc");
+        Manager manager = new Manager("Alonso", "Cédric", "10 Rue Json", "Java", 2002, 2129.3f, 220, "JavaDoc");
         try {
             this.actionsBD.addManager(manager);
         } catch (SQLException e) {
@@ -214,7 +209,7 @@ public class Test {
 
         this.getAllManager();
     }
-
+    @Test
     public void setManagerSalaryById() {
         int id = 1;
         float newSalary = 1000;
@@ -226,7 +221,7 @@ public class Test {
 
         this.getManagerById();
     }
-
+    @Test
     public void getSalaryHistogramManager() {
         Map<Float, Integer> salaryHisto;
 
@@ -242,21 +237,38 @@ public class Test {
     }
 
     /*---------------------------- EXIT ----------------------------*/
-
+    @Test
     public void exit(){
         this.actionsBD.exit();
     }
 
+    /*---------------------------- RESET ----------------------------*/
 
-
-    /*---------------------------- MAIN ----------------------------*/
-    public static void main(String[] args) {
-        Test test = new Test();
-        test.getAllProg();
-
-        System.out.println(Hobbies.generateRandomHobby() + " " + Departments.generateRandomDepartment());
+    @Test
+    public void deleteALLProgs(){
+        try {
+            this.actionsBD.deleteALLProgs();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    @Test
+    public void deleteALLManagers(){
+        try {
+            this.actionsBD.deleteALLManagers();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-
+    @Test
+    public void resetALLIndex(){
+        try {
+            this.actionsBD.resetIndexProg();
+            this.actionsBD.resetIndexManager();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

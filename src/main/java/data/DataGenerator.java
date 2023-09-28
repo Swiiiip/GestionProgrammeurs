@@ -2,9 +2,8 @@ package data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.scene.chart.PieChart;
-import personnes.ManagerBean;
-import personnes.ProgrammeurBean;
+import personnes.Manager;
+import personnes.Programmeur;
 import utils.Departments;
 import utils.Hobbies;
 
@@ -17,9 +16,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Random;
+import java.util.*;
 
-public class DataGenerator {
+public class DataGenerator{
 
     private static final int NBPROGS = 1000;
     private static final int NBMANAGERS = 50;
@@ -28,7 +27,6 @@ public class DataGenerator {
     private final static ActionsBD ACTIONSBD = new ActionsBD();
 
     public DataGenerator(){
-
     }
     
     static{
@@ -40,8 +38,17 @@ public class DataGenerator {
             throw new SecurityException();
         }
 
+        try{
+            ACTIONSBD.resetIndexProg();
+            ACTIONSBD.resetIndexManager();
+        } catch (SQLException e){
+            System.err.println("La réinitialisation des index à échouée.");
+            System.out.println(e.getMessage());
+            throw new SecurityException();
+        }
+
         for (int i = 0; i < NBMANAGERS; i++) {
-            ManagerBean manager;
+            Manager manager;
             try {
                 manager = getManagerFromAPI();
             } catch (Exception e) {
@@ -49,7 +56,10 @@ public class DataGenerator {
                 throw new SecurityException();
             }
             try {
-                ACTIONSBD.addManager(manager);
+                if (!estEnEurope(manager.getLastName()) && !estEnEurope(manager.getFirstName()))
+                    i--;
+                else
+                    ACTIONSBD.addManager(manager);
             } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + i + " a échouée.");
                 throw new SecurityException();
@@ -57,17 +67,22 @@ public class DataGenerator {
         }
 
         for (int i = 0; i < NBPROGS; i++) {
-            ProgrammeurBean prog;
+            Programmeur prog;
             try {
                 prog = getProgFromAPI();
+
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le manager " + i + " a échouée.");
+                System.err.println("La récupération des données pour le programmeur " + i + " a échouée.");
                 throw new SecurityException();
             }
             try {
-                ACTIONSBD.addProg(prog);
+                if (!estEnEurope(prog.getLastName()) && !estEnEurope(prog.getFirstName()))
+                    i--;
+                else
+                    ACTIONSBD.addProg(prog);
             } catch (SQLException e) {
                 System.err.println("L'ajout du programmeur " + i + " a échouée.");
+                System.out.println(e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -76,14 +91,14 @@ public class DataGenerator {
 
     }
 
-    private static ProgrammeurBean getProgFromAPI() throws Exception {
+    private static Programmeur getProgFromAPI() throws Exception {
         String jsonData = getJsonDataFromApi();
 
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
-        ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
+        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
         String pseudo = parsePseudoFromJson(jsonData);
 
         int birthYear = parseBirthYearFromJson(jsonData);
@@ -91,18 +106,21 @@ public class DataGenerator {
         float salary = 2000.0f + (age * 75.0f);
         float prime = RANDOM.nextFloat() * 500.0f;
 
-        return new ProgrammeurBean(lastName,
+        if (isWoman(jsonData))
+            salary *= 0.90f;
+
+        return new Programmeur(lastName,
                 firstName,
                 address,
                 pseudo,
-                new ManagerBean(),
+                manager,
                 hobby,
                 birthYear,
                 salary,
                 prime);
     }
 
-    private static ManagerBean getManagerFromAPI() throws  Exception {
+    private static Manager getManagerFromAPI() throws  Exception {
 
         String jsonData = getJsonDataFromApi();
         String lastName = parseLastNameFromJson(jsonData);
@@ -118,7 +136,10 @@ public class DataGenerator {
         float salary = 3000.0f + (age *150.0f);
         float prime = RANDOM.nextFloat() * 1000.0f;
 
-        return new ManagerBean(lastName,
+        if (isWoman(jsonData))
+            salary *= 0.90f;
+
+        return new Manager(lastName,
                 firstName,
                 address,
                 hobby,
@@ -193,4 +214,41 @@ public class DataGenerator {
 
         return loginNode.get("username").asText();
     }
+
+    private static List<Character> genererCaracteresEuropeens() {
+        List<Character> caracteresEuropeens = new ArrayList<>();
+
+        for (int codePoint = 0x20; codePoint <= 0x7E; codePoint++) {
+            caracteresEuropeens.add((char) codePoint);
+        }
+        for (int codePoint = 0xC0; codePoint <= 0xFF; codePoint++) {
+            caracteresEuropeens.add((char) codePoint);
+        }
+        for (int codePoint = 0x100; codePoint <= 0x17F; codePoint++) {
+            caracteresEuropeens.add((char) codePoint);
+        }
+        for (int codePoint = 0x180; codePoint <= 0x24F; codePoint++) {
+            caracteresEuropeens.add((char) codePoint);
+        }
+
+        return caracteresEuropeens;
+    }
+
+    private static boolean estEnEurope(String texte) {
+        List<Character> caracteresEuropeens = genererCaracteresEuropeens();
+        for (char c : texte.toCharArray())
+            if (!caracteresEuropeens.contains(c))
+                return false;
+
+        return true;
+    }
+
+    private static boolean isWoman(String jsonData) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode genderNode = rootNode.get("results").get(0).get("gender");
+
+        return genderNode.asText().equals("female");
+    }
+
 }

@@ -1,7 +1,7 @@
 package data;
 
-import personnes.ManagerBean;
-import personnes.ProgrammeurBean;
+import personnes.Manager;
+import personnes.Programmeur;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,7 +24,7 @@ public interface IActions {
      * @return Une liste contenant tous les objets ProgrammeurBean de la base de données.
      * @throws SQLException Si une erreur SQL survient lors de l'accès à la base de données.
      */
-    List<ProgrammeurBean> getAllProg() throws SQLException;
+    List<Programmeur> getAllProg() throws SQLException;
 
     /**
      * Récupère un programmeur spécifique à partir de son identifiant.
@@ -33,7 +33,7 @@ public interface IActions {
      * @return Un objet ProgrammeurBean représentant le programmeur correspondant à l'Id.
      * @throws SQLException Si une erreur SQL survient lors de l'accès à la base de données.
      */
-    ProgrammeurBean getProgById(int id) throws SQLException;
+    Programmeur getProgById(int id) throws SQLException;
 
     /**
      * Supprime un programmeur de la base de données en utilisant son identifiant.
@@ -49,7 +49,7 @@ public interface IActions {
      * @param programmeur L'objet ProgrammeurBean représentant le nouveau programmeur à ajouter.
      * @throws SQLException Si une erreur SQL survient lors de l'ajout dans la base de données.
      */
-    void addProg(ProgrammeurBean programmeur) throws SQLException;
+    void addProg(Programmeur programmeur) throws SQLException;
 
     /**
      * Modifie le salaire d'un programmeur en utilisant son identifiant.
@@ -63,27 +63,27 @@ public interface IActions {
 
     /*---------------------------- MANAGER ----------------------------*/
 
-    ProgrammeurBean getProgWithMaxSalary() throws SQLException;
+    Programmeur getProgWithMaxSalary() throws SQLException;
 
-    ProgrammeurBean getProgWithMinSalary() throws SQLException;
+    Programmeur getProgWithMinSalary() throws SQLException;
 
     Map<Integer, Float> getAvgSalaryByAgeProg() throws SQLException;
 
     int getNbProg() throws SQLException;
 
-    Map<Integer, ProgrammeurBean> getRankProgBySalary() throws SQLException;
+    Map<Integer, Programmeur> getRankProgBySalary() throws SQLException;
 
     double getCorrelationBetweenAgeAndSalaryProg() throws SQLException;
 
-    List<ManagerBean> getAllManager() throws SQLException;
+    List<Manager> getAllManager() throws SQLException;
 
-    ManagerBean getManagerById(int id) throws SQLException;
+    Manager getManagerById(int id) throws SQLException;
 
-    ManagerBean getManagerByFullName(String lastName, String firstName) throws SQLException;
+    Manager getManagerByFullName(String lastName, String firstName) throws SQLException;
 
     void deleteManagerById(int id) throws SQLException;
 
-    void addManager(ManagerBean manager) throws SQLException;
+    void addManager(Manager manager) throws SQLException;
 
     void setManagerSalaryById(int id, float newSalary) throws SQLException;
 
@@ -101,4 +101,8 @@ public interface IActions {
     void deleteALLProgs() throws SQLException;
 
     void deleteALLManagers() throws SQLException;
+
+    void resetIndexProg() throws SQLException;
+
+    void resetIndexManager() throws SQLException;
 }
