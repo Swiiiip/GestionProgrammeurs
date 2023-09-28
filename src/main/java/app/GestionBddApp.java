@@ -29,7 +29,7 @@ public class GestionBddApp extends Application {
 
     public static void addMenuBar() {
         MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("Menu"); // Rename the menu to "Menu" for clarity
+        Menu menu = new Menu("Menu");
         MenuItem returnMenuItem = new MenuItem("Revenir au menu");
 
         returnMenuItem.setOnAction(e -> {
@@ -38,8 +38,8 @@ public class GestionBddApp extends Application {
             Pages.showMenuPage(); // Show the menu page
         });
 
-        menu.getItems().add(returnMenuItem); // Add the menu item to the menu
-        menuBar.getMenus().add(menu); // Add the menu to the menu bar
+        menu.getItems().add(returnMenuItem);
+        menuBar.getMenus().add(menu);
 
         rootLayout.setTop(menuBar);
     }
