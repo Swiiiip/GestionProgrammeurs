@@ -8,7 +8,11 @@ public enum Departments {
     VENTES("Ventes"),
     MARKETING("Marketing"),
     INFO("Informatique"),
+    RESEAU("Réseau"),
+
+    COMMUNICATION("Communication"),
     PRODUCTION("Production");
+
 
     private static final Random RANDOM = new Random();
     private final String department;

@@ -10,7 +10,8 @@ public enum Hobbies {
     PEINTURE("Peinture"),
     PROGRAMMATION("Programmation"),
     JARDINAGE("Jardinage"),
-    LECTURE("Lecture");
+    LECTURE("Lecture"),
+    ESCALADE("Escalade");
 
     private final String hobby;
     private static final Random RANDOM = new Random();
