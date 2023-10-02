@@ -13,4 +13,5 @@ module moduleInfo {
     opens app to javafx.fxml;
     exports app;
     exports personnes;
+    exports dao;
 }

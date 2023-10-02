@@ -61,7 +61,7 @@ Ceci dit, vérifiez que vous ayez bien téléchargé :
     + **User :** adm
     + **Password :** adm
     + **Database :** APTN61_BD
-  + Cliquer sur "ActionsTests Connection" pour vérifier que la connexion est bien établie
+  + Cliquer sur "Test Connection" pour vérifier que la connexion est bien établie
   + Puis "OK"
   + Vous pouvez maintenant envoyer des requêtes SQL depuis la console MySQL !
 

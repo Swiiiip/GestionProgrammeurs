@@ -3,7 +3,9 @@ package data;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import personnes.Manager;
+import dao.ManagerDAO;
 import personnes.Programmeur;
+import dao.ProgrammeurDAO;
 import utils.Departments;
 import utils.Hobbies;
 
@@ -22,9 +24,12 @@ public class DataGenerator{
 
     private final int NBPROGS;
     private final int NBMANAGERS;
+
+    private final ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
+    private final ManagerDAO managerDAO= new ManagerDAO();
     private static final String APIURL = "https://randomuser.me/api";
     private static final Random RANDOM = new Random();
-    private final static ActionsBD ACTIONSBD = new ActionsBD();
+    //private final static Actions ACTIONSBD = new Actions();
 
     public DataGenerator(int nbProgs, int nbManagers){
         this.NBPROGS = nbProgs;
@@ -34,16 +39,16 @@ public class DataGenerator{
     
     private void loadData(){
         try{
-            ACTIONSBD.deleteALLProgs();
-            ACTIONSBD.deleteALLManagers();
+            programmeurDAO.deleteAll();
+            managerDAO.deleteAll();
         } catch (SQLException e){
             System.err.println("La suppression de toutes les données a échouée.");
             throw new SecurityException();
         }
 
         try{
-            ACTIONSBD.resetIndexProg();
-            ACTIONSBD.resetIndexManager();
+            programmeurDAO.resetIndex();
+            managerDAO.resetIndex();
         } catch (SQLException e){
             System.err.println("La réinitialisation des index à échouée.");
             System.out.println(e.getMessage());
@@ -62,7 +67,7 @@ public class DataGenerator{
                 if (isEuropean(manager.getLastName()) && isEuropean(manager.getFirstName()))
                     i--;
                 else {
-                    ACTIONSBD.addManager(manager);
+                    managerDAO.add(manager);
                     System.out.println(getColor() + "Ajout du manager id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
@@ -85,7 +90,7 @@ public class DataGenerator{
                 if (isEuropean(prog.getLastName()) && isEuropean(prog.getFirstName()))
                     i--;
                 else {
-                    ACTIONSBD.addProg(prog);
+                    programmeurDAO.add(prog);
                     System.out.println(getColor() + "Ajout du programmeur id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
@@ -95,7 +100,8 @@ public class DataGenerator{
             }
         }
 
-        ACTIONSBD.exit();
+        programmeurDAO.exit();
+        managerDAO.exit();
     }
     private Programmeur getProgFromAPI() throws Exception {
         String jsonData = getJsonDataFromApi();
@@ -105,7 +111,7 @@ public class DataGenerator{
         String gender = parseGenderFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
-        Manager manager = ACTIONSBD.getManagerById(RANDOM.nextInt(NBMANAGERS) + 1);
+        Manager manager = managerDAO.getById(RANDOM.nextInt(NBMANAGERS) + 1);
         String pseudo = parsePseudoFromJson(jsonData);
 
         int birthYear = parseBirthYearFromJson(jsonData);

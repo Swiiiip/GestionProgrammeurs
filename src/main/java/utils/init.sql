@@ -40,16 +40,41 @@ ALTER TABLE Programmeur AUTO_INCREMENT = 1;
 ALTER TABLE Manager AUTO_INCREMENT = 1;
 
 ALTER TABLE Programmeur
-ADD CONSTRAINT FK_programmeur FOREIGN KEY(Id_manager) REFERENCES Manager(Id) ON DELETE NO ACTION;
+ADD CONSTRAINT FK_programmeur FOREIGN KEY(Id_manager) REFERENCES Manager(Id);
 
-CREATE TRIGGER CheckManagerIDExists
-    BEFORE INSERT ON Programmeur FOR EACH ROW
+DROP TRIGGER IF EXISTS SetNewManagerForProgrammeur;
+
+DELIMITER //
+CREATE TRIGGER SetNewManagerForProgrammeur
+    BEFORE DELETE ON Manager FOR EACH ROW
 BEGIN
-    DECLARE manager_count INT;
-    SELECT COUNT(*) INTO manager_count FROM Manager WHERE Id = NEW.Id;
+    DECLARE deleted_manager_id INT;
+    DECLARE new_manager_id INT;
+    DECLARE manager_department VARCHAR(255);
 
-    IF manager_count = 0 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'L\' Id du manager spécifié n\'existe pas.';
+    SET deleted_manager_id = OLD.Id;
+    SET manager_department = OLD.Department;
+
+    UPDATE Programmeur
+    SET Id_manager = NULL
+    WHERE Id_manager = deleted_manager_id;
+
+    SET new_manager_id = (
+        SELECT Id
+        FROM Manager
+        WHERE Department = manager_department
+          AND Id != deleted_manager_id
+        ORDER BY (YEAR(NOW()) - BirthYear)
+        LIMIT 1
+    );
+
+    IF new_manager_id IS NULL THEN
+        SET new_manager_id = 0;
     END IF;
+
+    UPDATE Programmeur
+    SET Id_manager = new_manager_id
+    WHERE Id_manager = deleted_manager_id;
 END;
+//
+DELIMITER ;
