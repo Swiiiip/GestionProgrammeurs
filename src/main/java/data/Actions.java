@@ -4,7 +4,6 @@ import connexion.Connexion;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
-import utils.RequetesSQL;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -146,7 +145,10 @@ public class Actions<T extends Personne> {
     }
 
     public void addProg(Programmeur prog) throws SQLException {
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.ADDPROG);
+        final String query = "INSERT INTO Programmeur (LastName, FirstName, Gender, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setString(1, prog.getLastName());
         statement.setString(2, prog.getFirstName());
@@ -164,7 +166,10 @@ public class Actions<T extends Personne> {
     }
 
     public void addManager(Manager manager) throws SQLException {
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(RequetesSQL.ADDMANAGER);
+        final String query = "INSERT INTO Manager (LastName, FirstName, Gender, Address, Hobby, Department, BirthYear, Salary, Prime) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setString(1, manager.getLastName());
         statement.setString(2, manager.getFirstName());

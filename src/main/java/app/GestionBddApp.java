@@ -20,9 +20,9 @@ public class GestionBddApp extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Gestion BDD");
+    public void start(Stage primaryStage){
+        GestionBddApp.primaryStage = primaryStage;
+        GestionBddApp.primaryStage.setTitle("Gestion BDD");
 
         initRootLayout();
     }
@@ -49,7 +49,7 @@ public class GestionBddApp extends Application {
         try {
             primaryStage.setTitle("Gestion BDD");
 
-            this.rootLayout = new BorderPane();
+            rootLayout = new BorderPane();
             Scene scene = new Scene(rootLayout, 400, 400);
             primaryStage.setScene(scene);
             primaryStage.show();
