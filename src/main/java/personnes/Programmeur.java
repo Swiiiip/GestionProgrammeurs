@@ -41,9 +41,9 @@ public class Programmeur extends Personne{
      * @param salary     Le salaire du programmeur.
      * @param prime      La prime du programmeur.
      */
-    public Programmeur(String lastName, String firstName, String gender, String address, String pseudo,
+    public Programmeur(String lastName, String firstName, String gender, String picture, String address, String pseudo,
                        Manager manager, String hobby, int birthYear, float salary, float prime) {
-        super(lastName,firstName,gender, address,hobby,birthYear,salary,prime);
+        super(lastName,firstName,gender, picture, address,hobby,birthYear,salary,prime);
         this.pseudo = pseudo;
         this.manager = manager;
     }

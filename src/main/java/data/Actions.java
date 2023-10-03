@@ -21,9 +21,6 @@ public class Actions<T extends Personne> {
         this.connexion = new Connexion();
     }
 
-    public Actions(String db_url, String db_user, String db_pwd) {
-        this.connexion = new Connexion(db_url, db_user, db_pwd);
-    }
 
     private T mapPersonne(String typePersonne, ResultSet resultSet) throws SQLException {
         return switch (typePersonne) {
@@ -40,6 +37,7 @@ public class Actions<T extends Personne> {
         prog.setFirstName(res.getString("FirstName"));
         prog.setLastName(res.getString("LastName"));
         prog.setGender(res.getString("Gender"));
+        prog.setPicture(res.getString("Picture"));
         prog.setAddress(res.getString("Address"));
         prog.setPseudo(res.getString("Pseudo"));
 
@@ -61,6 +59,7 @@ public class Actions<T extends Personne> {
         manager.setLastName(res.getString("LastName"));
         manager.setFirstName(res.getString("FirstName"));
         manager.setGender(res.getString("Gender"));
+        manager.setPicture(res.getString("Picture"));
         manager.setAddress(res.getString("Address"));
         manager.setHobby(res.getString("Hobby"));
         manager.setDepartment(res.getString("Department"));
@@ -145,41 +144,43 @@ public class Actions<T extends Personne> {
     }
 
     public void addProg(Programmeur prog) throws SQLException {
-        final String query = "INSERT INTO Programmeur (LastName, FirstName, Gender, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO Programmeur (LastName, FirstName, Gender, Picture, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setString(1, prog.getLastName());
         statement.setString(2, prog.getFirstName());
         statement.setString(3, prog.getGender());
-        statement.setString(4, prog.getAddress());
-        statement.setString(5, prog.getPseudo());
-        statement.setInt(6, prog.getManager().getId());
-        statement.setString(7, prog.getHobby());
-        statement.setInt(8, prog.getBirthYear());
-        statement.setFloat(9, prog.getSalary());
-        statement.setFloat(10, prog.getPrime());
+        statement.setString(4, prog.getPicture());
+        statement.setString(5, prog.getAddress());
+        statement.setString(6, prog.getPseudo());
+        statement.setInt(7, prog.getManager().getId());
+        statement.setString(8, prog.getHobby());
+        statement.setInt(9, prog.getBirthYear());
+        statement.setFloat(10, prog.getSalary());
+        statement.setFloat(11, prog.getPrime());
 
         statement.executeUpdate();
         statement.close();
     }
 
     public void addManager(Manager manager) throws SQLException {
-        final String query = "INSERT INTO Manager (LastName, FirstName, Gender, Address, Hobby, Department, BirthYear, Salary, Prime) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO Manager (LastName, FirstName, Gender, Picture, Address, Hobby, Department, BirthYear, Salary, Prime) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setString(1, manager.getLastName());
         statement.setString(2, manager.getFirstName());
         statement.setString(3, manager.getGender());
-        statement.setString(4, manager.getAddress());
-        statement.setString(5, manager.getHobby());
-        statement.setString(6, manager.getDepartment());
-        statement.setInt(7, manager.getBirthYear());
-        statement.setFloat(8, manager.getSalary());
-        statement.setFloat(9, manager.getPrime());
+        statement.setString(4, manager.getPicture());
+        statement.setString(5, manager.getAddress());
+        statement.setString(6, manager.getHobby());
+        statement.setString(7, manager.getDepartment());
+        statement.setInt(8, manager.getBirthYear());
+        statement.setFloat(9, manager.getSalary());
+        statement.setFloat(10, manager.getPrime());
 
         statement.executeUpdate();
         statement.close();

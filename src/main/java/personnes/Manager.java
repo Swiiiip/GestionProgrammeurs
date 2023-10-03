@@ -12,9 +12,9 @@ public class Manager extends Personne {
         super();
     }
 
-    public Manager(String lastName, String firstName, String gender, String address, String hobby, int birthYear, float salary,
+    public Manager(String lastName, String firstName, String gender, String picture, String address, String hobby, int birthYear, float salary,
                    float prime, String department) {
-        super(lastName, firstName, gender, address, hobby, birthYear, salary, prime);
+        super(lastName, firstName, gender, picture, address, hobby, birthYear, salary, prime);
         this.department = department;
     }
 

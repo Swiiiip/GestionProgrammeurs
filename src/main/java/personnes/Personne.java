@@ -8,13 +8,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDate;
 
-@JsonPropertyOrder({"id", "firstName", "lastName", "gender", "age", "address", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"picture", "id", "firstName", "lastName", "gender", "age", "address", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Personne {
     private int id;
     private String firstName;
     private String lastName;
     private String gender;
+    private String picture;
     private String address;
     private String hobby;
     private int birthYear;
@@ -25,6 +26,7 @@ public class Personne {
         this.lastName = null;
         this.firstName = null;
         this.gender = null;
+        this.picture = null;
         this.address = null;
         this.hobby = null;
         this.birthYear = 0;
@@ -32,10 +34,11 @@ public class Personne {
         this.prime = 0;
     }
 
-    public Personne(String lastName, String firstName, String gender, String address, String hobby, int birthYear, float salary, float prime) {
+    public Personne(String lastName, String firstName, String gender, String picture, String address, String hobby, int birthYear, float salary, float prime) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.gender = gender;
+        this.picture = picture;
         this.address = address;
         this.hobby = hobby;
         this.birthYear = birthYear;
@@ -50,7 +53,7 @@ public class Personne {
      */
     @JsonProperty("id")
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -69,7 +72,7 @@ public class Personne {
      */
     @JsonProperty("lastName")
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     /**
@@ -88,7 +91,7 @@ public class Personne {
      */
     @JsonProperty("firstName")
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     /**
@@ -107,7 +110,7 @@ public class Personne {
      */
     @JsonProperty("gender")
     public String getGender() {
-        return gender;
+        return this.gender;
     }
 
     /**
@@ -119,7 +122,14 @@ public class Personne {
         this.gender = gender;
     }
 
+    @JsonProperty("picture")
+    public String getPicture(){
+        return this.picture;
+    }
 
+    public void setPicture(String picture){
+        this.picture = picture;
+    }
     /**
      * Définit l'âge de la personne en fonction de sa date de naissance
      *
@@ -138,7 +148,7 @@ public class Personne {
      */
     @JsonProperty("address")
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     /**
@@ -157,7 +167,7 @@ public class Personne {
      */
     @JsonProperty("hobby")
     public String getHobby() {
-        return hobby;
+        return this.hobby;
     }
 
     /**
@@ -176,7 +186,7 @@ public class Personne {
      */
     @JsonProperty("birthYear")
     public int getBirthYear() {
-        return birthYear;
+        return this.birthYear;
     }
 
 
@@ -196,7 +206,7 @@ public class Personne {
      */
     @JsonProperty("salary")
     public float getSalary() {
-        return salary;
+        return this.salary;
     }
 
     /**
@@ -215,7 +225,7 @@ public class Personne {
      */
     @JsonProperty("prime")
     public float getPrime() {
-        return prime;
+        return this.prime;
     }
 
     /**

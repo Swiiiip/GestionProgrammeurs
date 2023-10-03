@@ -109,6 +109,8 @@ public class DataGenerator{
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
         String gender = parseGenderFromJson(jsonData);
+        String picture = parsePictureFromJson(jsonData);
+        System.out.println(picture);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
         Manager manager = managerDAO.getById(RANDOM.nextInt(NBMANAGERS) + 1);
@@ -125,6 +127,7 @@ public class DataGenerator{
         return new Programmeur(lastName,
                 firstName,
                 gender,
+                picture,
                 address,
                 pseudo,
                 manager,
@@ -140,6 +143,7 @@ public class DataGenerator{
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
         String gender = parseGenderFromJson(jsonData);
+        String picture = parsePictureFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         int birthYear = parseBirthYearFromJson(jsonData);
 
@@ -157,6 +161,7 @@ public class DataGenerator{
         return new Manager(lastName,
                 firstName,
                 gender,
+                picture,
                 address,
                 hobby,
                 birthYear,
@@ -237,6 +242,15 @@ public class DataGenerator{
         JsonNode genderNode = rootNode.get("results").get(0).get("gender");
 
         return genderNode.asText();
+    }
+
+    private String parsePictureFromJson(String jsonData) throws IOException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode pictureNode = rootNode.get("results").get(0).get("picture");
+        JsonNode sizeNode = pictureNode.get("large");
+
+        return sizeNode.asText();
     }
 
     private List<Character> genererCaracteresEuropeens() {
