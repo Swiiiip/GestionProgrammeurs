@@ -94,6 +94,10 @@ public class Personne {
         return this.firstName;
     }
 
+    public String getFullName() {
+        return this.lastName.toUpperCase() + " " + this.firstName;
+    }
+
     /**
      * Définit le prénom de la personne.
      *
@@ -254,4 +258,5 @@ public class Personne {
             return "{}";
         }
     }
+
 }

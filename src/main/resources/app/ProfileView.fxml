@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.ProfileViewController">
+    <VBox alignment="CENTER">
+        <ImageView fx:id="profilePictureImageView" fitHeight="100" fitWidth="100"/>
+            <Text fx:id="fullNameText" />
+            <Text fx:id="role" />
+    </VBox>
+
+    <Text fx:id="genderText" />
+    <Text fx:id="addressText" />
+    <Text fx:id="pseudoText" />
+    <Text fx:id="managerText" />
+    <Text fx:id="hobbyText" />
+    <Text fx:id="birthYearText" />
+    <Text fx:id="salaryText" />
+    <Text fx:id="primeText" />
+</VBox>

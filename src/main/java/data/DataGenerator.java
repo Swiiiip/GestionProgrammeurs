@@ -72,7 +72,7 @@ public class DataGenerator{
                 }
             } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + (i+1)+ " a échouée.");
-                System.out.println(e.getMessage());
+                System.err.println(e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -110,7 +110,6 @@ public class DataGenerator{
         String firstName = parseFirstNameFromJson(jsonData);
         String gender = parseGenderFromJson(jsonData);
         String picture = parsePictureFromJson(jsonData);
-        System.out.println(picture);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
         Manager manager = managerDAO.getById(RANDOM.nextInt(NBMANAGERS) + 1);
@@ -204,7 +203,6 @@ public class DataGenerator{
         
         return nameNode.get("first").asText();
     }
-
 
     private String parseAddressFromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();

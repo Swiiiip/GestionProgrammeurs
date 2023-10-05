@@ -14,16 +14,6 @@ public class Application {
         AppliManagement application = new AppliManagement();
         application.start(args);
 
-        long estimationTime = (NBPROGS + NBMANAGERS) / 5 * 1000L;
-
-        estimationTime = Math.round(estimationTime * 0.95);
-
-        long secondes = estimationTime / 1000;
-        long minutes = secondes / 60;
-        secondes = secondes % 60;
-
-        System.out.println("Temps Estimé : " + minutes + " minutes et " + secondes + " secondes.");
-
         long startTime = System.currentTimeMillis();
 
         new DataGenerator(NBPROGS, NBMANAGERS);
@@ -32,12 +22,11 @@ public class Application {
 
         long executionTime = endTime - startTime;
 
-        secondes = executionTime / 1000;
-        minutes = secondes / 60;
+        long secondes = executionTime / 1000;
+        long minutes = secondes / 60;
         secondes = secondes % 60;
 
         System.out.println("Temps Réel : " + minutes + " minutes et " + secondes + " secondes.");
-
 
         ProgrammeurDAO prog = new ProgrammeurDAO();
 

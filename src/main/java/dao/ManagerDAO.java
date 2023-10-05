@@ -15,7 +15,6 @@ public class ManagerDAO implements PersonneDAO<Manager> {
         return actionsBD.getAll("Manager");
     }
 
-
     @Override
     public Manager getById(int id) throws SQLException {
         return (Manager) actionsBD.getById("Manager", id);

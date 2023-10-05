@@ -2,6 +2,7 @@ package exec;
 
 import dao.ProgrammeurDAO;
 import data.DataGenerator;
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +12,7 @@ import personnes.Programmeur;
 
 import java.sql.SQLException;
 
-public class AfficherImageJPG extends javafx.application.Application {
+public class AfficherImageJPG extends Application {
 
     @Override
     public void start(Stage primaryStage) {

@@ -6,9 +6,11 @@
 
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.control.ListCell?>
 <VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="app.MenuViewController">
   <Label text="MENU" />
+
   <Button text="Afficher tous les programmeurs" onAction="#handleButtonAction"/>
   <Button text="Afficher un programmeur" onAction="#handleButtonAction"/>
   <Button text="Supprimer un programmeur" onAction="#handleButtonAction"/>

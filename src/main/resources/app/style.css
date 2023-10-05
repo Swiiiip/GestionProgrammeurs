@@ -1,0 +1,66 @@
+/* Root layout styling */
+.root {
+    -fx-background-color: #f2f2f2;
+}
+
+/* Menu bar styling */
+.primary-menu {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Menu styling */
+.menu-item {
+    -fx-font-size: 14px;
+}
+
+/* Button styling */
+.button {
+    -fx-font-size: 14px;
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-pref-width: 250px;
+
+}
+
+/* Text field styling */
+.text-field {
+    -fx-font-size: 14px;
+}
+
+/* Label styling */
+.label {
+    -fx-font-size: 14px;
+}
+
+/* ListView styling */
+.list-view {
+    -fx-font-size: 14px;
+}
+
+/* Table styling */
+.table-view {
+    -fx-font-size: 14px;
+}
+
+.table-column {
+    -fx-alignment: CENTER;
+}
+
+/* TableView alternating row color */
+.table-row-cell:odd {
+    -fx-background-color: #f6f6f6;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #3b9eff;
+    -fx-text-fill: white;
+}
+
+/* Tooltip styling */
+.tooltip {
+    -fx-font-size: 12px;
+    -fx-background-color: #333;
+    -fx-text-fill: white;
+}

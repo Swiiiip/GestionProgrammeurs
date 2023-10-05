@@ -1,19 +1,22 @@
 package app;
 
+import dao.ManagerDAO;
+import dao.ProgrammeurDAO;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-
 public class GestionBddApp extends Application {
-    static Stage primaryStage;
-    static BorderPane rootLayout;
+    protected static Stage primaryStage;
+    protected static BorderPane rootLayout;
+    protected static MenuViewController menuViewController = new MenuViewController();
+    protected static DataViewController dataViewController = new DataViewController();
+    protected static ProfileViewController profileViewController = new ProfileViewController();
+    protected static Pages pages = new Pages();
+    protected static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
+    protected static ManagerDAO managerDAO = new ManagerDAO();
 
     public static void main(String[] args) {
         launch(args);
@@ -21,40 +24,24 @@ public class GestionBddApp extends Application {
 
     @Override
     public void start(Stage primaryStage){
-        GestionBddApp.primaryStage = primaryStage;
-        GestionBddApp.primaryStage.setTitle("Gestion BDD");
+        this.primaryStage = primaryStage;
+        primaryStage.setTitle("Gestion BDD");
 
         initRootLayout();
     }
 
-    public static void addMenuBar() {
-        MenuBar menuBar = new MenuBar();
-        Menu menu = new Menu("Menu");
-        MenuItem returnMenuItem = new MenuItem("Revenir au menu");
-
-        returnMenuItem.setOnAction(e -> {
-            System.out.println("Menu clicked");
-            rootLayout.getChildren().clear();
-            Pages.showMenuPage(); // Show the menu page
-        });
-
-        menu.getItems().add(returnMenuItem);
-        menuBar.getMenus().add(menu);
-
-        rootLayout.setTop(menuBar);
-    }
-
-    // Initialiser le layout
     private void initRootLayout() {
         try {
-            primaryStage.setTitle("Gestion BDD");
-
-            rootLayout = new BorderPane();
+            this.rootLayout = new BorderPane();
             Scene scene = new Scene(rootLayout, 400, 400);
+            scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.show();
+
+            rootLayout.setTop(menuViewController.initMenuBar());
 
             Pages.showMenuPage();
+
+            primaryStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
