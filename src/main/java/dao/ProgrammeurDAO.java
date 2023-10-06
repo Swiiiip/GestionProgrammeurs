@@ -2,13 +2,15 @@ package dao;
 
 import data.Actions;
 import personnes.Programmeur;
+import utils.Coords;
+import utils.Pictures;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
-    private final Actions actionsBD = new Actions();
+    private final Actions<Programmeur> actionsBD = new Actions<>();
 
     @Override
     public List<Programmeur> getAll() throws SQLException {
@@ -17,12 +19,12 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
 
     @Override
     public Programmeur getById(int id) throws SQLException {
-        return (Programmeur) actionsBD.getById("Programmeur", id);
+        return actionsBD.getById("Programmeur", id);
     }
 
     @Override
     public Programmeur getByFullName(String lastName, String firstName) throws SQLException {
-        return (Programmeur) actionsBD.getByFullName("Programmeur", lastName, firstName);
+        return actionsBD.getByFullName("Programmeur", lastName, firstName);
     }
 
     @Override
@@ -42,12 +44,12 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
 
     @Override
     public Programmeur getWithMaxSalary() throws SQLException{
-        return (Programmeur) actionsBD.getWithMaxSalary("Programmeur");
+        return actionsBD.getWithMaxSalary("Programmeur");
     }
 
     @Override
     public Programmeur getWithMinSalary() throws SQLException{
-        return (Programmeur) actionsBD.getWithMinSalary("Programmeur");
+        return actionsBD.getWithMinSalary("Programmeur");
     }
 
     @Override
@@ -77,6 +79,31 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
     @Override
     public void deleteAll() throws SQLException {
         actionsBD.deleteAll("Programmeur");
+    }
+
+    @Override
+    public void deleteUtils() throws SQLException{
+        actionsBD.deleteUtils();
+    }
+
+    @Override
+    public void addPictures(Pictures pictures) throws SQLException{
+        actionsBD.addPictures(pictures);
+    }
+
+    @Override
+    public void addCoords(Coords coords) throws SQLException{
+        actionsBD.addCoords(coords);
+    }
+
+    @Override
+    public Pictures getPictures(Pictures pictures) throws SQLException{
+        return actionsBD.getPictures(pictures);
+    }
+
+    @Override
+    public Coords getCoords(Coords coords) throws SQLException{
+        return actionsBD.getCoords(coords);
     }
 
     @Override

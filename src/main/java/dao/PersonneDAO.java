@@ -1,6 +1,8 @@
 package dao;
 
 import personnes.Personne;
+import utils.Coords;
+import utils.Pictures;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -35,7 +37,17 @@ public interface PersonneDAO<T extends Personne> {
 
     void deleteAll() throws SQLException;
 
+    void deleteUtils() throws SQLException;
+
+    void addPictures(Pictures pictures) throws SQLException;
+
+    void addCoords(Coords coords) throws SQLException;
+
     void resetIndex() throws SQLException;
 
     void exit();
+
+    Pictures getPictures(Pictures pictures) throws SQLException;
+
+    Coords getCoords(Coords coords) throws SQLException;
 }

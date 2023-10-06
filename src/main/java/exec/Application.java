@@ -3,6 +3,10 @@ package exec;
 import dao.ManagerDAO;
 import dao.ProgrammeurDAO;
 import data.DataGenerator;
+import personnes.Manager;
+import personnes.Programmeur;
+
+import java.sql.SQLException;
 
 public class Application {
 
@@ -29,9 +33,17 @@ public class Application {
         System.out.println("Temps Réel : " + minutes + " minutes et " + secondes + " secondes.");
 
         ProgrammeurDAO prog = new ProgrammeurDAO();
-
         ManagerDAO manager = new ManagerDAO();
 
-        //TODO
+        try {
+            for (Programmeur p : prog.getAll())
+                System.out.println(p);
+
+            for (Manager m : manager.getAll())
+                System.out.println(m);
+
+        }catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
     }
 }

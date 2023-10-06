@@ -6,8 +6,10 @@ import personnes.Manager;
 import dao.ManagerDAO;
 import personnes.Programmeur;
 import dao.ProgrammeurDAO;
+import utils.Coords;
 import utils.Departments;
 import utils.Hobbies;
+import utils.Pictures;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +31,6 @@ public class DataGenerator{
     private final ManagerDAO managerDAO= new ManagerDAO();
     private static final String APIURL = "https://randomuser.me/api";
     private static final Random RANDOM = new Random();
-    //private final static Actions ACTIONSBD = new Actions();
 
     public DataGenerator(int nbProgs, int nbManagers){
         this.NBPROGS = nbProgs;
@@ -41,8 +42,9 @@ public class DataGenerator{
         try{
             programmeurDAO.deleteAll();
             managerDAO.deleteAll();
+            programmeurDAO.deleteUtils();
         } catch (SQLException e){
-            System.err.println("La suppression de toutes les données a échouée.");
+            System.err.println("La suppression de toutes les données a échouée." + e.getMessage());
             throw new SecurityException();
         }
 
@@ -50,8 +52,7 @@ public class DataGenerator{
             programmeurDAO.resetIndex();
             managerDAO.resetIndex();
         } catch (SQLException e){
-            System.err.println("La réinitialisation des index à échouée.");
-            System.out.println(e.getMessage());
+            System.err.println("La réinitialisation des index à échouée." + e.getMessage());
             throw new SecurityException();
         }
 
@@ -60,7 +61,7 @@ public class DataGenerator{
             try {
                 manager = getManagerFromAPI();
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le manager " + (i+1) + " a échouée.");
+                System.err.println("La récupération des données pour le manager " + (i+1) + " a échouée." + e.getMessage());
                 throw new SecurityException();
             }
             try {
@@ -71,8 +72,7 @@ public class DataGenerator{
                     System.out.println(getColor() + "Ajout du manager id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
-                System.err.println("L'ajout du manager " + (i+1)+ " a échouée.");
-                System.err.println(e.getMessage());
+                System.err.println("L'ajout du manager " + (i+1)+ " a échouée." + e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -83,7 +83,7 @@ public class DataGenerator{
                 prog = getProgFromAPI();
 
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le programmeur " + (i+1) + " a échouée.");
+                System.err.println("La récupération des données pour le programmeur " + (i+1) + " a échouée." + e.getMessage());
                 throw new SecurityException();
             }
             try {
@@ -94,8 +94,7 @@ public class DataGenerator{
                     System.out.println(getColor() + "Ajout du programmeur id : " + (i+1) + "\u001B[0m");
                 }
             } catch (SQLException e) {
-                System.err.println("L'ajout du programmeur " + (i+1) + " a échouée.");
-                System.out.println(e.getMessage());
+                System.err.println("L'ajout du programmeur " + (i+1) + " a échouée." + e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -104,12 +103,21 @@ public class DataGenerator{
         managerDAO.exit();
     }
     private Programmeur getProgFromAPI() throws Exception {
+        ProgrammeurDAO prog = new ProgrammeurDAO();
         String jsonData = getJsonDataFromApi();
 
+        Pictures pictures = parsePicturesFromJson(jsonData);
+        Coords coords = parseCoordsFromJson(jsonData);
+        prog.addPictures(pictures);
+        prog.addCoords(coords);
+
+        pictures = programmeurDAO.getPictures(pictures);
+        coords = programmeurDAO.getCoords(coords);
+
+        String title = parseTitleFromJson(jsonData);
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
         String gender = parseGenderFromJson(jsonData);
-        String picture = parsePictureFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         String hobby = Hobbies.generateRandomHobby();
         Manager manager = managerDAO.getById(RANDOM.nextInt(NBMANAGERS) + 1);
@@ -123,11 +131,13 @@ public class DataGenerator{
         if (isWoman(gender))
             salary *= 0.90f;
 
-        return new Programmeur(lastName,
+        return new Programmeur(title,
+                lastName,
                 firstName,
                 gender,
-                picture,
+                pictures,
                 address,
+                coords,
                 pseudo,
                 manager,
                 hobby,
@@ -137,12 +147,21 @@ public class DataGenerator{
     }
 
     private Manager getManagerFromAPI() throws  Exception {
-
+        ManagerDAO manager = new ManagerDAO();
         String jsonData = getJsonDataFromApi();
+
+        Pictures pictures = parsePicturesFromJson(jsonData);
+        Coords coords = parseCoordsFromJson(jsonData);
+        manager.addPictures(pictures);
+        manager.addCoords(coords);
+
+        pictures = programmeurDAO.getPictures(pictures);
+        coords = programmeurDAO.getCoords(coords);
+
+        String title = parseTitleFromJson(jsonData);
         String lastName = parseLastNameFromJson(jsonData);
         String firstName = parseFirstNameFromJson(jsonData);
         String gender = parseGenderFromJson(jsonData);
-        String picture = parsePictureFromJson(jsonData);
         String address = parseAddressFromJson(jsonData);
         int birthYear = parseBirthYearFromJson(jsonData);
 
@@ -151,23 +170,26 @@ public class DataGenerator{
 
         int age = LocalDate.now().getYear() - birthYear;
 
-        float salary = 3000.0f + (age *150.0f);
+        float salary = 3000.0f + (age * 150.0f);
         float prime = RANDOM.nextFloat() * 1000.0f;
 
         if (isWoman(gender))
             salary *= 0.90f;
 
-        return new Manager(lastName,
+        return new Manager(title,
+                lastName,
                 firstName,
                 gender,
-                picture,
+                pictures,
                 address,
+                coords,
                 hobby,
                 birthYear,
                 salary,
                 prime,
                 department);
     }
+
 
     private String getJsonDataFromApi() throws IOException, URISyntaxException {
         URI uri = new URI(APIURL);
@@ -242,13 +264,35 @@ public class DataGenerator{
         return genderNode.asText();
     }
 
-    private String parsePictureFromJson(String jsonData) throws IOException{
+    private Pictures parsePicturesFromJson(String jsonData) throws IOException{
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(jsonData);
-        JsonNode pictureNode = rootNode.get("results").get(0).get("picture");
-        JsonNode sizeNode = pictureNode.get("large");
+        JsonNode picturesNode = rootNode.get("results").get(0).get("picture");
 
-        return sizeNode.asText();
+        return new Pictures(picturesNode.get("large").asText(),
+                picturesNode.get("medium").asText(),
+                picturesNode.get("thumbnail").asText());
+    }
+
+    private Coords parseCoordsFromJson(String jsonData) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode locationNode = rootNode.get("results").get(0).get("location");
+        JsonNode coordsNode = locationNode.get("coordinates");
+
+        String latitude = coordsNode.get("latitude").asText();
+        String longitude = coordsNode.get("longitude").asText();
+
+        return new Coords(latitude, longitude);
+    }
+
+
+    private String parseTitleFromJson(String jsonData) throws IOException{
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonData);
+        JsonNode nameNode = rootNode.get("results").get(0).get("name");
+
+        return nameNode.get("title").asText();
     }
 
     private List<Character> genererCaracteresEuropeens() {

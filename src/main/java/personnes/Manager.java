@@ -2,6 +2,8 @@ package personnes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import utils.Coords;
+import utils.Pictures;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Manager extends Personne {
@@ -12,9 +14,9 @@ public class Manager extends Personne {
         super();
     }
 
-    public Manager(String lastName, String firstName, String gender, String picture, String address, String hobby, int birthYear, float salary,
+    public Manager(String title, String lastName, String firstName, String gender, Pictures pictures, String address, Coords coords, String hobby, int birthYear, float salary,
                    float prime, String department) {
-        super(lastName, firstName, gender, picture, address, hobby, birthYear, salary, prime);
+        super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.department = department;
     }
 

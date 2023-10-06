@@ -4,6 +4,8 @@ import connexion.Connexion;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
+import utils.Coords;
+import utils.Pictures;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,12 +36,18 @@ public class Actions<T extends Personne> {
         Programmeur prog = new Programmeur();
 
         prog.setId(res.getInt("Id"));
+        prog.setTitle(res.getString("Title"));
         prog.setFirstName(res.getString("FirstName"));
         prog.setLastName(res.getString("LastName"));
         prog.setGender(res.getString("Gender"));
-        prog.setPicture(res.getString("Picture"));
         prog.setAddress(res.getString("Address"));
         prog.setPseudo(res.getString("Pseudo"));
+
+        Pictures pictures = getPicturesById(res.getInt("Id_pictures"));
+        prog.setPictures(pictures);
+
+        Coords coords = getCoordsById(res.getInt("Id_Coords"));
+        prog.setCoords(coords);
 
         Manager manager = (Manager) getById("Manager", res.getInt("Id_manager"));
         prog.setManager(manager);
@@ -56,10 +64,17 @@ public class Actions<T extends Personne> {
         Manager manager = new Manager();
 
         manager.setId(res.getInt("Id"));
+        manager.setTitle(res.getString("Title"));
         manager.setLastName(res.getString("LastName"));
         manager.setFirstName(res.getString("FirstName"));
         manager.setGender(res.getString("Gender"));
-        manager.setPicture(res.getString("Picture"));
+
+        Pictures pictures = getPicturesById(res.getInt("Id_pictures"));
+        manager.setPictures(pictures);
+
+        Coords coords = getCoordsById(res.getInt("Id_Coords"));
+        manager.setCoords(coords);
+
         manager.setAddress(res.getString("Address"));
         manager.setHobby(res.getString("Hobby"));
         manager.setDepartment(res.getString("Department"));
@@ -69,6 +84,74 @@ public class Actions<T extends Personne> {
 
         return manager;
     }
+
+    private Pictures mapPictures(ResultSet res) throws SQLException{
+        Pictures pictures = new Pictures();
+
+        pictures.setId(res.getInt("Id"));
+        pictures.setLarge(res.getString("Large"));
+        pictures.setMedium(res.getString("medium"));
+        pictures.setThumbnail(res.getString("thumbnail"));
+
+        return pictures;
+    }
+
+    private Coords mapCoords(ResultSet res) throws SQLException{
+        Coords coords = new Coords();
+
+        coords.setId(res.getInt("Id"));
+        coords.setLatitude(res.getString("Latitude"));
+        coords.setLongitude(res.getString("Longitude"));
+
+        return coords;
+    }
+
+    private Pictures getPicturesById(int idPictures) throws SQLException{
+        Pictures pictures = null;
+        final String query = "SELECT * FROM Pictures WHERE Id = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setInt(1, idPictures);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            pictures = mapPictures(resultSet);
+        }
+
+        resultSet.close();
+        statement.close();
+
+        if (pictures == null)
+            throw new SQLException();
+
+        return pictures;
+    }
+
+    private Coords getCoordsById(int idCoords) throws SQLException{
+        Coords coords = null;
+        final String query = "SELECT * FROM Coords WHERE Id = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setInt(1, idCoords);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next()) {
+            coords = mapCoords(resultSet);
+        }
+
+        resultSet.close();
+        statement.close();
+
+        if (coords == null)
+            throw new SQLException();
+
+        return coords;
+    }
+
 
     public List<T> getAll(String typePersonne) throws SQLException {
         List<T> personnes = new ArrayList<>();
@@ -99,7 +182,7 @@ public class Actions<T extends Personne> {
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        statement.setLong(1, id);
+        statement.setInt(1, id);
 
         ResultSet resultSet = statement.executeQuery();
 
@@ -144,43 +227,75 @@ public class Actions<T extends Personne> {
     }
 
     public void addProg(Programmeur prog) throws SQLException {
-        final String query = "INSERT INTO Programmeur (LastName, FirstName, Gender, Picture, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String query = "INSERT INTO Programmeur (Title, LastName, FirstName, Gender, Id_pictures, Address, Id_Coords, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        statement.setString(1, prog.getLastName());
-        statement.setString(2, prog.getFirstName());
-        statement.setString(3, prog.getGender());
-        statement.setString(4, prog.getPicture());
-        statement.setString(5, prog.getAddress());
-        statement.setString(6, prog.getPseudo());
-        statement.setInt(7, prog.getManager().getId());
-        statement.setString(8, prog.getHobby());
-        statement.setInt(9, prog.getBirthYear());
-        statement.setFloat(10, prog.getSalary());
-        statement.setFloat(11, prog.getPrime());
+        statement.setString(1, prog.getTitle());
+        statement.setString(2, prog.getLastName());
+        statement.setString(3, prog.getFirstName());
+        statement.setString(4, prog.getGender());
+        statement.setInt(5, prog.getPictures().getId());
+        statement.setString(6, prog.getAddress());
+        statement.setInt(7, prog.getCoords().getId());
+        statement.setString(8, prog.getPseudo());
+        statement.setInt(9, prog.getManager().getId());
+        statement.setString(10, prog.getHobby());
+        statement.setInt(11, prog.getBirthYear());
+        statement.setFloat(12, prog.getSalary());
+        statement.setFloat(13, prog.getPrime());
+
+        statement.executeUpdate();
+        statement.close();
+
+    }
+
+    public void addManager(Manager manager) throws SQLException {
+        final String query = "INSERT INTO Manager (Title, LastName, FirstName, Gender, Id_pictures, Address, Id_Coords, Hobby, Department, BirthYear, Salary, Prime)" +
+                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, manager.getTitle());
+        statement.setString(2, manager.getLastName());
+        statement.setString(3, manager.getFirstName());
+        statement.setString(4, manager.getGender());
+        statement.setInt(5, manager.getPictures().getId());
+        statement.setString(6, manager.getAddress());
+        statement.setInt(7, manager.getCoords().getId());
+        statement.setString(8, manager.getHobby());
+        statement.setString(9, manager.getDepartment());
+        statement.setInt(10, manager.getBirthYear());
+        statement.setFloat(11, manager.getSalary());
+        statement.setFloat(12, manager.getPrime());
 
         statement.executeUpdate();
         statement.close();
     }
 
-    public void addManager(Manager manager) throws SQLException {
-        final String query = "INSERT INTO Manager (LastName, FirstName, Gender, Picture, Address, Hobby, Department, BirthYear, Salary, Prime) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void addPictures(Pictures pictures) throws SQLException {
+        final String query = "INSERT INTO Pictures (Large, Medium, Thumbnail) VALUES (?, ?, ?)";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        statement.setString(1, manager.getLastName());
-        statement.setString(2, manager.getFirstName());
-        statement.setString(3, manager.getGender());
-        statement.setString(4, manager.getPicture());
-        statement.setString(5, manager.getAddress());
-        statement.setString(6, manager.getHobby());
-        statement.setString(7, manager.getDepartment());
-        statement.setInt(8, manager.getBirthYear());
-        statement.setFloat(9, manager.getSalary());
-        statement.setFloat(10, manager.getPrime());
+        statement.setString(1, pictures.getLarge());
+        statement.setString(2, pictures.getMedium());
+        statement.setString(3, pictures.getThumbnail());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+
+    public void addCoords(Coords coords) throws SQLException{
+        final String query = "INSERT INTO Coords (Latitude, Longitude)" +
+                " VALUES (?, ?)";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, coords.getLatitude());
+        statement.setString(2, coords.getLongitude());
 
         statement.executeUpdate();
         statement.close();
@@ -393,8 +508,49 @@ public class Actions<T extends Personne> {
         statement.close();
     }
 
+    public void deleteUtils() throws SQLException{
+        deletePictures();
+        deleteCoords();
+    }
+    private void deletePictures() throws SQLException{
+        String query = "DELETE FROM Pictures";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    private void deleteCoords() throws SQLException{
+        String query = "DELETE FROM Coords";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public void resetIndex(String typePersonne) throws SQLException {
+        resetIndexPictures();
+        resetIndexCoords();
+
         String query = "ALTER TABLE " + typePersonne + " AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndexPictures() throws SQLException{
+        String query = "ALTER TABLE Pictures AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndexCoords() throws SQLException{
+        String query = "ALTER TABLE Coords AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.executeUpdate();
@@ -406,4 +562,55 @@ public class Actions<T extends Personne> {
     }
 
 
+    public Pictures getPictures(Pictures pictures) throws SQLException{
+        Pictures fullDataPictures = null;
+
+        final String query = "Select * from Pictures WHERE Large = ? " +
+                "AND Medium = ? " +
+                "AND Thumbnail = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, pictures.getLarge());
+        statement.setString(2, pictures.getMedium());
+        statement.setString(3, pictures.getThumbnail());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataPictures = mapPictures(res);
+
+        if (fullDataPictures == null)
+            throw new SQLException("Pictures null");
+
+        res.close();
+        statement.close();
+
+        return fullDataPictures;
+    }
+
+    public Coords getCoords(Coords coords) throws SQLException{
+        Coords fullDataCoords = null;
+
+        final String query = "Select * from Coords WHERE Latitude = ? " +
+                "AND Longitude = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, coords.getLatitude());
+        statement.setString(2, coords.getLongitude());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataCoords = mapCoords(res);
+
+        if (fullDataCoords == null)
+            throw new SQLException("Coords null");
+
+        res.close();
+        statement.close();
+
+        return fullDataCoords;
+    }
 }

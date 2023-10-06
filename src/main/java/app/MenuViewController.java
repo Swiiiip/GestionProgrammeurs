@@ -21,7 +21,7 @@ public class MenuViewController{
             switch (buttonText) {
                 case "Afficher tous les programmeurs":
                     try{
-                        pages.showDataDisplayPage(programmeurDAO.getAll());
+                        Pages.showDataDisplayPage(programmeurDAO.getAll());
                     } catch (Exception e) {
                         displayError(e.getMessage());
                     }

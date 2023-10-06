@@ -14,6 +14,7 @@ module moduleInfo {
     exports app;
     exports personnes;
     exports dao;
+    exports utils;
 
     opens exec to javafx.graphics;
     exports exec;

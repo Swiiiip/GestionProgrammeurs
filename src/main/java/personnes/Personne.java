@@ -1,22 +1,27 @@
 package personnes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import utils.Coords;
+import utils.Pictures;
 
 import java.time.LocalDate;
 
-@JsonPropertyOrder({"picture", "id", "firstName", "lastName", "gender", "age", "address", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"id", "title", "firstName", "lastName", "pictures", "gender", "age", "address", "coords", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Personne {
     private int id;
+    private String title;
     private String firstName;
     private String lastName;
     private String gender;
-    private String picture;
+    private Pictures pictures;
     private String address;
+    private Coords coords;
     private String hobby;
     private int birthYear;
     private float salary;
@@ -26,7 +31,7 @@ public class Personne {
         this.lastName = null;
         this.firstName = null;
         this.gender = null;
-        this.picture = null;
+        this.pictures = null;
         this.address = null;
         this.hobby = null;
         this.birthYear = 0;
@@ -34,12 +39,14 @@ public class Personne {
         this.prime = 0;
     }
 
-    public Personne(String lastName, String firstName, String gender, String picture, String address, String hobby, int birthYear, float salary, float prime) {
+    public Personne(String title, String lastName, String firstName, String gender, Pictures pictures, String address, Coords coords, String hobby, int birthYear, float salary, float prime) {
+        this.title = title;
         this.lastName = lastName;
         this.firstName = firstName;
         this.gender = gender;
-        this.picture = picture;
+        this.pictures = pictures;
         this.address = address;
+        this.coords = coords;
         this.hobby = hobby;
         this.birthYear = birthYear;
         this.salary = salary;
@@ -70,6 +77,19 @@ public class Personne {
      *
      * @return Le nom de la personne.
      */
+    @JsonProperty("title")
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+    /**
+     * Obtient le nom de la personne.
+     *
+     * @return Le nom de la personne.
+     */
     @JsonProperty("lastName")
     public String getLastName() {
         return this.lastName;
@@ -94,6 +114,7 @@ public class Personne {
         return this.firstName;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return this.lastName.toUpperCase() + " " + this.firstName;
     }
@@ -126,13 +147,13 @@ public class Personne {
         this.gender = gender;
     }
 
-    @JsonProperty("picture")
-    public String getPicture(){
-        return this.picture;
+    @JsonProperty("pictures")
+    public Pictures getPictures(){
+        return this.pictures;
     }
 
-    public void setPicture(String picture){
-        this.picture = picture;
+    public void setPictures(Pictures pictures){
+        this.pictures = pictures;
     }
     /**
      * Définit l'âge de la personne en fonction de sa date de naissance
@@ -162,6 +183,20 @@ public class Personne {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Obtient le nom de la personne.
+     *
+     * @return Le nom de la personne.
+     */
+    @JsonProperty("coords")
+    public Coords getCoords() {
+        return this.coords;
+    }
+
+    public void setCoords(Coords coords){
+        this.coords = coords;
     }
 
     /**

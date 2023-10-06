@@ -24,7 +24,7 @@ public class GestionBddApp extends Application {
 
     @Override
     public void start(Stage primaryStage){
-        this.primaryStage = primaryStage;
+        GestionBddApp.primaryStage = primaryStage;
         primaryStage.setTitle("Gestion BDD");
 
         initRootLayout();
@@ -32,12 +32,12 @@ public class GestionBddApp extends Application {
 
     private void initRootLayout() {
         try {
-            this.rootLayout = new BorderPane();
+            rootLayout = new BorderPane();
             Scene scene = new Scene(rootLayout, 400, 400);
             scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
             primaryStage.setScene(scene);
 
-            rootLayout.setTop(menuViewController.initMenuBar());
+            rootLayout.setTop(MenuViewController.initMenuBar());
 
             Pages.showMenuPage();
 
