@@ -10,10 +10,11 @@ import utils.Coords;
 import utils.Pictures;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 
 @JsonPropertyOrder({"id", "title", "firstName", "lastName", "pictures", "gender", "age", "address", "coords", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Personne {
+public abstract class Personne {
     private int id;
     private String title;
     private String firstName;
@@ -276,6 +277,23 @@ public class Personne {
         this.prime = prime;
     }
 
+    @JsonIgnore
+    public LinkedHashMap<String, Object> getColumns() {
+        LinkedHashMap<String, Object> columns = new LinkedHashMap<>();
+        columns.put("Id", this.id);
+        columns.put("Title", this.title);
+        columns.put("LastName", this.lastName);
+        columns.put("FirstName", this.firstName);
+        columns.put("Gender", this.gender);
+        columns.put("Id_pictures", this.pictures.getId());
+        columns.put("Id_Coords", this.coords.getId());
+        columns.put("Address", this.address);
+        columns.put("Hobby", this.hobby);
+        columns.put("BirthYear", this.birthYear);
+        columns.put("Salary", this.salary);
+        columns.put("Prime", this.prime);
+        return columns;
+    }
 
     @Override
     public String toString() {

@@ -103,13 +103,12 @@ public class DataGenerator{
         managerDAO.exit();
     }
     private Programmeur getProgFromAPI() throws Exception {
-        ProgrammeurDAO prog = new ProgrammeurDAO();
         String jsonData = getJsonDataFromApi();
 
         Pictures pictures = parsePicturesFromJson(jsonData);
         Coords coords = parseCoordsFromJson(jsonData);
-        prog.addPictures(pictures);
-        prog.addCoords(coords);
+        programmeurDAO.addPictures(pictures);
+        programmeurDAO.addCoords(coords);
 
         pictures = programmeurDAO.getPictures(pictures);
         coords = programmeurDAO.getCoords(coords);
@@ -147,13 +146,12 @@ public class DataGenerator{
     }
 
     private Manager getManagerFromAPI() throws  Exception {
-        ManagerDAO manager = new ManagerDAO();
         String jsonData = getJsonDataFromApi();
 
         Pictures pictures = parsePicturesFromJson(jsonData);
         Coords coords = parseCoordsFromJson(jsonData);
-        manager.addPictures(pictures);
-        manager.addCoords(coords);
+        managerDAO.addPictures(pictures);
+        managerDAO.addCoords(coords);
 
         pictures = programmeurDAO.getPictures(pictures);
         coords = programmeurDAO.getCoords(coords);

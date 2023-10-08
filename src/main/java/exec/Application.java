@@ -3,10 +3,8 @@ package exec;
 import dao.ManagerDAO;
 import dao.ProgrammeurDAO;
 import data.DataGenerator;
-import personnes.Manager;
-import personnes.Programmeur;
+import prediction.PredictionModel;
 
-import java.sql.SQLException;
 
 public class Application {
 
@@ -36,13 +34,11 @@ public class Application {
         ManagerDAO manager = new ManagerDAO();
 
         try {
-            for (Programmeur p : prog.getAll())
-                System.out.println(p);
-
-            for (Manager m : manager.getAll())
-                System.out.println(m);
-
-        }catch (SQLException e){
+            PredictionModel<ProgrammeurDAO> progModel = new PredictionModel<>(prog);
+            PredictionModel<ManagerDAO> managerModel = new PredictionModel<>(manager);
+            System.out.println(progModel.predictSalary(50, "male"));
+            System.out.println(managerModel.predictSalary(50, "female"));
+        } catch(Exception e){
             System.err.println(e.getMessage());
         }
     }

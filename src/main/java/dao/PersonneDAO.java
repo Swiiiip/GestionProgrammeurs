@@ -31,7 +31,7 @@ public interface PersonneDAO<T extends Personne> {
 
     Map<Float, Integer> getSalaryHistogram() throws SQLException;
 
-    double getCorrelationBetweenAgeAndSalary() throws SQLException;
+    Map<String, Float> getAverageSalaryByGender() throws SQLException;
 
     void deleteById(int id) throws SQLException;
 

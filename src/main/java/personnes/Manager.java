@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import utils.Coords;
 import utils.Pictures;
 
+import java.util.LinkedHashMap;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Manager extends Personne {
 
@@ -29,4 +31,10 @@ public class Manager extends Personne {
         this.department = department;
     }
 
+    @Override
+    public LinkedHashMap<String, Object> getColumns() {
+        LinkedHashMap<String, Object> columns = super.getColumns();
+        columns.put("Department", this.department);
+        return columns;
+    }
 }

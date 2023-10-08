@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import utils.Coords;
 import utils.Pictures;
 
+import java.util.LinkedHashMap;
+
 /**
  * La classe ProgrammeurBean représente un programmeur avec ses attributs tels que
  * le nom, le prénom, l'adresse, le pseudo, le responsable, le hobby, l'année de
@@ -91,6 +93,14 @@ public class Programmeur extends Personne{
      */
     public void setManager(Manager manager) {
         this.manager = manager;
+    }
+
+    @Override
+    public LinkedHashMap<String, Object> getColumns() {
+        LinkedHashMap<String, Object> columns = super.getColumns();
+        columns.put("Pseudo", this.pseudo);
+        columns.put("Id_manager", this.manager.getId());
+        return columns;
     }
 
 }

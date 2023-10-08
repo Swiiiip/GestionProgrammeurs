@@ -10,10 +10,7 @@ import utils.Pictures;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Actions<T extends Personne> {
 
@@ -226,53 +223,42 @@ public class Actions<T extends Personne> {
         return personne;
     }
 
-    public void addProg(Programmeur prog) throws SQLException {
-        final String query = "INSERT INTO Programmeur (Title, LastName, FirstName, Gender, Id_pictures, Address, Id_Coords, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void addPersonne(Personne personne) throws SQLException {
+        String typePersonne = personne.getClass().getSimpleName();
+
+        LinkedHashMap<String, Object> columns = personne.getColumns();
+        String query = getQuery(columns, typePersonne);
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        statement.setString(1, prog.getTitle());
-        statement.setString(2, prog.getLastName());
-        statement.setString(3, prog.getFirstName());
-        statement.setString(4, prog.getGender());
-        statement.setInt(5, prog.getPictures().getId());
-        statement.setString(6, prog.getAddress());
-        statement.setInt(7, prog.getCoords().getId());
-        statement.setString(8, prog.getPseudo());
-        statement.setInt(9, prog.getManager().getId());
-        statement.setString(10, prog.getHobby());
-        statement.setInt(11, prog.getBirthYear());
-        statement.setFloat(12, prog.getSalary());
-        statement.setFloat(13, prog.getPrime());
-
-        statement.executeUpdate();
-        statement.close();
-
-    }
-
-    public void addManager(Manager manager) throws SQLException {
-        final String query = "INSERT INTO Manager (Title, LastName, FirstName, Gender, Id_pictures, Address, Id_Coords, Hobby, Department, BirthYear, Salary, Prime)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.setString(1, manager.getTitle());
-        statement.setString(2, manager.getLastName());
-        statement.setString(3, manager.getFirstName());
-        statement.setString(4, manager.getGender());
-        statement.setInt(5, manager.getPictures().getId());
-        statement.setString(6, manager.getAddress());
-        statement.setInt(7, manager.getCoords().getId());
-        statement.setString(8, manager.getHobby());
-        statement.setString(9, manager.getDepartment());
-        statement.setInt(10, manager.getBirthYear());
-        statement.setFloat(11, manager.getSalary());
-        statement.setFloat(12, manager.getPrime());
+        int index = 1;
+        for (Object columnValue : columns.values()) {
+            statement.setObject(index, columnValue);
+            index++;
+        }
 
         statement.executeUpdate();
         statement.close();
     }
+
+    private String getQuery(LinkedHashMap<String, Object> columns, String typePersonne) {
+        StringBuilder columnNames = new StringBuilder();
+        StringBuilder placeholders = new StringBuilder();
+
+        for (Map.Entry<String, Object> entry : columns.entrySet()) {
+            String columnName = entry.getKey();
+
+            if (!columnNames.isEmpty()) {
+                columnNames.append(", ");
+                placeholders.append(", ");
+            }
+            columnNames.append(columnName);
+            placeholders.append("?");
+        }
+
+        return "INSERT INTO " + typePersonne + " (" + columnNames + ") VALUES (" + placeholders + ")";
+    }
+
 
     public void addPictures(Pictures pictures) throws SQLException {
         final String query = "INSERT INTO Pictures (Large, Medium, Thumbnail) VALUES (?, ?, ?)";
@@ -442,51 +428,28 @@ public class Actions<T extends Personne> {
         return salaryHistogramManager;
     }
 
-    private static double calculateMean(List<Double> data) {
-        double sum = 0.0;
-        for (double value : data) {
-            sum += value;
-        }
-        return sum / data.size();
-    }
-
-    public double getCorrelationBetweenAgeAndSalary(String typePersonne) throws SQLException{
-        final String query = "SELECT BirthYear, Salary " +
-                "FROM " + typePersonne;
+    public Map<String, Float> getAverageSalaryByGender(String typePersonne) throws SQLException {
+        final String query = "SELECT Gender, AVG(Salary) AS AverageSalary " +
+                "FROM " + typePersonne +
+                " GROUP BY Gender";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
         ResultSet resultSet = statement.executeQuery();
 
-        List<Double> birthYears = new ArrayList<>();
-        List<Double> salaries = new ArrayList<>();
-
+        Map<String, Float> averageSalaryByGender = new HashMap<>();
         while (resultSet.next()) {
-            birthYears.add(resultSet.getDouble("BirthYear"));
-            salaries.add(resultSet.getDouble("Salary"));
-        }
+            String gender = resultSet.getString("Gender");
+            float averageSalary = resultSet.getFloat("AverageSalary");
 
-        double meanBirthYear = calculateMean(birthYears);
-        double meanSalary = calculateMean(salaries);
-
-        double numerator = 0.0;
-        double denominatorX = 0.0;
-        double denominatorY = 0.0;
-
-        for (int i = 0; i < birthYears.size(); i++) {
-            double diffX = birthYears.get(i) - meanBirthYear;
-            double diffY = salaries.get(i) - meanSalary;
-
-            numerator += (diffX * diffY);
-            denominatorX += (diffX * diffX);
-            denominatorY += (diffY * diffY);
+            averageSalaryByGender.put(gender, averageSalary);
         }
 
         resultSet.close();
         statement.close();
 
-        return numerator / (Math.sqrt(denominatorX) * Math.sqrt(denominatorY));
+        return averageSalaryByGender;
     }
+
 
     public void deleteById(String typePersonne, int id) throws SQLException{
         this.getById(typePersonne, id);

@@ -29,7 +29,7 @@ public class ManagerDAO implements PersonneDAO<Manager> {
 
     @Override
     public void add(Manager manager) throws SQLException {
-        actionsBD.addManager(manager);
+        actionsBD.addPersonne(manager);
     }
 
     @Override
@@ -68,10 +68,9 @@ public class ManagerDAO implements PersonneDAO<Manager> {
     }
 
     @Override
-    public double getCorrelationBetweenAgeAndSalary() throws SQLException{
-        return actionsBD.getCorrelationBetweenAgeAndSalary("Manager");
+    public Map<String, Float> getAverageSalaryByGender() throws SQLException{
+        return actionsBD.getAverageSalaryByGender("Manageur");
     }
-
 
     @Override
     public void deleteById(int id) throws SQLException {

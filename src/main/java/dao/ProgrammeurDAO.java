@@ -29,7 +29,7 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
 
     @Override
     public void add(Programmeur prog) throws SQLException{
-        actionsBD.addProg(prog);
+        actionsBD.addPersonne(prog);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
     }
 
     @Override
-    public double getCorrelationBetweenAgeAndSalary() throws SQLException {
-        return actionsBD.getCorrelationBetweenAgeAndSalary("Programmeur");
+    public Map<String, Float> getAverageSalaryByGender() throws SQLException{
+        return actionsBD.getAverageSalaryByGender("Programmeur");
     }
     @Override
     public void deleteById(int id) throws SQLException {

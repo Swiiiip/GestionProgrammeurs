@@ -9,7 +9,7 @@ module moduleInfo {
     requires java.sql;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
-
+    requires weka.stable;
     opens app to javafx.fxml;
     exports app;
     exports personnes;
@@ -18,4 +18,5 @@ module moduleInfo {
 
     opens exec to javafx.graphics;
     exports exec;
+    exports loadingscreen;
 }
