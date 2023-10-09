@@ -10,6 +10,9 @@ module moduleInfo {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
     requires weka.stable;
+    requires javafx.web;
+    requires annotations;
+
     opens app to javafx.fxml;
     exports app;
     exports personnes;

@@ -43,8 +43,6 @@ public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
 
         model = new LinearRegression();
         model.buildClassifier(data);
-        System.out.println("Modèle de régression linéaire construit pour " + personneDAO + " :");
-        System.out.println(model);
     }
 
     public float predictSalary(double predictAge, String predictGender) throws Exception {
