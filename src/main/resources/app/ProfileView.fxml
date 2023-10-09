@@ -4,19 +4,29 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.ProfileViewController">
-    <VBox alignment="CENTER">
-        <ImageView fx:id="profilePictureImageView" fitHeight="100" fitWidth="100"/>
-            <Text fx:id="fullNameText" />
-            <Text fx:id="role" />
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.web.WebView?>
+<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.ProfileViewController">
+
+    <VBox fx:id="profileBlock" styleClass="profile-block">
+
+        <HBox alignment="BOTTOM_RIGHT" fx:id="profileHeader" spacing="10.0" styleClass="profile-header">
+                <ImageView fx:id="profilePictureImageView"/>
+                <VBox alignment="CENTER_LEFT">
+                    <Text fx:id="fullNameText" styleClass="full-name"/>
+                    <Text fx:id="roleText" styleClass="role"/>
+                </VBox>
+                <Text  fx:id="profileId" styleClass="profile-id"/>
+        </HBox>
+
+        <TitledPane text="Plus d'infos ..." expanded="false">
+            <content>
+                <VBox fx:id="profileContent" styleClass="profile-content"/>
+            </content>
+        </TitledPane>
+
     </VBox>
 
-    <Text fx:id="genderText" />
-    <Text fx:id="addressText" />
-    <Text fx:id="pseudoText" />
-    <Text fx:id="managerText" />
-    <Text fx:id="hobbyText" />
-    <Text fx:id="birthYearText" />
-    <Text fx:id="salaryText" />
-    <Text fx:id="primeText" />
 </VBox>

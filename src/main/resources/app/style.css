@@ -61,6 +61,46 @@
 /* Tooltip styling */
 .tooltip {
     -fx-font-size: 12px;
-    -fx-background-color: #333;
-    -fx-text-fill: white;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+.profile-block {
+    -fx-background-color: #d7d7d7;
+    -fx-max-width: 300px;
+    -fx-min-height: 140px;
+}
+
+.profile-header {
+    -fx-background-color: #bebebe;
+    -fx-padding: 10px;
+}
+
+.profile-content {
+    -fx-background-color: #d7d7d7;
+    -fx-font-size: 15px;
+    -fx-font-family: "Verdana";
+    -fx-spacing: 10px;
+}
+
+.profile-picture {
+    -fx-max-width: 100px;
+    -fx-max-height: 100px;
+}
+
+.full-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: "Verdana";
+}
+
+.role {
+    -fx-font-style: italic;
+    -fx-font-size: 15px;
+    -fx-font-family: "Verdana";
+}
+
+.profile-id {
+    -fx-font-size: 10px;
+    -fx-font-family: "Verdana";
 }

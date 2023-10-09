@@ -23,11 +23,16 @@ public class MenuViewController{
                     try{
                         Pages.showDataDisplayPage(programmeurDAO.getAll());
                     } catch (Exception e) {
-                        displayError(e.getMessage());
+                        System.err.println(e.getMessage());
                     }
                     break;
 
                 case "Afficher un programmeur":
+                    try{
+                        Pages.showProfileData(programmeurDAO.getById(1));
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
                     break;
 
                 case "Supprimer un programmeur":
@@ -60,22 +65,27 @@ public class MenuViewController{
 
         returnMenuItem.setOnAction(e -> {
             rootLayout.setCenter(null);
-            pages.showMenuPage();
+            Pages.showMenuPage();
         });
 
         menu.getItems().add(returnMenuItem);
         menuBar.getMenus().add(menu);
 
-        /* ----------- REFRESH DATA BUTTON ----------- */
+        /* ----------- FETCH DATA BUTTON ----------- */
         // (Pour quand la BDD est modifiée [via MySQL Workbench ou DataGenerator])
-        Label label = new Label("Refresh Data");
+        Label label = new Label("Fetch Data");
+
+        Tooltip tooltip = new Tooltip("Remet à jour les données affichées en synchronisant avec la BDD.");
+        label.setTooltip(tooltip);
+
         label.setOnMouseClicked(mouseEvent->{
             try {
-                pages.showDataDisplayPage(programmeurDAO.getAll());
+                Pages.showDataDisplayPage(programmeurDAO.getAll());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
+
         Menu refreshData = new Menu("", label);
         menuBar.getMenus().add(refreshData);
 

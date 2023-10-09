@@ -11,10 +11,6 @@ import javafx.stage.Stage;
 public class GestionBddApp extends Application {
     protected static Stage primaryStage;
     protected static BorderPane rootLayout;
-    protected static MenuViewController menuViewController = new MenuViewController();
-    protected static DataViewController dataViewController = new DataViewController();
-    protected static ProfileViewController profileViewController = new ProfileViewController();
-    protected static Pages pages = new Pages();
     protected static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
     protected static ManagerDAO managerDAO = new ManagerDAO();
 
@@ -33,18 +29,19 @@ public class GestionBddApp extends Application {
     private void initRootLayout() {
         try {
             rootLayout = new BorderPane();
+            rootLayout.setTop(MenuViewController.initMenuBar());
+
             Scene scene = new Scene(rootLayout, 400, 400);
             scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-            primaryStage.setScene(scene);
 
-            rootLayout.setTop(MenuViewController.initMenuBar());
+            primaryStage.setScene(scene);
 
             Pages.showMenuPage();
 
             primaryStage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Error : " + e.getMessage());
         }
     }
 

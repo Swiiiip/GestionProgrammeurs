@@ -187,9 +187,9 @@ public abstract class Personne {
     }
 
     /**
-     * Obtient le nom de la personne.
+     * Obtient les coordonées géographiques de la personne (latitude et longitude).
      *
-     * @return Le nom de la personne.
+     * @return les coordonées géographiques de la personne
      */
     @JsonProperty("coords")
     public Coords getCoords() {
