@@ -9,6 +9,8 @@ module moduleInfo {
     requires java.sql;
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
+    requires javafx.web;
+    requires annotations;
 
     opens app to javafx.fxml;
     exports app;

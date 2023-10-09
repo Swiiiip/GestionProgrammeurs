@@ -1,20 +1,25 @@
 package app;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import personnes.Manager;
+import personnes.Personne;
 import personnes.Programmeur;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class DataViewController{
-    private GestionBddApp mainApp;
 
     @FXML private TableView<Object> tableView = new TableView<>();
 
@@ -38,6 +43,11 @@ public class DataViewController{
 
                 if(field.getName().equals("manager")){
                     setUpManagerColumn();
+                    continue;
+                }
+
+                if(field.getName().equals("pictures")){
+                    setUpPictureColumn();
                     continue;
                 }
 
@@ -70,15 +80,15 @@ public class DataViewController{
                     super.updateItem(item, empty);
                     if (item == null || empty) {
                         setText(null);
-                        setGraphic(null);
                     } else {
                         setText(item);
+                        setTextFill(Color.BLUE);
                     }
                 }
             };
 
             cell.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 1) {
+                if (event.getClickCount() == 2) {
                     Programmeur rowData = (Programmeur) cell.getTableRow().getItem();
                     Manager manager = rowData.getManager();
 
@@ -91,5 +101,35 @@ public class DataViewController{
             return cell;
         });
     }
+
+    public void setUpPictureColumn() {
+        TableColumn<Object, Image> column = new TableColumn<>("profilePhoto");
+        column.setCellFactory(param -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+            {
+                imageView.setFitHeight(50);
+                imageView.setFitWidth(50);
+            }
+
+            @Override
+            protected void updateItem(Image item, boolean empty) {
+                super.updateItem(item, empty);
+                imageView.setImage(item);
+                setGraphic(imageView);
+            }
+        });
+
+        column.setCellValueFactory(cellData -> {
+            String pictureLink = ((Personne) cellData.getValue()).getPictures().getThumbnail();
+
+            if (pictureLink == null)
+                pictureLink = "https://www.w3schools.com/howto/img_avatar.png"; // Default PP
+
+            return new SimpleObjectProperty<>(new Image(pictureLink));
+        });
+
+        tableView.getColumns().add(column);
+    }
+
 
 }

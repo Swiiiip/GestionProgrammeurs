@@ -6,7 +6,10 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.List;
 
-public class Pages extends GestionBddApp {
+import static app.GestionBddApp.primaryStage;
+import static app.GestionBddApp.rootLayout;
+
+public class Pages {
 
     public static void showMenuPage() {
         try {
@@ -18,7 +21,7 @@ public class Pages extends GestionBddApp {
             rootLayout.setCenter(menuLayout);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getCause());
         }
     }
 
@@ -29,7 +32,7 @@ public class Pages extends GestionBddApp {
             FXMLLoader loader = new FXMLLoader(DataViewController.class.getResource("DataDisplay.fxml"));
             VBox dataPageLayout = loader.load();
 
-            dataViewController = loader.getController();
+            DataViewController dataViewController = loader.getController();
 
             dataViewController.initializeTableView(data);
             dataViewController.updateTableView(data);
@@ -39,24 +42,23 @@ public class Pages extends GestionBddApp {
             rootLayout.setCenter(dataPageLayout);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getCause());
         }
     }
 
     public static void showProfileData(Object data){
         try{
-            System.out.println("showSpecificData : "+data);
             primaryStage.setTitle("Gestion BDD | Data Display");
 
             FXMLLoader loader = new FXMLLoader(ProfileViewController.class.getResource("ProfileView.fxml"));
             VBox profileLayout = loader.load();
 
-            profileViewController = loader.getController();
+            ProfileViewController profileViewController = loader.getController();
             profileViewController.initialize(data);
             rootLayout.setCenter(profileLayout);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getCause());
         }
 
     }
