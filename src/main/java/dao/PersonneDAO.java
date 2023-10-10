@@ -49,5 +49,11 @@ public interface PersonneDAO<T extends Personne> {
 
     Pictures getPictures(Pictures pictures) throws SQLException;
 
+    Pictures getPicturesById(int id) throws SQLException;
+
     Coords getCoords(Coords coords) throws SQLException;
+
+    Coords getCoordsById(int id) throws SQLException;
+
+    String getTypeLabel();
 }

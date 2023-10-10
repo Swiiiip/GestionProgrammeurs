@@ -55,6 +55,22 @@ public class DataGenerator{
             System.err.println("La réinitialisation des index à échouée." + e.getMessage());
             throw new SecurityException();
         }
+        Pictures defaultFemale = new Pictures("https://www.w3schools.com/howto/img_avatar2.png", "", "");
+        Pictures defaultMale = new Pictures("https://www.w3schools.com/howto/img_avatar.png", "", "");
+        try {
+            programmeurDAO.addPictures(defaultMale);
+            programmeurDAO.addPictures(defaultFemale);
+        } catch (SQLException e){
+            System.err.println("L'ajout des images par défaut a échouée." + e.getMessage());
+            throw new SecurityException();
+        }
+        Coords defaultCoords = new Coords("0.0","0.0");
+        try {
+            programmeurDAO.addCoords(defaultCoords);
+        } catch (SQLException e){
+            System.err.println("L'ajout des coordonnées par défaut a échouée." + e.getMessage());
+            throw new SecurityException();
+        }
 
         for (int i = 0; i < NBMANAGERS; i++) {
             Manager manager;

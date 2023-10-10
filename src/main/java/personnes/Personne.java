@@ -12,7 +12,7 @@ import utils.Pictures;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
-@JsonPropertyOrder({"id", "title", "firstName", "lastName", "pictures", "gender", "age", "address", "coords", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"id", "title", "lastName", "firstName", "pictures", "gender", "age", "address", "coords", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;

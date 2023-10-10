@@ -103,7 +103,7 @@ public class Actions<T extends Personne> {
         return coords;
     }
 
-    private Pictures getPicturesById(int idPictures) throws SQLException{
+    public Pictures getPicturesById(int idPictures) throws SQLException{
         Pictures pictures = null;
         final String query = "SELECT * FROM Pictures WHERE Id = ?";
 
@@ -126,7 +126,7 @@ public class Actions<T extends Personne> {
         return pictures;
     }
 
-    private Coords getCoordsById(int idCoords) throws SQLException{
+    public Coords getCoordsById(int idCoords) throws SQLException{
         Coords coords = null;
         final String query = "SELECT * FROM Coords WHERE Id = ?";
 
@@ -190,9 +190,9 @@ public class Actions<T extends Personne> {
         resultSet.close();
         statement.close();
 
-        if (personne == null && id != 0) {
+        if (personne == null && id != 0)
             throw new SQLException();
-        }
+
 
         return personne;
     }
@@ -218,12 +218,12 @@ public class Actions<T extends Personne> {
         statement.close();
 
         if (personne == null)
-            throw new SQLException();
+            throw new SQLException("Le " + typePersonne + " " + lastName + " " + firstName + " n'existe pas");
 
         return personne;
     }
 
-    public void addPersonne(Personne personne) throws SQLException {
+    public void addPersonne(T personne) throws SQLException {
         String typePersonne = personne.getClass().getSimpleName();
 
         LinkedHashMap<String, Object> columns = personne.getColumns();
@@ -320,9 +320,8 @@ public class Actions<T extends Personne> {
         T personne = null;
 
         final String query = "SELECT * FROM " + typePersonne +
-                " WHERE (Salary, Prime) = (SELECT MAX(Salary), MAX(Prime)" +
+                " WHERE Salary = (SELECT MAX(Salary)" +
                 " FROM " + typePersonne + ")";
-
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
@@ -333,6 +332,9 @@ public class Actions<T extends Personne> {
 
         resultSet.close();
         statement.close();
+
+        if (personne == null)
+            throw new SQLException();
 
         return personne;
     }
@@ -341,7 +343,7 @@ public class Actions<T extends Personne> {
         T personne = null;
 
         final String query = "SELECT * FROM " + typePersonne +
-                " WHERE (Salary, Prime) = (SELECT MIN(Salary), MIN(Prime)" +
+                " WHERE Salary = (SELECT MIN(Salary)" +
                 " FROM " + typePersonne + ")";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
@@ -353,6 +355,10 @@ public class Actions<T extends Personne> {
 
         resultSet.close();
         statement.close();
+
+        if (personne == null)
+            throw new SQLException();
+
 
         return personne;
     }
@@ -544,7 +550,7 @@ public class Actions<T extends Personne> {
             fullDataPictures = mapPictures(res);
 
         if (fullDataPictures == null)
-            throw new SQLException("Pictures null");
+            throw new SQLException("Erreur lors de la récupération des images.");
 
         res.close();
         statement.close();
@@ -569,7 +575,7 @@ public class Actions<T extends Personne> {
             fullDataCoords = mapCoords(res);
 
         if (fullDataCoords == null)
-            throw new SQLException("Coords null");
+            throw new SQLException("Erreur lors de la récupération des coordonnées.");
 
         res.close();
         statement.close();

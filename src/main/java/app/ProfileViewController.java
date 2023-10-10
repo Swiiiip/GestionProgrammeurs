@@ -25,6 +25,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.GestionBddApp.logger;
+
 public class ProfileViewController {
 
     @FXML
@@ -43,7 +45,7 @@ public class ProfileViewController {
     private VBox profileContent;
 
     public void initialize(Object data) {
-        System.out.println("Profile data : " + data);
+        logger.error("Profile data : " + data);
 
         setupProfileHeader(data);
         setupProfileContent(data);
@@ -115,7 +117,7 @@ public class ProfileViewController {
                 try{
                     fieldValue = field.get(data).toString();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e.getMessage());
                 }
 
                 if(fieldName.equals("birthYear") && data instanceof Personne p) {

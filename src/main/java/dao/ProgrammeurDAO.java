@@ -107,6 +107,21 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
     }
 
     @Override
+    public Pictures getPicturesById(int id) throws SQLException{
+        return actionsBD.getPicturesById(id);
+    }
+
+    @Override
+    public Coords getCoordsById(int id) throws SQLException{
+        return actionsBD.getCoordsById(id);
+    }
+
+    @Override
+    public String getTypeLabel() {
+        return "programmeur";
+    }
+
+    @Override
     public void resetIndex() throws SQLException {
         actionsBD.resetIndex("Programmeur");
     }

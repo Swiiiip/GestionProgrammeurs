@@ -21,29 +21,30 @@ public class MenuViewController{
                 case "Afficher tous les programmeurs":
                     try{
                         Pages.showDataDisplayPage(programmeurDAO.getAll());
-                    } catch (Exception e) {
+                    } catch (SQLException e) {
                         System.err.println(e.getMessage());
                     }
                     break;
 
                 case "Afficher un programmeur":
                     try{
+                        //TODO input id with integer check
                         Pages.showProfileData(programmeurDAO.getById(1));
-                    } catch (Exception e) {
-                        System.err.println(e.getMessage());
+                    } catch (SQLException e) {
+                        logger.error(e.getMessage());
                     }
                     break;
 
                 case "Supprimer un programmeur":
-                    System.out.println("suppr");
+                    logger.info("suppr");
                     break;
 
                 case "Ajouter un programmeur":
-                    System.out.println("add");
+                    logger.info("add");
                     break;
 
                 case "Modifier le salaire":
-                    System.out.println("update");
+                    logger.info("update");
                     break;
 
                 case "Quitter le programme":

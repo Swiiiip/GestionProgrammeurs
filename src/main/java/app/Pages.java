@@ -6,8 +6,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.List;
 
-import static app.GestionBddApp.primaryStage;
-import static app.GestionBddApp.rootLayout;
+import static app.GestionBddApp.*;
 
 public class Pages {
 
@@ -21,7 +20,7 @@ public class Pages {
             rootLayout.setCenter(menuLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -42,7 +41,7 @@ public class Pages {
             rootLayout.setCenter(dataPageLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 
@@ -58,7 +57,7 @@ public class Pages {
             rootLayout.setCenter(profileLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
 
     }

@@ -169,7 +169,10 @@ public class DataViewController{
             String pictureLink = ((Personne) cellData.getValue()).getPictures().getThumbnail();
 
             if (pictureLink == null)
-                pictureLink = "https://www.w3schools.com/howto/img_avatar.png"; // Default PP
+                if (((Personne) cellData.getValue()).getGender().equals("male"))
+                    pictureLink = "https://www.w3schools.com/howto/img_avatar.png"; // Default male PP
+                else
+                    pictureLink = "https://www.w3schools.com/howto/img_avatar2.png"; // Default female PP
 
             return new SimpleObjectProperty<>(new Image(pictureLink));
         });

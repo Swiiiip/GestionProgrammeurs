@@ -12,6 +12,8 @@ module moduleInfo {
     requires weka.stable;
     requires javafx.web;
     requires annotations;
+    requires org.fusesource.jansi;
+    requires org.slf4j;
 
     opens app to javafx.fxml;
     exports app;

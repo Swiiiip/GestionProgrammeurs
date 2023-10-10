@@ -7,11 +7,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class GestionBddApp extends Application {
     protected static Stage primaryStage;
+    protected static final Logger logger = LoggerFactory.getLogger(GestionBddApp.class);
     protected static BorderPane rootLayout;
     protected static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
     protected static ManagerDAO managerDAO = new ManagerDAO();
@@ -43,7 +46,7 @@ public class GestionBddApp extends Application {
             primaryStage.show();
 
         } catch (Exception e) {
-            System.err.println("Error : " + e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 

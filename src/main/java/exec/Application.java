@@ -1,10 +1,6 @@
 package exec;
 
-import dao.ManagerDAO;
-import dao.ProgrammeurDAO;
 import data.DataGenerator;
-import prediction.PredictionModel;
-
 
 public class Application {
 
@@ -28,18 +24,9 @@ public class Application {
         long minutes = secondes / 60;
         secondes = secondes % 60;
 
-        System.out.println("Temps Réel : " + minutes + " minutes et " + secondes + " secondes.");
+        System.out.println("Temps Réel : " + minutes + " minutes et " + secondes + " secondes.\n");
 
-        ProgrammeurDAO prog = new ProgrammeurDAO();
-        ManagerDAO manager = new ManagerDAO();
+        new MenuPrincipal();
 
-        try {
-            PredictionModel<ProgrammeurDAO> progModel = new PredictionModel<>(prog);
-            PredictionModel<ManagerDAO> managerModel = new PredictionModel<>(manager);
-            System.out.println(progModel.predictSalary(50, "male"));
-            System.out.println(managerModel.predictSalary(50, "female"));
-        } catch(Exception e){
-            System.err.println(e.getMessage());
-        }
     }
 }

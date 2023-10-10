@@ -104,6 +104,16 @@ public class ManagerDAO implements PersonneDAO<Manager> {
     }
 
     @Override
+    public Pictures getPicturesById(int id) throws SQLException{
+        return actionsBD.getPicturesById(id);
+    }
+
+    @Override
+    public Coords getCoordsById(int id) throws SQLException{
+        return actionsBD.getCoordsById(id);
+    }
+
+    @Override
     public Coords getCoords(Coords coords) throws SQLException{
         return actionsBD.getCoords(coords);
     }
@@ -116,5 +126,10 @@ public class ManagerDAO implements PersonneDAO<Manager> {
     @Override
     public void exit() {
         actionsBD.exit();
+    }
+
+    @Override
+    public String getTypeLabel(){
+        return "manager";
     }
 }
