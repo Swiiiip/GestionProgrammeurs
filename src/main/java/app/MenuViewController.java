@@ -3,19 +3,18 @@ package app;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
 import static app.GestionBddApp.*;
-import static exec.AppliManagement.displayError;
 import static javafx.application.Platform.exit;
 
 public class MenuViewController{
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        if (event.getSource() instanceof Button) {
-            Button clickedButton = (Button) event.getSource();
+        if (event.getSource() instanceof Button clickedButton) {
             String buttonText = clickedButton.getText();
 
             switch (buttonText) {
@@ -36,12 +35,15 @@ public class MenuViewController{
                     break;
 
                 case "Supprimer un programmeur":
+                    System.out.println("suppr");
                     break;
 
                 case "Ajouter un programmeur":
+                    System.out.println("add");
                     break;
 
                 case "Modifier le salaire":
+                    System.out.println("update");
                     break;
 
                 case "Quitter le programme":
@@ -73,6 +75,14 @@ public class MenuViewController{
 
         /* ----------- FETCH DATA BUTTON ----------- */
         // (Pour quand la BDD est modifiée [via MySQL Workbench ou DataGenerator])
+        Menu refreshData = getMenu();
+        menuBar.getMenus().add(refreshData);
+
+        return menuBar;
+    }
+
+    @NotNull
+    private static Menu getMenu() {
         Label label = new Label("Fetch Data");
 
         Tooltip tooltip = new Tooltip("Remet à jour les données affichées en synchronisant avec la BDD.");
@@ -86,9 +96,6 @@ public class MenuViewController{
             }
         });
 
-        Menu refreshData = new Menu("", label);
-        menuBar.getMenus().add(refreshData);
-
-        return menuBar;
+        return new Menu("", label);
     }
 }

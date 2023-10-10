@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class GestionBddApp extends Application {
     protected static Stage primaryStage;
     protected static BorderPane rootLayout;
@@ -32,7 +34,7 @@ public class GestionBddApp extends Application {
             rootLayout.setTop(MenuViewController.initMenuBar());
 
             Scene scene = new Scene(rootLayout, 400, 400);
-            scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
 
             primaryStage.setScene(scene);
 

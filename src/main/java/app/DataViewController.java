@@ -2,7 +2,6 @@ package app;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableCell;
@@ -92,9 +91,7 @@ public class DataViewController{
                     Programmeur rowData = (Programmeur) cell.getTableRow().getItem();
                     Manager manager = rowData.getManager();
 
-                    if (rowData != null) {
-                        Pages.showProfileData(manager);
-                    }
+                    Pages.showProfileData(manager);
                 }
             });
 

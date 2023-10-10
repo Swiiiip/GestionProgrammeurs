@@ -126,7 +126,7 @@ public class ProfileViewController {
 
     private Text createManagerTextLabel( @NotNull Field field, Object data) {
         Manager managerData;
-        String fieldValue = "NaN";
+        String fieldValue;
 
         try {
             managerData = (Manager) field.get(data);

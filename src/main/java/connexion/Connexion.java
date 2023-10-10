@@ -12,20 +12,6 @@ import java.sql.SQLException;
  * @author Jade Hatoum
  */
 public class Connexion {
-    /**
-     * URL de la base de données.
-     */
-    private final String db_url;
-
-    /**
-     * Identifiant pour la connexion à la base de données.
-     */
-    private final String db_user;
-
-    /**
-     * Mot de passe pour la connexion à la base de données.
-     */
-    private final String db_pwd;
 
     /**
      * Connexion à la base de données.
@@ -34,7 +20,7 @@ public class Connexion {
 
     /**
      * Constructeur de la classe Connexion avec des valeurs par défaut.
-     * L'url JDBC par défaut est configuré sur du 'localhost', le port par défaut pour MySQL '3306',avec la BDD sélectionnée par défaut : APTN61_BD
+     * L'url JDBC par défaut est configuré sur du 'localhost', le port par défaut pour MySQL '3306', avec la BDD sélectionnée par défaut : APTN61_BD
      * L'utilisateur est identique au mot de passe : 'adm'
      */
     public Connexion(){
@@ -49,11 +35,8 @@ public class Connexion {
      * @param db_pwd Le mot de passe pour accéder à la base de données.
      */
     public Connexion(String db_url, String db_user, String db_pwd){
-        this.db_url = db_url;
-        this.db_user = db_user;
-        this.db_pwd = db_pwd;
         try {
-            this.connexion = DriverManager.getConnection(this.db_url, this.db_user, this.db_pwd);
+            this.connexion = DriverManager.getConnection(db_url, db_user, db_pwd);
         }catch(SQLException e){
             System.err.println("Error SQL : "+e.getMessage());
             System.err.println("La connexion à la base de données a échoué !");

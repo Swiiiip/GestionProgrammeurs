@@ -21,7 +21,7 @@ public class Pages {
             rootLayout.setCenter(menuLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getCause());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class Pages {
             rootLayout.setCenter(dataPageLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getCause());
+            System.err.println(e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class Pages {
             rootLayout.setCenter(profileLayout);
 
         } catch (IOException e) {
-            System.err.println(e.getCause());
+            System.err.println(e.getMessage());
         }
 
     }
