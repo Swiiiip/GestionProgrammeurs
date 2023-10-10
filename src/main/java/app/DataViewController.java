@@ -40,6 +40,10 @@ public class DataViewController{
         while (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
 
+                if(field.getName().equals("coords")){
+                    continue;
+                }
+
                 if(field.getName().equals("manager")){
                     setUpManagerColumn();
                     continue;
@@ -57,6 +61,50 @@ public class DataViewController{
 
             clazz = clazz.getSuperclass();
         }
+
+        reorderTableColumns(tableView, List.of("id", "profilePhoto", "pseudo", "firstName", "lastName", "gender", "manager"));
+    }
+
+    public void reorderTableColumns(TableView<Object> tableView, List<String> listOrderColumns) {
+        List<TableColumn<Object, ?>> columns = tableView.getColumns();
+        int numColumns = columns.size();
+
+        TableColumn<Object, ?>[] reorderedColumns = new TableColumn[numColumns];
+
+        int index = 0;
+        for (String columnName : listOrderColumns) {
+            TableColumn<Object, ?> column = findColumnByName(columns, columnName);
+            if (column != null) {
+                reorderedColumns[index++] = column;
+            }
+        }
+
+        for (TableColumn<Object, ?> column : columns) {
+            if (!containsColumn(reorderedColumns, column)) {
+                reorderedColumns[index++] = column;
+            }
+        }
+
+        tableView.getColumns().clear();
+        tableView.getColumns().setAll(reorderedColumns);
+    }
+
+    private TableColumn<Object, ?> findColumnByName(List<TableColumn<Object, ?>> columns, String columnName) {
+        for (TableColumn<Object, ?> column : columns) {
+            if (column.getText().equals(columnName)) {
+                return column;
+            }
+        }
+        return null;
+    }
+
+    private boolean containsColumn(TableColumn<Object, ?>[] reorderedColumns, TableColumn<Object, ?> column) {
+        for (TableColumn<Object, ?> c : reorderedColumns) {
+            if (c == column) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setUpManagerColumn() {
@@ -92,6 +140,7 @@ public class DataViewController{
                     Manager manager = rowData.getManager();
 
                     Pages.showProfileData(manager);
+
                 }
             });
 

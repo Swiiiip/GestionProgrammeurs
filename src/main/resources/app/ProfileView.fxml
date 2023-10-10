@@ -4,27 +4,31 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.Insets?>
 <VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="app.ProfileViewController">
 
     <VBox fx:id="profileBlock" styleClass="profile-block">
 
-        <HBox alignment="BOTTOM_RIGHT" fx:id="profileHeader" spacing="10.0" styleClass="profile-header">
-                <ImageView fx:id="profilePictureImageView"/>
-                <VBox alignment="CENTER_LEFT">
+        <HBox alignment="CENTER" spacing="10.0" styleClass="profile-header">
+            <HBox HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                <ImageView fx:id="profilePictureImageView" layoutX="Infinity" HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets left="10.0"/>
+                    </padding>
                     <Text fx:id="fullNameText" styleClass="full-name"/>
                     <Text fx:id="roleText" styleClass="role"/>
                 </VBox>
-                <Text  fx:id="profileId" styleClass="profile-id"/>
+            </HBox>
+            <HBox HBox.hgrow="ALWAYS" alignment="BOTTOM_RIGHT">
+                <Text  fx:id="profileId" styleClass="profile-id" />
+            </HBox>
         </HBox>
 
         <TitledPane text="Plus d'infos ..." expanded="false">
-            <content>
-                <VBox fx:id="profileContent" styleClass="profile-content"/>
-            </content>
+            <VBox fx:id="profileContent" styleClass="profile-content"/>
         </TitledPane>
 
     </VBox>

@@ -2,7 +2,9 @@ package app;
 
 import javafx.fxml.FXML;
 
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextFlow;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebEngine;
 
@@ -19,7 +21,9 @@ import utils.Coords;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileViewController {
 
@@ -80,7 +84,7 @@ public class ProfileViewController {
     }
 
     public void setupProfileContent(Object data){
-        List<Text> textLabels = createTextLabelsForAttributes(data);
+        List<TextFlow> textLabels = createTextLabelsForAttributes(data);
         profileContent.getChildren().addAll(textLabels);
 
         if(data instanceof Personne p){
@@ -89,8 +93,8 @@ public class ProfileViewController {
         }
     }
 
-    public List<Text> createTextLabelsForAttributes(Object data) {
-        List<Text> textLabels = new ArrayList<>();
+    public List<TextFlow> createTextLabelsForAttributes(Object data) {
+        List<TextFlow> textFlows = new ArrayList<>();
         String fieldName, fieldValue;
 
         Class<?> clazz = data.getClass();
@@ -104,7 +108,7 @@ public class ProfileViewController {
                     continue;
 
                 if(fieldName.equals("manager")) {
-                    textLabels.add( createManagerTextLabel(field, data) );
+                    textFlows.add( createManagerTextLabel(field, data) );
                     continue;
                 }
 
@@ -114,17 +118,63 @@ public class ProfileViewController {
                     throw new RuntimeException(e);
                 }
 
+                if(fieldName.equals("birthYear") && data instanceof Personne p) {
+                    fieldValue = fieldValue + " (" + p.getAge() + " ans)";
+                }
+
                 Text textLabel = new Text(fieldName + " : " + fieldValue);
-                textLabels.add(textLabel);
+                textFlows.add( new TextFlow(textLabel));
             }
 
             clazz = clazz.getSuperclass();
         }
 
-        return textLabels;
+        reorderTextFlows(textFlows, List.of("pseudo","gender","hobby","birthYear","salary","prime","manager","department","address"));
+
+        return textFlows;
     }
 
-    private Text createManagerTextLabel( @NotNull Field field, Object data) {
+    public void reorderTextFlows(List<TextFlow> textFlows, List<String> listOrderFields) {
+        Map<String, TextFlow> textFlowMap = new LinkedHashMap<>();
+
+        for (TextFlow textFlow : textFlows) {
+            String text = getTextFromTextFlow(textFlow);
+            textFlowMap.put(text, textFlow);
+        }
+
+        List<TextFlow> reorderedTextFlows = new ArrayList<>();
+
+        for (String fieldName : listOrderFields) {
+            TextFlow textFlow = textFlowMap.get(fieldName);
+            if (textFlow != null) {
+                reorderedTextFlows.add(textFlow);
+                textFlowMap.remove(fieldName);
+            }
+        }
+
+        reorderedTextFlows.addAll(textFlowMap.values());
+
+        textFlows.clear();
+        textFlows.addAll(reorderedTextFlows);
+    }
+
+    private String getTextFromTextFlow(TextFlow textFlow) {
+        StringBuilder builder = new StringBuilder();
+        for (Node text : textFlow.getChildren()) {
+            try {
+                if (text instanceof Text) {
+                    String fieldName = ((Text) text).getText().split(" : ")[0];
+                    builder.append(fieldName);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return builder.toString();
+    }
+
+    private TextFlow createManagerTextLabel( @NotNull Field field, Object data) {
         Manager managerData;
         String fieldValue;
 
@@ -145,7 +195,7 @@ public class ProfileViewController {
             }
         });
 
-        return textLabel;
+        return new TextFlow(textLabel);
     }
 
     public WebView createMapView(Coords coords){
@@ -169,7 +219,7 @@ public class ProfileViewController {
 
         int latitudeInt = (int) latitude;
         int longitudeInt = (int) longitude;
-        int viewRange = 10;
+        int viewRange = 5;
 
         String html = "https://www.openstreetmap.org/export/embed.html?bbox=" + (longitudeInt - viewRange) + "," + (latitudeInt - viewRange) + "," + (longitudeInt + viewRange) + "," + (latitudeInt + viewRange) + "&marker=" + latitudeInt + "," + longitudeInt + "&layers=ND";
         webEngine.load(html);
