@@ -6,7 +6,7 @@
 
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.geometry.Insets?>
-<VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
+<VBox styleClass="profiles-background" alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="app.ProfileViewController">
 
     <VBox fx:id="profileBlock" styleClass="profile-block">

@@ -10,21 +10,21 @@ import static app.GestionBddApp.*;
 
 public class Pages {
 
-    public static void showMenuPage() {
-        try {
+    public static VBox getMenuPage() {
+            try {
             primaryStage.setTitle("Gestion BDD | Menu");
 
             FXMLLoader loader = new FXMLLoader(Pages.class.getResource("Menu.fxml"));
-            VBox menuLayout = loader.load();
 
-            rootLayout.setCenter(menuLayout);
+            return loader.load();
 
         } catch (IOException e) {
             logger.error(e.getMessage());
+            return null;
         }
     }
 
-    public static void showDataDisplayPage(List<?> data) {
+    public static VBox getDataDisplayPage(List<?> data) {
         try {
             primaryStage.setTitle("Gestion BDD | Data Display");
 
@@ -38,14 +38,15 @@ public class Pages {
 
             //dataPageLayout.getChildren().add( [add in here VBox to split the window in half and add statistics if needed !] );
 
-            rootLayout.setCenter(dataPageLayout);
+            return dataPageLayout;
 
         } catch (IOException e) {
             logger.error(e.getMessage());
+            return null;
         }
     }
 
-    public static void showProfileData(Object data){
+    public static VBox getProfileData(Object data){
         try{
             primaryStage.setTitle("Gestion BDD | Data Display");
 
@@ -54,10 +55,12 @@ public class Pages {
 
             ProfileViewController profileViewController = loader.getController();
             profileViewController.initialize(data);
-            rootLayout.setCenter(profileLayout);
+
+            return profileLayout;
 
         } catch (IOException e) {
             logger.error(e.getMessage());
+            return null;
         }
 
     }

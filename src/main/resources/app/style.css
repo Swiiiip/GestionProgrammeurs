@@ -64,6 +64,10 @@
     -fx-text-fill: black;
 }
 
+.profiles-background {
+    -fx-background-color: #f2f2f2;
+}
+
 .profile-block {
     -fx-background-color: #d7d7d7;
     -fx-max-width: 300px;
@@ -102,4 +106,42 @@
 .profile-id {
     -fx-font-size: 10px;
     -fx-font-family: "Verdana";
+}
+
+/* MessageBar */
+.message-bar {
+    -fx-background-color: rgba(0, 0, 255, 0.6);
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-border-width: 2px;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+}
+
+.message-bar.success {
+    -fx-background-color: rgba(0, 255, 0, 0.6);
+}
+
+.message-bar.error {
+    -fx-background-color: rgba(255, 0, 0, 0.6);
+}
+
+.message-bar.warning {
+    -fx-background-color: rgba(255, 255, 0, 0.6);
+}
+
+/* MessageBox */
+.message-box {
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-background-radius: 5px;
+    -fx-border-color: rgba(0, 0, 0, 0.2);
+    -fx-border-radius: 5px;
+    -fx-padding: 5px 10px;
+}
+
+/* MessageLabel (for text inside the message box) */
+.message-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #000; /* Text color */
 }

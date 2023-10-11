@@ -25,9 +25,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static app.GestionBddApp.getContentOverlay;
 import static app.GestionBddApp.logger;
 
 public class ProfileViewController {
+
+    @FXML
+    private VBox profileBlock;
 
     @FXML
     private ImageView profilePictureImageView;
@@ -45,7 +49,7 @@ public class ProfileViewController {
     private VBox profileContent;
 
     public void initialize(Object data) {
-        logger.error("Profile data : " + data);
+        logger.info("Profile data : " + data);
 
         setupProfileHeader(data);
         setupProfileContent(data);
@@ -193,7 +197,8 @@ public class ProfileViewController {
 
         textLabel.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                Pages.showProfileData(managerData);
+                VBox box = Pages.getProfileData(managerData);
+                getContentOverlay().getChildren().add(box);
             }
         });
 

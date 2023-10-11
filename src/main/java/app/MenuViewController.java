@@ -1,37 +1,50 @@
 package app;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import org.jetbrains.annotations.NotNull;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import utils.MessageBar;
 
 import java.sql.SQLException;
 
 import static app.GestionBddApp.*;
 import static javafx.application.Platform.exit;
 
-public class MenuViewController{
+public class MenuViewController {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
+        VBox box;
+
         if (event.getSource() instanceof Button clickedButton) {
             String buttonText = clickedButton.getText();
 
             switch (buttonText) {
                 case "Afficher tous les programmeurs":
-                    try{
-                        Pages.showDataDisplayPage(programmeurDAO.getAll());
+                    try {
+                        //Pages.showDataDisplayPage(programmeurDAO.getAll());
+                        box = Pages.getDataDisplayPage(programmeurDAO.getAll());
+                        getContentOverlay().getChildren().add(box);
+
                     } catch (SQLException e) {
-                        System.err.println(e.getMessage());
+                        logger.error(e.getMessage());
+                        new MessageBar().displayMessageBar(e.getMessage(), MessageBar.MessageType.ERROR);
                     }
                     break;
 
                 case "Afficher un programmeur":
-                    try{
+                    try {
                         //TODO input id with integer check
-                        Pages.showProfileData(programmeurDAO.getById(1));
+                        box = Pages.getProfileData(programmeurDAO.getById(1));
+                        getContentOverlay().getChildren().add(box);
+
                     } catch (SQLException e) {
                         logger.error(e.getMessage());
+                        new MessageBar().displayMessageBar(e.getMessage(), MessageBar.MessageType.ERROR);
                     }
                     break;
 
@@ -67,8 +80,10 @@ public class MenuViewController{
         MenuItem returnMenuItem = new MenuItem("Menu principal");
 
         returnMenuItem.setOnAction(e -> {
-            rootLayout.setCenter(null);
-            Pages.showMenuPage();
+            getContentOverlay().getChildren().clear(); //TODO OPTIONAL FUNCTIONALITY : clears page stack (=history) when returning back to main menu
+
+            VBox menuPage = Pages.getMenuPage();
+            getContentOverlay().getChildren().add(menuPage);
         });
 
         menu.getItems().add(returnMenuItem);
@@ -76,27 +91,50 @@ public class MenuViewController{
 
         /* ----------- FETCH DATA BUTTON ----------- */
         // (Pour quand la BDD est modifiée [via MySQL Workbench ou DataGenerator])
-        Menu refreshData = getMenu();
-        menuBar.getMenus().add(refreshData);
-
-        return menuBar;
-    }
-
-    @NotNull
-    private static Menu getMenu() {
         Label label = new Label("Fetch Data");
 
         Tooltip tooltip = new Tooltip("Remet à jour les données affichées en synchronisant avec la BDD.");
         label.setTooltip(tooltip);
 
-        label.setOnMouseClicked(mouseEvent->{
+        label.setOnMouseClicked(mouseEvent -> {
             try {
-                Pages.showDataDisplayPage(programmeurDAO.getAll());
+                VBox box = Pages.getDataDisplayPage(programmeurDAO.getAll());
+                getContentOverlay().getChildren().add(box);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         });
 
-        return new Menu("", label);
+        menuBar.getMenus().add(new Menu("", label));
+
+        /* ----------- TMP BUTTON ----------- */  //TODO temp button to test messageBar display, REMOVE LATER!!!
+        label = new Label("messageBar");
+
+        label.setOnMouseClicked(mouseEvent -> new MessageBar().displayMessageBar("test", MessageBar.MessageType.SUCCESS));
+
+        menuBar.getMenus().add(new Menu("", label));
+
+        /* ----------- BACK BUTTON ----------- */
+        label = new Label("Back");
+
+        tooltip = new Tooltip("Retourner à la page précédente.");
+        label.setTooltip(tooltip);
+
+        label.setOnMouseClicked(mouseEvent -> {
+
+            ObservableList<Node> children = getContentOverlay().getChildren();
+            int size = children.size();
+            Pane container = getContainerMessageBar();
+
+            if (size > 1 && !( size==2 && children.contains(container) ) )
+                if(children.get(size-1).equals(container))
+                    children.remove(size-2);
+                else
+                    children.remove(size-1);
+        });
+
+        menuBar.getMenus().add(new Menu("", label));
+
+        return menuBar;
     }
 }

@@ -10,6 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import personnes.Manager;
 import personnes.Personne;
@@ -17,6 +18,8 @@ import personnes.Programmeur;
 
 import java.lang.reflect.Field;
 import java.util.List;
+
+import static app.GestionBddApp.getContentOverlay;
 
 public class DataViewController{
 
@@ -62,7 +65,7 @@ public class DataViewController{
             clazz = clazz.getSuperclass();
         }
 
-        reorderTableColumns(tableView, List.of("id", "profilePhoto", "pseudo", "firstName", "lastName", "gender", "manager"));
+        reorderTableColumns(tableView, List.of("id", "profilePhoto", "pseudo", "firstName", "lastName", "title", "gender", "manager"));
     }
 
     public void reorderTableColumns(TableView<Object> tableView, List<String> listOrderColumns) {
@@ -139,7 +142,8 @@ public class DataViewController{
                     Programmeur rowData = (Programmeur) cell.getTableRow().getItem();
                     Manager manager = rowData.getManager();
 
-                    Pages.showProfileData(manager);
+                    VBox box = Pages.getProfileData(manager);
+                    getContentOverlay().getChildren().add(box);
 
                 }
             });
