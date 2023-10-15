@@ -2,7 +2,6 @@ package app;
 
 import dao.ManagerDAO;
 import dao.ProgrammeurDAO;
-
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,10 +18,10 @@ import java.util.Objects;
 
 public class GestionBddApp extends Application {
 
-    protected static Stage primaryStage;
     public static final Logger logger = LoggerFactory.getLogger(GestionBddApp.class);
     private static final StackPane contentOverlay = new StackPane();
     private static final Pane containerPane = new Pane();
+    protected static Stage primaryStage;
     protected static BorderPane rootLayout;
     protected static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
     protected static ManagerDAO managerDAO = new ManagerDAO();
@@ -31,8 +30,16 @@ public class GestionBddApp extends Application {
         launch(args);
     }
 
+    public static StackPane getContentOverlay() {
+        return contentOverlay;
+    }
+
+    public static Pane getContainerMessageBar() {
+        return containerPane;
+    }
+
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         GestionBddApp.primaryStage = primaryStage;
         primaryStage.setTitle("Gestion BDD");
 
@@ -65,8 +72,5 @@ public class GestionBddApp extends Application {
             new MessageBar().displayMessageBar(e.getMessage(), MessageBar.MessageType.ERROR);
         }
     }
-
-    public static StackPane getContentOverlay() { return contentOverlay; }
-    public static Pane getContainerMessageBar() { return containerPane; }
 
 }

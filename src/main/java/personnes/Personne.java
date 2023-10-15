@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import utils.Coords;
-import utils.Pictures;
+import personnes.utils.Coords;
+import personnes.utils.Pictures;
+import utils.Gender;
+import utils.Hobbies;
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -19,11 +21,11 @@ public abstract class Personne {
     private String title;
     private String firstName;
     private String lastName;
-    private String gender;
+    private Gender gender;
     private Pictures pictures;
     private String address;
     private Coords coords;
-    private String hobby;
+    private Hobbies hobby;
     private int birthYear;
     private float salary;
     private float prime;
@@ -40,7 +42,7 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(String title, String lastName, String firstName, String gender, Pictures pictures, String address, Coords coords, String hobby, int birthYear, float salary, float prime) {
+    public Personne(String title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
         this.title = title;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -83,9 +85,10 @@ public abstract class Personne {
         return this.title;
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         this.title = title;
     }
+
     /**
      * Obtient le nom de la personne.
      *
@@ -115,11 +118,6 @@ public abstract class Personne {
         return this.firstName;
     }
 
-    @JsonIgnore
-    public String getFullName() {
-        return this.lastName.toUpperCase() + " " + this.firstName;
-    }
-
     /**
      * Définit le prénom de la personne.
      *
@@ -129,13 +127,18 @@ public abstract class Personne {
         this.firstName = firstName;
     }
 
+    @JsonIgnore
+    public String getFullName() {
+        return this.lastName.toUpperCase() + " " + this.firstName;
+    }
+
     /**
      * Obtient le genre de la personne.
      *
      * @return Le genre de la personne.
      */
     @JsonProperty("gender")
-    public String getGender() {
+    public Gender getGender() {
         return this.gender;
     }
 
@@ -144,25 +147,26 @@ public abstract class Personne {
      *
      * @param gender Le genre de la personne.
      */
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
     }
 
     @JsonProperty("pictures")
-    public Pictures getPictures(){
+    public Pictures getPictures() {
         return this.pictures;
     }
 
-    public void setPictures(Pictures pictures){
+    public void setPictures(Pictures pictures) {
         this.pictures = pictures;
     }
+
     /**
      * Définit l'âge de la personne en fonction de sa date de naissance
      *
      * @return L'âge de la personne
      */
     @JsonProperty("age")
-    public int getAge(){
+    public int getAge() {
         return LocalDate.now().getYear() - this.birthYear;
     }
 
@@ -196,7 +200,7 @@ public abstract class Personne {
         return this.coords;
     }
 
-    public void setCoords(Coords coords){
+    public void setCoords(Coords coords) {
         this.coords = coords;
     }
 
@@ -206,7 +210,7 @@ public abstract class Personne {
      * @return Le hobby de la personne.
      */
     @JsonProperty("hobby")
-    public String getHobby() {
+    public Hobbies getHobby() {
         return this.hobby;
     }
 
@@ -215,7 +219,7 @@ public abstract class Personne {
      *
      * @param hobby Le hobby de la personne.
      */
-    public void setHobby(String hobby) {
+    public void setHobby(Hobbies hobby) {
         this.hobby = hobby;
     }
 
@@ -284,11 +288,11 @@ public abstract class Personne {
         columns.put("Title", this.title);
         columns.put("LastName", this.lastName);
         columns.put("FirstName", this.firstName);
-        columns.put("Gender", this.gender);
+        columns.put("Gender", this.gender.getGender());
         columns.put("Id_pictures", this.pictures.getId());
         columns.put("Id_Coords", this.coords.getId());
         columns.put("Address", this.address);
-        columns.put("Hobby", this.hobby);
+        columns.put("Hobby", this.hobby.getHobby());
         columns.put("BirthYear", this.birthYear);
         columns.put("Salary", this.salary);
         columns.put("Prime", this.prime);

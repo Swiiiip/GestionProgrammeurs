@@ -9,7 +9,6 @@ public enum Departments {
     MARKETING("Marketing"),
     INFO("Informatique"),
     RESEAU("Réseau"),
-
     COMMUNICATION("Communication"),
     PRODUCTION("Production");
 
@@ -21,11 +20,11 @@ public enum Departments {
         this.department = department;
     }
 
-    public String getDepartment() {
-        return department;
+    public static Departments generateRandomDepartment() {
+        return values()[RANDOM.nextInt(values().length)];
     }
 
-    public static String generateRandomDepartment() {
-        return values()[RANDOM.nextInt(values().length)].getDepartment();
+    public String getDepartment() {
+        return department;
     }
 }

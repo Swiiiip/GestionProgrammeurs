@@ -6,12 +6,13 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.List;
 
-import static app.GestionBddApp.*;
+import static app.GestionBddApp.logger;
+import static app.GestionBddApp.primaryStage;
 
 public class Pages {
 
     public static VBox getMenuPage() {
-            try {
+        try {
             primaryStage.setTitle("Gestion BDD | Menu");
 
             FXMLLoader loader = new FXMLLoader(Pages.class.getResource("Menu.fxml"));
@@ -46,8 +47,8 @@ public class Pages {
         }
     }
 
-    public static VBox getProfileData(Object data){
-        try{
+    public static VBox getProfileData(Object data) {
+        try {
             primaryStage.setTitle("Gestion BDD | Data Display");
 
             FXMLLoader loader = new FXMLLoader(ProfileViewController.class.getResource("ProfileView.fxml"));

@@ -21,9 +21,10 @@ import java.util.List;
 
 import static app.GestionBddApp.getContentOverlay;
 
-public class DataViewController{
+public class DataViewController {
 
-    @FXML private TableView<Object> tableView = new TableView<>();
+    @FXML
+    private TableView<Object> tableView = new TableView<>();
 
     public void initializeTableView(List<?> data) {
         tableView.setItems(FXCollections.observableArrayList(data));
@@ -43,16 +44,16 @@ public class DataViewController{
         while (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
 
-                if(field.getName().equals("coords")){
+                if (field.getName().equals("coords")) {
                     continue;
                 }
 
-                if(field.getName().equals("manager")){
+                if (field.getName().equals("manager")) {
                     setUpManagerColumn();
                     continue;
                 }
 
-                if(field.getName().equals("pictures")){
+                if (field.getName().equals("pictures")) {
                     setUpPictureColumn();
                     continue;
                 }
@@ -156,6 +157,7 @@ public class DataViewController{
         TableColumn<Object, Image> column = new TableColumn<>("profilePhoto");
         column.setCellFactory(param -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
+
             {
                 imageView.setFitHeight(50);
                 imageView.setFitWidth(50);
@@ -172,11 +174,10 @@ public class DataViewController{
         column.setCellValueFactory(cellData -> {
             String pictureLink = ((Personne) cellData.getValue()).getPictures().getThumbnail();
 
-            if (pictureLink == null)
-                if (((Personne) cellData.getValue()).getGender().equals("male"))
-                    pictureLink = "https://www.w3schools.com/howto/img_avatar.png"; // Default male PP
-                else
-                    pictureLink = "https://www.w3schools.com/howto/img_avatar2.png"; // Default female PP
+            if (pictureLink == null) {
+                cellData.getValue();
+                pictureLink = "https://www.w3schools.com/howto/img_avatar2.png"; // Default female PP
+            }
 
             return new SimpleObjectProperty<>(new Image(pictureLink));
         });

@@ -1,6 +1,8 @@
 package prediction;
+
 import dao.PersonneDAO;
 import personnes.Personne;
+import utils.Gender;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -16,12 +18,12 @@ public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
     private final LinearRegression model;
 
     public PredictionModel(T personneDAO) throws Exception {
-
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("age"));
-        Attribute genreAttribute = new Attribute("genre", Arrays.asList("female", "male"));
+        Attribute genreAttribute = new Attribute("gender",
+                Arrays.asList(Gender.MALE.getGender(), Gender.FEMALE.getGender()));
         attributes.add(genreAttribute);
-        attributes.add(new Attribute("salaire"));
+        attributes.add(new Attribute("salary"));
 
         data = new Instances("personne_data", attributes, 0);
         data.setClassIndex(data.numAttributes() - 1);
@@ -29,17 +31,20 @@ public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
         List<? extends Personne> personnes = personneDAO.getAll();
         for (Personne personne : personnes) {
             double age = personne.getAge();
-            String genre = personne.getGender();
-            float salaire = personne.getSalary();
+            String gender = personne.getGender().getGender();
+            float salary = personne.getSalary();
 
             DenseInstance instance = new DenseInstance(3);
             instance.setDataset(data);
             instance.setValue(attributes.get(0), age);
-            instance.setValue(attributes.get(1), genre);
-            instance.setValue(attributes.get(2), salaire);
+            instance.setValue(attributes.get(1), gender);
+            instance.setValue(attributes.get(2), salary);
 
             data.add(instance);
         }
+
+        if (data.size() < 20)
+            throw new Exception("un minimum de 20 données est requis");
 
         model = new LinearRegression();
         model.buildClassifier(data);

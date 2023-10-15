@@ -24,4 +24,5 @@ module moduleInfo {
     opens exec to javafx.graphics;
     exports exec;
     exports loadingscreen;
+    exports personnes.utils;
 }

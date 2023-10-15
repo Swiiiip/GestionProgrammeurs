@@ -9,11 +9,14 @@ import personnes.Personne;
 import personnes.Programmeur;
 import prediction.PredictionModel;
 import utils.Departments;
+import utils.Gender;
 import utils.Hobbies;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MenuPrincipal {
     private final Scanner scanner;
@@ -24,18 +27,21 @@ public class MenuPrincipal {
         this.scanner = new Scanner(System.in);
         this.programmeurDAO = new ProgrammeurDAO();
         this.managerDAO = new ManagerDAO();
+        Logger logger = Logger.getLogger("com.github.fommil");
+
+        logger.setLevel(Level.SEVERE);
 
         menuPrincipal();
     }
 
     private void menuPrincipal() {
         while (true) {
-            System.out.println("Menu Principal:");
+            System.out.println("\n\n********* Menu Principal *********\n");
             System.out.println("1. Menu Programmeurs");
             System.out.println("2. Menu Managers");
             System.out.println("3. Quitter");
 
-            System.out.print("Choisissez une option : ");
+            System.out.print("\nChoisissez une option : ");
             int choix = this.getInt();
 
             switch (choix) {
@@ -56,7 +62,7 @@ public class MenuPrincipal {
 
     private void menu(PersonneDAO<?> personneDAO) {
         while (true) {
-            System.out.println("Menu " + personneDAO.getTypeLabel() + " :");
+            System.out.println("\n\n********* Menu " + personneDAO.getTypeLabel() + " *********\n");
             System.out.println("99. Prédire le salaire d'un " + personneDAO.getTypeLabel());
             System.out.println("1. Afficher tous les " + personneDAO.getTypeLabel());
             System.out.println("2. Afficher un " + personneDAO.getTypeLabel() + " par ID");
@@ -74,7 +80,7 @@ public class MenuPrincipal {
             System.out.println("14. Afficher le salaire moyen des " + personneDAO.getTypeLabel() + "s par genre");
             System.out.println("15. Revenir au menu principal");
             System.out.println("16. Quitter");
-            System.out.print("Choisissez une option : ");
+            System.out.print("\nChoisissez une option : ");
 
             int choix = this.getInt();
 
@@ -135,24 +141,25 @@ public class MenuPrincipal {
         }
     }
 
-    private void predictSalary(PersonneDAO<?> personneDAO){
+    private void predictSalary(PersonneDAO<?> personneDAO) {
         System.out.print("\nEntrez votre age : ");
         double age = this.getAge();
 
         System.out.print("\nEntrez votre genre : ");
-        String gender = this.getGender();
+        Gender gender = this.getGender();
 
         try {
             PredictionModel<? extends PersonneDAO<? extends Personne>> predictionModel = new PredictionModel<>(personneDAO);
-            float predictSalary = predictionModel.predictSalary(age, gender);
-            System.out.println("Pour un" + (gender.equals("male") ? " homme " : "e femme") + " de " + age + " ans, " +
+            float predictSalary = predictionModel.predictSalary(age, gender.getGender());
+            System.out.println("-> Pour un" + (!gender.isWoman() ? " homme" : "e femme") + " de " + age + " ans, " +
                     "le salaire prédictif est de " + predictSalary + "€");
         } catch (Exception e) {
-            System.err.println("Le modèle de prédiction a échoué");
+            System.err.println("Le modèle de prédiction a échoué : " + e.getMessage());
         }
 
     }
-    private void displayAPerson(Personne personne){
+
+    private void displayAPerson(Personne personne) {
         System.out.println(personne);
         System.out.println("---------------------------");
     }
@@ -160,17 +167,17 @@ public class MenuPrincipal {
     private void displayAll(PersonneDAO<?> personneDAO) {
         try {
             List<? extends Personne> personnes = personneDAO.getAll();
-            System.out.println(personnes.size() + " " + personneDAO.getTypeLabel() + "s trouvés :");
+            System.out.println("\n" + personnes.size() + " " + personneDAO.getTypeLabel() + (personnes.size() == 1 ? " trouvé :" : "s trouvés :"));
             for (Personne p : personnes) {
                 this.displayAPerson(p);
-           }
+            }
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'affichage des " + personneDAO.getTypeLabel() + "s : " + e.getMessage());
         }
     }
 
     private void displayById(PersonneDAO<?> personneDAO) {
-        int id = 0;
+        int id;
         do {
             try {
                 System.out.print("Entrez l'ID du " + personneDAO.getTypeLabel() + " à afficher : ");
@@ -179,7 +186,7 @@ public class MenuPrincipal {
                 this.displayAPerson(personne);
 
             } catch (SQLException e) {
-                System.err.println("Le " + personneDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
+                System.err.println(e.getMessage());
                 id = 0;
             }
         } while (id == 0);
@@ -206,7 +213,7 @@ public class MenuPrincipal {
         infosPersonne.add(firstName);
 
         System.out.print("\nEntrez le genre : ");
-        String gender = this.getGender();
+        Gender gender = this.getGender();
         infosPersonne.add(gender);
 
         scanner.nextLine();
@@ -215,7 +222,7 @@ public class MenuPrincipal {
         infosPersonne.add(address);
 
         System.out.print("\nEntrez le hobby : ");
-        String hobby = this.getHobby();
+        Hobbies hobby = this.getHobby();
         infosPersonne.add(hobby);
 
         System.out.print("\nEntrez l'année de naissance : ");
@@ -233,7 +240,7 @@ public class MenuPrincipal {
         return infosPersonne;
     }
 
-    private Personne getPersonneByFullName(PersonneDAO<?> personneDAO){
+    private Personne getPersonneByFullName(PersonneDAO<?> personneDAO) {
         String fullName;
         Personne personne = null;
         scanner.nextLine();
@@ -256,7 +263,7 @@ public class MenuPrincipal {
                 String lastName = names[0];
                 String firstName = names[1];
                 try {
-                     personne = personneDAO.getByFullName(lastName, firstName);
+                    personne = personneDAO.getByFullName(lastName, firstName);
                 } catch (SQLException e) {
                     System.err.println(e.getMessage());
                     scanner.nextLine();
@@ -293,19 +300,19 @@ public class MenuPrincipal {
 
     @NotNull
     private Programmeur getProgrammeur(List<?> infosPersonne, String pseudo, Manager manager) throws SQLException {
-        String gender = (String) infosPersonne.get(3);
+        Gender gender = (Gender) infosPersonne.get(3);
 
         return new Programmeur(
                 (String) infosPersonne.get(0),
                 (String) infosPersonne.get(1),
                 (String) infosPersonne.get(2),
                 gender,
-                gender.equals("male") ? this.programmeurDAO.getPicturesById(1) : this.programmeurDAO.getPicturesById(2),
+                !gender.isWoman() ? this.programmeurDAO.getPicturesById(1) : this.programmeurDAO.getPicturesById(2),
                 (String) infosPersonne.get(4),
                 this.programmeurDAO.getCoordsById(1),
                 pseudo,
                 manager,
-                (String) infosPersonne.get(5),
+                (Hobbies) infosPersonne.get(5),
                 (Integer) infosPersonne.get(6),
                 (Float) infosPersonne.get(7),
                 (Float) infosPersonne.get(8)
@@ -313,17 +320,17 @@ public class MenuPrincipal {
     }
 
     @NotNull
-    private Manager getManager(List<?> infosPersonne, String department) throws SQLException{
-        String gender = (String) infosPersonne.get(3);
+    private Manager getManager(List<?> infosPersonne, Departments department) throws SQLException {
+        Gender gender = (Gender) infosPersonne.get(3);
         return new Manager(
                 (String) infosPersonne.get(0),
                 (String) infosPersonne.get(1),
                 (String) infosPersonne.get(2),
                 gender,
-                gender.equals("male") ? this.managerDAO.getPicturesById(1) : this.managerDAO.getPicturesById(2),
+                !gender.isWoman() ? this.managerDAO.getPicturesById(1) : this.managerDAO.getPicturesById(2),
                 (String) infosPersonne.get(4),
                 this.managerDAO.getCoordsById(1),
-                (String) infosPersonne.get(5),
+                (Hobbies) infosPersonne.get(5),
                 (Integer) infosPersonne.get(6),
                 (Float) infosPersonne.get(7),
                 (Float) infosPersonne.get(8),
@@ -337,7 +344,7 @@ public class MenuPrincipal {
         List<?> infosPersonne = collecterInfosPersonne();
 
         System.out.print("\nEntrez le département : ");
-        String department = this.getDepartment();
+        Departments department = this.getDepartment();
 
         Manager manager;
 
@@ -355,8 +362,8 @@ public class MenuPrincipal {
         }
     }
 
-    private void add(PersonneDAO<?> personneDAO){
-        switch (personneDAO.getTypeLabel()){
+    private void add(PersonneDAO<?> personneDAO) {
+        switch (personneDAO.getTypeLabel()) {
             case "programmeur":
                 addProgrammeur((ProgrammeurDAO) personneDAO);
                 break;
@@ -404,7 +411,7 @@ public class MenuPrincipal {
                 System.err.println("Le " + personneDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
                 id = 0;
             }
-        } while(id == 0);
+        } while (id == 0);
 
         try {
             System.out.print("Entrez le nouveau salaire : ");
@@ -527,35 +534,40 @@ public class MenuPrincipal {
         return input;
     }
 
-    private String getGender() {
-        String gender = null;
-        boolean inputValid = false;
-
-        do {
+    private Gender getGender() {
+        while (true) {
             try {
-                gender = scanner.next();
+                String input = scanner.next();
 
-                if (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female"))
-                    inputValid = true;
-                else
-                    throw new InputMismatchException("Le genre de la nouvelle personne doit être : \"male\" ou \"female\"");
+                for (Gender gender : Gender.values()) {
+                    if (gender.getGender().equalsIgnoreCase(input)) {
+                        return gender;
+                    }
+                }
+
+                StringBuilder validGender = new StringBuilder("les genres valides : ");
+                for (Gender gender : Gender.values()) {
+                    validGender.append(gender.getGender()).append(", ");
+                }
+
+                validGender.setLength(validGender.length() - 2);
+                throw new InputMismatchException("Genre invalide. Choisissez parmi " + validGender);
+
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
-                scanner.nextLine();
             }
-        } while (!inputValid);
 
-        return gender.toLowerCase();
+        }
     }
 
-    private String getHobby(){
-        while (true){
+    private Hobbies getHobby() {
+        while (true) {
             try {
                 String input = scanner.next();
 
                 for (Hobbies hobby : Hobbies.values()) {
                     if (hobby.getHobby().equalsIgnoreCase(input)) {
-                        return hobby.getHobby();
+                        return hobby;
                     }
                 }
 
@@ -567,21 +579,21 @@ public class MenuPrincipal {
                 validHobbies.setLength(validHobbies.length() - 2);
                 throw new InputMismatchException("Hobby invalide. Choisissez parmi " + validHobbies);
 
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
             }
 
         }
     }
 
-    private String getDepartment(){
-        while (true){
+    private Departments getDepartment() {
+        while (true) {
             try {
                 String input = scanner.next();
 
                 for (Departments department : Departments.values()) {
                     if (department.getDepartment().equalsIgnoreCase(input)) {
-                        return department.getDepartment();
+                        return department;
                     }
                 }
 
@@ -593,13 +605,14 @@ public class MenuPrincipal {
                 validDepartments.setLength(validDepartments.length() - 2);
                 throw new InputMismatchException("Département invalide. Choisissez parmi " + validDepartments);
 
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
             }
 
         }
     }
-    private String getTitle(){
+
+    private String getTitle() {
         String title = null;
         boolean inputValid = false;
         do {
@@ -611,7 +624,7 @@ public class MenuPrincipal {
                 else
                     throw new InputMismatchException("Le titre de la nouvelle personne doit être : " +
                             "\"Mr\" ou \"Mrs\" ou \"Ms\"");
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
             }
         } while (!inputValid);
@@ -619,7 +632,7 @@ public class MenuPrincipal {
         return title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase();
     }
 
-    private double getAge(){
+    private double getAge() {
         double age;
         do {
             try {
@@ -627,7 +640,7 @@ public class MenuPrincipal {
                 if (!(0 < age && age < 100))
                     throw new InputMismatchException();
 
-            } catch (InputMismatchException e){
+            } catch (InputMismatchException e) {
                 System.err.println("L'âge doit être compris entre 1 et 100");
                 age = 0.0;
                 scanner.nextLine();
@@ -637,7 +650,7 @@ public class MenuPrincipal {
         return age;
     }
 
-    private int getDoB(){
+    private int getDoB() {
         int birthYear;
         do {
             int currentYear = LocalDate.now().getYear();

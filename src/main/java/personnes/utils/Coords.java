@@ -1,4 +1,4 @@
-package utils;
+package personnes.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,17 +13,18 @@ public class Coords {
     private String latitude;
     private String longitude;
 
-    public Coords(){
+    public Coords() {
         this.latitude = null;
         this.longitude = null;
     }
-    public Coords(String latitude, String longitude){
+
+    public Coords(String latitude, String longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     @JsonIgnore
-    public int getId(){
+    public int getId() {
         return this.id;
     }
 
@@ -49,8 +50,9 @@ public class Coords {
         this.longitude = longitude;
     }
 
+
     @Override
-    public String toString(){
+    public String toString() {
         return "->latitude : " + this.latitude + ", longitude : " + this.longitude;
     }
 }

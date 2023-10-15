@@ -1,23 +1,20 @@
 package app;
 
 import javafx.fxml.FXML;
-
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextFlow;
-import javafx.scene.web.WebView;
-import javafx.scene.web.WebEngine;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
-
-import javafx.scene.layout.VBox;
-import utils.Coords;
+import personnes.utils.Coords;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -57,27 +54,27 @@ public class ProfileViewController {
         //maybe we'll be able to implement the carousel effect after that 👀
     }
 
-    public void setupProfileHeader(Object data){
+    public void setupProfileHeader(Object data) {
         String pictureLink, fullName;
         int id = -1;
 
-        if(data instanceof Personne p){
+        if (data instanceof Personne p) {
             pictureLink = p.getPictures().getLarge();
 
             String title = p.getTitle();
             fullName = title + " " + p.getFullName();
 
             id = p.getId();
-        }else{
+        } else {
             pictureLink = "https://www.w3schools.com/howto/img_avatar.png";
             fullName = "NOM Prénom";
         }
 
-        fullNameText.setText( fullName );
+        fullNameText.setText(fullName);
 
-        roleText.setText( data.getClass().getSimpleName() );
+        roleText.setText(data.getClass().getSimpleName());
 
-        profileId.setText( "ID " + id );
+        profileId.setText("ID " + id);
 
         profilePictureImageView.setImage(new Image(pictureLink));
 
@@ -89,11 +86,11 @@ public class ProfileViewController {
         profilePictureImageView.setFitHeight(2 * radius);
     }
 
-    public void setupProfileContent(Object data){
+    public void setupProfileContent(Object data) {
         List<TextFlow> textLabels = createTextLabelsForAttributes(data);
         profileContent.getChildren().addAll(textLabels);
 
-        if(data instanceof Personne p){
+        if (data instanceof Personne p) {
             WebView mapView = createMapView(p.getCoords());
             profileContent.getChildren().add(mapView);
         }
@@ -110,32 +107,32 @@ public class ProfileViewController {
 
                 fieldName = field.getName();
 
-                if(fieldName.equals("pictures") || fieldName.equals("id") || fieldName.equals("fullName") || fieldName.equals("firstName") || fieldName.equals("lastName") || fieldName.equals("title") || fieldName.equals("coords"))
+                if (fieldName.equals("pictures") || fieldName.equals("id") || fieldName.equals("fullName") || fieldName.equals("firstName") || fieldName.equals("lastName") || fieldName.equals("title") || fieldName.equals("coords"))
                     continue;
 
-                if(fieldName.equals("manager")) {
-                    textFlows.add( createManagerTextLabel(field, data) );
+                if (fieldName.equals("manager")) {
+                    textFlows.add(createManagerTextLabel(field, data));
                     continue;
                 }
 
-                try{
+                try {
                     fieldValue = field.get(data).toString();
                 } catch (Exception e) {
                     throw new RuntimeException(e.getMessage());
                 }
 
-                if(fieldName.equals("birthYear") && data instanceof Personne p) {
+                if (fieldName.equals("birthYear") && data instanceof Personne p) {
                     fieldValue = fieldValue + " (" + p.getAge() + " ans)";
                 }
 
                 Text textLabel = new Text(fieldName + " : " + fieldValue);
-                textFlows.add( new TextFlow(textLabel));
+                textFlows.add(new TextFlow(textLabel));
             }
 
             clazz = clazz.getSuperclass();
         }
 
-        reorderTextFlows(textFlows, List.of("pseudo","gender","hobby","birthYear","salary","prime","manager","department","address"));
+        reorderTextFlows(textFlows, List.of("pseudo", "gender", "hobby", "birthYear", "salary", "prime", "manager", "department", "address"));
 
         return textFlows;
     }
@@ -180,7 +177,7 @@ public class ProfileViewController {
         return builder.toString();
     }
 
-    private TextFlow createManagerTextLabel( @NotNull Field field, Object data) {
+    private TextFlow createManagerTextLabel(@NotNull Field field, Object data) {
         Manager managerData;
         String fieldValue;
 
@@ -205,7 +202,7 @@ public class ProfileViewController {
         return new TextFlow(textLabel);
     }
 
-    public WebView createMapView(Coords coords){
+    public WebView createMapView(Coords coords) {
         WebView webView = new WebView();
         double size = 400;
         webView.setMinSize(size, size);
@@ -215,7 +212,7 @@ public class ProfileViewController {
 
         double latitude, longitude;
 
-        try{
+        try {
             latitude = Double.parseDouble(coords.getLatitude());
             longitude = Double.parseDouble(coords.getLongitude());
         } catch (Exception e) {

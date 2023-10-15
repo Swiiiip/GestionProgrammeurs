@@ -1,119 +1,89 @@
 package dao;
 
-import data.Actions;
+import data.db.Actions;
 import personnes.Programmeur;
-import utils.Coords;
-import utils.Pictures;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
-    private final Actions<Programmeur> actionsBD = new Actions<>();
+public class ProgrammeurDAO extends PersonneDAO<Programmeur> {
+    private final Actions<Programmeur> actions = new Actions<>();
 
     @Override
     public List<Programmeur> getAll() throws SQLException {
-        return actionsBD.getAll("Programmeur");
+        return actions.getAll("Programmeur");
     }
 
     @Override
     public Programmeur getById(int id) throws SQLException {
-        return actionsBD.getById("Programmeur", id);
+        return actions.getById("Programmeur", id);
     }
 
     @Override
     public Programmeur getByFullName(String lastName, String firstName) throws SQLException {
-        return actionsBD.getByFullName("Programmeur", lastName, firstName);
+        return actions.getByFullName("Programmeur", lastName, firstName);
     }
 
     @Override
-    public void add(Programmeur prog) throws SQLException{
-        actionsBD.addPersonne(prog);
+    public void add(Programmeur prog) throws SQLException {
+        actions.addPersonne(prog);
     }
 
     @Override
-    public void setSalaryById(int id, float newSalary) throws SQLException{
-        actionsBD.setSalaryById("Programmeur", id, newSalary);
+    public void setSalaryById(int id, float newSalary) throws SQLException {
+        actions.setSalaryById("Programmeur", id, newSalary);
     }
 
     @Override
-    public int getCount() throws SQLException{
-        return actionsBD.getCount("Programmeur");
+    public int getCount() throws SQLException {
+        return actions.getCount("Programmeur");
     }
 
     @Override
-    public Programmeur getWithMaxSalary() throws SQLException{
-        return actionsBD.getWithMaxSalary("Programmeur");
+    public Programmeur getWithMaxSalary() throws SQLException {
+        return actions.getWithAggregatedSalary("Programmeur", "MAX");
     }
 
     @Override
-    public Programmeur getWithMinSalary() throws SQLException{
-        return actionsBD.getWithMinSalary("Programmeur");
+    public Programmeur getWithMinSalary() throws SQLException {
+        return actions.getWithAggregatedSalary("Programmeur", "MIN");
     }
 
     @Override
-    public Map<Integer, Float> getAvgSalaryByAge() throws SQLException{
-        return actionsBD.getAvgSalaryByAge("Programmeur");
+    public Map<Integer, Float> getAvgSalaryByAge() throws SQLException {
+        return actions.getAvgSalaryByAge("Programmeur");
     }
 
     @Override
-    public Map<Integer, Programmeur> getRankBySalary() throws SQLException{
-        return actionsBD.getRankBySalary("Programmeur");
+    public Map<Integer, Programmeur> getRankBySalary() throws SQLException {
+        return actions.getRankBySalary("Programmeur");
     }
 
     @Override
-    public Map<Float, Integer> getSalaryHistogram() throws SQLException{
-        return actionsBD.getSalaryHistogram("Programmeur");
+    public Map<Float, Integer> getSalaryHistogram() throws SQLException {
+        return actions.getSalaryHistogram("Programmeur");
     }
 
     @Override
-    public Map<String, Float> getAverageSalaryByGender() throws SQLException{
-        return actionsBD.getAverageSalaryByGender("Programmeur");
+    public Map<String, Float> getAverageSalaryByGender() throws SQLException {
+        return actions.getAverageSalaryByGender("Programmeur");
     }
+
     @Override
     public void deleteById(int id) throws SQLException {
-        actionsBD.deleteById("Programmeur", id);
+        actions.deleteById("Programmeur", id);
     }
 
     @Override
     public void deleteAll() throws SQLException {
-        actionsBD.deleteAll("Programmeur");
+        actions.deleteAll("Programmeur");
     }
 
-    @Override
-    public void deleteUtils() throws SQLException{
-        actionsBD.deleteUtils();
-    }
 
     @Override
-    public void addPictures(Pictures pictures) throws SQLException{
-        actionsBD.addPictures(pictures);
-    }
-
-    @Override
-    public void addCoords(Coords coords) throws SQLException{
-        actionsBD.addCoords(coords);
-    }
-
-    @Override
-    public Pictures getPictures(Pictures pictures) throws SQLException{
-        return actionsBD.getPictures(pictures);
-    }
-
-    @Override
-    public Coords getCoords(Coords coords) throws SQLException{
-        return actionsBD.getCoords(coords);
-    }
-
-    @Override
-    public Pictures getPicturesById(int id) throws SQLException{
-        return actionsBD.getPicturesById(id);
-    }
-
-    @Override
-    public Coords getCoordsById(int id) throws SQLException{
-        return actionsBD.getCoordsById(id);
+    public void resetIndex() throws SQLException {
+        actions.resetIndex("Programmeur");
     }
 
     @Override
@@ -121,13 +91,4 @@ public class ProgrammeurDAO implements PersonneDAO<Programmeur> {
         return "programmeur";
     }
 
-    @Override
-    public void resetIndex() throws SQLException {
-        actionsBD.resetIndex("Programmeur");
-    }
-
-    @Override
-    public void exit() {
-        actionsBD.exit();
-    }
 }

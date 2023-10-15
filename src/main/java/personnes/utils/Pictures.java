@@ -1,4 +1,4 @@
-package utils;
+package personnes.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,27 +14,33 @@ public class Pictures {
     private String medium;
     private String thumbnail;
 
-    public Pictures(){
+    public Pictures() {
         this.large = null;
         this.medium = null;
         this.thumbnail = null;
     }
-    public Pictures(String large, String medium, String thumbnail){
+
+    public Pictures(String large, String medium, String thumbnail) {
         this.large = large;
         this.medium = medium;
         this.thumbnail = thumbnail;
     }
 
     @JsonIgnore
-    public int getId(){
+    public int getId() {
         return this.id;
     }
+
+    public void setId(int generatedId) {
+        this.id = generatedId;
+    }
+
     @JsonProperty("large")
     public String getLarge() {
         return large;
     }
 
-    public void setLarge(String large){
+    public void setLarge(String large) {
         this.large = large;
     }
 
@@ -54,10 +60,6 @@ public class Pictures {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
-    }
-
-    public void setId(int generatedId) {
-        this.id = generatedId;
     }
 
     @Override

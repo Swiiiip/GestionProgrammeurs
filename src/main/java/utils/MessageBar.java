@@ -10,18 +10,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
-import static app.GestionBddApp.*;
+import static app.GestionBddApp.getContainerMessageBar;
+import static app.GestionBddApp.getContentOverlay;
 
 public class MessageBar extends StackPane {
 
     private static final double MESSAGE_DISPLAY_TIME = 2.0;
     private final Label messageLabel = new Label();
-    private final HBox messageBox = new HBox(messageLabel);
     public Pane containerPane = new Pane();
 
     public MessageBar() {
         containerPane.setMouseTransparent(true);
 
+        HBox messageBox = new HBox(messageLabel);
         messageBox.setAlignment(Pos.CENTER);
 
         messageBox.getStyleClass().add("message-box");
@@ -86,7 +87,7 @@ public class MessageBar extends StackPane {
         hideTimeline.playFromStart();
 
         //logger.info("BEFORE Current containerPane : " + getContainerMessageBar() + " | " +getContentOverlay().getChildren().toString() + " " + getContentOverlay().getChildren().size());
-        getContentOverlay().getChildren().remove( getContainerMessageBar() );
+        getContentOverlay().getChildren().remove(getContainerMessageBar());
     }
 
     private void hideMessage() {

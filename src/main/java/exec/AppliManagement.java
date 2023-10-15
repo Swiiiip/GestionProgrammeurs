@@ -2,26 +2,9 @@ package exec;
 
 import java.util.Scanner;
 
-public class AppliManagement extends Application{
+public class AppliManagement extends Application {
 
-    public AppliManagement(){
-    }
-
-    /**
-     * Allows to launch the program and to manage potential errors
-     *
-     * @param args the arguments provided by the user
-     */
-    public void start(String[] args){
-        try {
-            validationArgs(args);
-            displaySuccess("\nArguments :" + "\n\t>nombre de programmeurs : " + NBPROGS +
-                    "\n\t>nombre de managers : " + NBMANAGERS);
-        }
-        catch(IllegalArgumentException e) {
-            displayError(e);
-            loadMenu();
-        }
+    public AppliManagement() {
     }
 
     /**
@@ -31,7 +14,7 @@ public class AppliManagement extends Application{
      * @param args the arguments
      */
     private static void validationArgs(String[] args) throws IllegalArgumentException {
-       for (int i = 0; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
             switch (i) {
                 case 0:
                     int nbProgs;
@@ -80,6 +63,30 @@ public class AppliManagement extends Application{
         }
     }
 
+    /**
+     * Allows you to display an error message
+     *
+     * @param msg the message to display
+     */
+    public static void displayError(String msg) {
+        System.err.println(msg);
+    }
+
+    /**
+     * Allows to launch the program and to manage potential errors
+     *
+     * @param args the arguments provided by the user
+     */
+    public void start(String[] args) {
+        try {
+            validationArgs(args);
+            displaySuccess("\nArguments :" + "\n\t>nombre de programmeurs : " + NBPROGS +
+                    "\n\t>nombre de managers : " + NBMANAGERS);
+        } catch (IllegalArgumentException e) {
+            displayError(e);
+            loadMenu();
+        }
+    }
 
     /**
      * loads the initialization menu
@@ -94,17 +101,17 @@ public class AppliManagement extends Application{
 
             do {
                 System.out.print("Choose number of programmeurs: ");
-                try{
+                try {
                     nbProgs = Integer.parseInt(scanner.next());
                     exit(String.valueOf(nbProgs));
 
                     if (nbProgs <= 0)
                         displayError("The minimum number is 1.");
-                } catch (Exception e){
+                } catch (Exception e) {
                     nbProgs = 0;
                     displayError("The minimum number is 1.");
                 }
-            } while(nbProgs <= 0);
+            } while (nbProgs <= 0);
             NBPROGS = nbProgs;
         } else
             System.out.println("\nFor this instance, you set up : " + NBPROGS + " programmeurs\n");
@@ -113,50 +120,45 @@ public class AppliManagement extends Application{
             int nbManager;
             do {
                 System.out.print("Choose number of managers: ");
-                try{
+                try {
                     nbManager = Integer.parseInt(scanner.next());
                     exit(String.valueOf(nbManager));
 
                     if (nbManager <= 0)
                         displayError("The minimum number is 1.");
-                } catch (Exception e){
+                } catch (Exception e) {
                     nbManager = 0;
                     displayError("The minimum number is 1.");
-            }
+                }
             } while (nbManager <= 0);
             NBMANAGERS = nbManager;
             System.out.println();
-        }else
+        } else
             System.out.println("\nFor this instance, you set up : " + NBMANAGERS + " managers\n");
 
     }
 
     /**
      * Displays a success message
+     *
      * @param msg the message to display
      */
-    private void displaySuccess(String msg){
+    private void displaySuccess(String msg) {
         System.out.println(msg + "\n");
     }
 
     /**
-     * Allows you to display an error message
-     * @param msg the message to display
-     */
-    public static void displayError(String msg){
-        System.err.println(msg);
-    }
-
-    /**
      * Allows you to display the error message of an exception
+     *
      * @param e Exception to handle
      */
-    public void displayError(Exception e){
+    public void displayError(Exception e) {
         displayError(e.getMessage());
     }
 
     /**
      * allows you to exit the program
+     *
      * @param exit the string typed
      */
     private void exit(String exit) {

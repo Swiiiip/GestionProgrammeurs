@@ -1,6 +1,6 @@
 package exec;
 
-import data.DataGenerator;
+import data.generator.DataGenerator;
 
 public class Application {
 

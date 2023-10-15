@@ -1,11 +1,14 @@
-package data;
+package data.db;
 
 import connexion.Connexion;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
-import utils.Coords;
-import utils.Pictures;
+import personnes.utils.Coords;
+import personnes.utils.Pictures;
+import utils.Departments;
+import utils.Gender;
+import utils.Hobbies;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,75 +17,13 @@ import java.util.*;
 
 public class Actions<T extends Personne> {
 
-    private final Connexion connexion;
+    protected final Connexion connexion;
 
     public Actions() {
         this.connexion = new Connexion();
     }
 
-
-    private T mapPersonne(String typePersonne, ResultSet resultSet) throws SQLException {
-        return switch (typePersonne) {
-            case "Programmeur" -> (T) mapProgrammeur(resultSet);
-            case "Manager" -> (T) mapManager(resultSet);
-            default -> null;
-        };
-    }
-
-    private Programmeur mapProgrammeur(ResultSet res) throws SQLException {
-        Programmeur prog = new Programmeur();
-
-        prog.setId(res.getInt("Id"));
-        prog.setTitle(res.getString("Title"));
-        prog.setFirstName(res.getString("FirstName"));
-        prog.setLastName(res.getString("LastName"));
-        prog.setGender(res.getString("Gender"));
-        prog.setAddress(res.getString("Address"));
-        prog.setPseudo(res.getString("Pseudo"));
-
-        Pictures pictures = getPicturesById(res.getInt("Id_pictures"));
-        prog.setPictures(pictures);
-
-        Coords coords = getCoordsById(res.getInt("Id_Coords"));
-        prog.setCoords(coords);
-
-        Manager manager = (Manager) getById("Manager", res.getInt("Id_manager"));
-        prog.setManager(manager);
-
-        prog.setHobby(res.getString("Hobby"));
-        prog.setBirthYear(res.getInt("BirthYear"));
-        prog.setSalary(res.getFloat("Salary"));
-        prog.setPrime(res.getFloat("Prime"));
-
-        return prog;
-    }
-
-    private Manager mapManager(ResultSet res) throws SQLException {
-        Manager manager = new Manager();
-
-        manager.setId(res.getInt("Id"));
-        manager.setTitle(res.getString("Title"));
-        manager.setLastName(res.getString("LastName"));
-        manager.setFirstName(res.getString("FirstName"));
-        manager.setGender(res.getString("Gender"));
-
-        Pictures pictures = getPicturesById(res.getInt("Id_pictures"));
-        manager.setPictures(pictures);
-
-        Coords coords = getCoordsById(res.getInt("Id_Coords"));
-        manager.setCoords(coords);
-
-        manager.setAddress(res.getString("Address"));
-        manager.setHobby(res.getString("Hobby"));
-        manager.setDepartment(res.getString("Department"));
-        manager.setBirthYear(res.getInt("BirthYear"));
-        manager.setSalary(res.getFloat("Salary"));
-        manager.setPrime(res.getFloat("Prime"));
-
-        return manager;
-    }
-
-    private Pictures mapPictures(ResultSet res) throws SQLException{
+    private Pictures mapPictures(ResultSet res) throws SQLException {
         Pictures pictures = new Pictures();
 
         pictures.setId(res.getInt("Id"));
@@ -93,7 +34,7 @@ public class Actions<T extends Personne> {
         return pictures;
     }
 
-    private Coords mapCoords(ResultSet res) throws SQLException{
+    private Coords mapCoords(ResultSet res) throws SQLException {
         Coords coords = new Coords();
 
         coords.setId(res.getInt("Id"));
@@ -103,7 +44,7 @@ public class Actions<T extends Personne> {
         return coords;
     }
 
-    public Pictures getPicturesById(int idPictures) throws SQLException{
+    public Pictures getPicturesById(int idPictures) throws SQLException {
         Pictures pictures = null;
         final String query = "SELECT * FROM Pictures WHERE Id = ?";
 
@@ -126,7 +67,7 @@ public class Actions<T extends Personne> {
         return pictures;
     }
 
-    public Coords getCoordsById(int idCoords) throws SQLException{
+    public Coords getCoordsById(int idCoords) throws SQLException {
         Coords coords = null;
         final String query = "SELECT * FROM Coords WHERE Id = ?";
 
@@ -149,6 +90,58 @@ public class Actions<T extends Personne> {
         return coords;
     }
 
+    public Pictures getPictures(Pictures pictures) throws SQLException {
+        Pictures fullDataPictures = null;
+
+        final String query = "Select * from Pictures WHERE Large = ? " +
+                "AND Medium = ? " +
+                "AND Thumbnail = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, pictures.getLarge());
+        statement.setString(2, pictures.getMedium());
+        statement.setString(3, pictures.getThumbnail());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataPictures = mapPictures(res);
+
+        if (fullDataPictures == null)
+            throw new SQLException("Erreur lors de la récupération des images.");
+
+        res.close();
+        statement.close();
+
+        return fullDataPictures;
+    }
+
+    public Coords getCoords(Coords coords) throws SQLException {
+        Coords fullDataCoords = null;
+
+        final String query = "Select * from Coords WHERE Latitude = ? " +
+                "AND Longitude = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setString(1, coords.getLatitude());
+        statement.setString(2, coords.getLongitude());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataCoords = mapCoords(res);
+
+        if (fullDataCoords == null)
+            throw new SQLException("Erreur lors de la récupération des coordonnées.");
+
+        res.close();
+        statement.close();
+
+
+        return fullDataCoords;
+    }
 
     public List<T> getAll(String typePersonne) throws SQLException {
         List<T> personnes = new ArrayList<>();
@@ -172,6 +165,116 @@ public class Actions<T extends Personne> {
         return personnes;
     }
 
+    private T mapPersonne(String typePersonne, ResultSet resultSet) throws SQLException {
+        if ("programmeur".equalsIgnoreCase(typePersonne)) {
+            return (T) mapProgrammeur(resultSet);
+        } else if ("manager".equalsIgnoreCase(typePersonne)) {
+            return (T) mapManager(resultSet);
+        } else {
+            throw new IllegalArgumentException("Type de personne '" + typePersonne + "' n'est pas reconnu");
+        }
+    }
+
+
+    private Manager mapManager(ResultSet res) throws SQLException {
+        Manager manager = new Manager();
+
+        manager.setId(res.getInt("Id"));
+        manager.setTitle(res.getString("Title"));
+        manager.setLastName(res.getString("LastName"));
+        manager.setFirstName(res.getString("FirstName"));
+        String genderString = res.getString("Gender");
+
+        Gender genderEnum = null;
+
+        for (Gender gender : Gender.values()) {
+            if (gender.getGender().equalsIgnoreCase(genderString)) {
+                genderEnum = gender;
+                break;
+            }
+        }
+
+        manager.setGender(genderEnum);
+
+        Pictures pictures = this.getPicturesById(res.getInt("Id_pictures"));
+        manager.setPictures(pictures);
+
+        Coords coords = this.getCoordsById(res.getInt("Id_Coords"));
+        manager.setCoords(coords);
+
+        manager.setAddress(res.getString("Address"));
+
+        String hobbyString = res.getString("Hobby");
+        Hobbies hobbyEnum = null;
+        for (Hobbies hobby : Hobbies.values())
+            if (hobby.getHobby().equalsIgnoreCase(hobbyString)) {
+                hobbyEnum = hobby;
+                break;
+            }
+        manager.setHobby(hobbyEnum);
+
+        String departmentString = res.getString("Department");
+        Departments departmentEnum = null;
+        for (Departments department : Departments.values())
+            if (department.getDepartment().equalsIgnoreCase(departmentString)) {
+                departmentEnum = department;
+                break;
+            }
+        manager.setDepartment(departmentEnum);
+
+        manager.setBirthYear(res.getInt("BirthYear"));
+        manager.setSalary(res.getFloat("Salary"));
+        manager.setPrime(res.getFloat("Prime"));
+
+        return manager;
+    }
+
+    private Programmeur mapProgrammeur(ResultSet res) throws SQLException {
+        Programmeur prog = new Programmeur();
+
+        prog.setId(res.getInt("Id"));
+        prog.setTitle(res.getString("Title"));
+        prog.setFirstName(res.getString("FirstName"));
+        prog.setLastName(res.getString("LastName"));
+
+        String genderString = res.getString("Gender");
+        Gender genderEnum = null;
+        for (Gender gender : Gender.values())
+            if (gender.getGender().equalsIgnoreCase(genderString)) {
+                genderEnum = gender;
+                break;
+            }
+        prog.setGender(genderEnum);
+
+        prog.setAddress(res.getString("Address"));
+        prog.setPseudo(res.getString("Pseudo"));
+
+        Pictures pictures = this.getPicturesById(res.getInt("Id_pictures"));
+        prog.setPictures(pictures);
+
+        Coords coords = this.getCoordsById(res.getInt("Id_Coords"));
+        prog.setCoords(coords);
+
+        Manager manager = (Manager) this.getById("Manager", res.getInt("Id_manager"));
+        prog.setManager(manager);
+
+        String hobbyString = res.getString("Hobby");
+        Hobbies hobbyEnum = null;
+        for (Hobbies hobby : Hobbies.values())
+            if (hobby.getHobby().equalsIgnoreCase(hobbyString)) {
+                hobbyEnum = hobby;
+                break;
+            }
+        prog.setHobby(hobbyEnum);
+
+        prog.setBirthYear(res.getInt("BirthYear"));
+        prog.setSalary(res.getFloat("Salary"));
+        prog.setPrime(res.getFloat("Prime"));
+
+        return prog;
+
+    }
+
     public T getById(String typePersonne, int id) throws SQLException {
         T personne = null;
 
@@ -191,8 +294,7 @@ public class Actions<T extends Personne> {
         statement.close();
 
         if (personne == null && id != 0)
-            throw new SQLException();
-
+            throw new SQLException("Le " + typePersonne + " avec l'id " + id + " n'existe pas");
 
         return personne;
     }
@@ -274,7 +376,7 @@ public class Actions<T extends Personne> {
     }
 
 
-    public void addCoords(Coords coords) throws SQLException{
+    public void addCoords(Coords coords) throws SQLException {
         final String query = "INSERT INTO Coords (Latitude, Longitude)" +
                 " VALUES (?, ?)";
 
@@ -300,7 +402,8 @@ public class Actions<T extends Personne> {
 
         statement.close();
     }
-    public int getCount(String typePersonne) throws SQLException{
+
+    public int getCount(String typePersonne) throws SQLException {
         final String query = "SELECT COUNT(*) AS nbPerson FROM " + typePersonne;
 
         int count = 0;
@@ -316,49 +419,99 @@ public class Actions<T extends Personne> {
 
         return count;
     }
-    public T getWithMaxSalary(String typePersonne) throws SQLException{
-        T personne = null;
 
-        final String query = "SELECT * FROM " + typePersonne +
-                " WHERE Salary = (SELECT MAX(Salary)" +
-                " FROM " + typePersonne + ")";
 
+    public void deleteById(String typePersonne, int id) throws SQLException {
+        this.getById(typePersonne, id);
+
+        final String query = "DELETE FROM " + typePersonne + " WHERE Id = ?";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        ResultSet resultSet = statement.executeQuery();
+        statement.setLong(1, id);
+        statement.executeUpdate();
 
-        if(resultSet.next())
-            personne = mapPersonne(typePersonne, resultSet);
-
-        resultSet.close();
         statement.close();
-
-        if (personne == null)
-            throw new SQLException();
-
-        return personne;
     }
 
-    public T getWithMinSalary(String typePersonne) throws SQLException{
+    public void deleteAll(String typePersonne) throws SQLException {
+        String query = "DELETE FROM " + typePersonne;
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void deleteUtils() throws SQLException {
+        deletePictures();
+        deleteCoords();
+    }
+
+    private void deletePictures() throws SQLException {
+        String query = "DELETE FROM Pictures";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    private void deleteCoords() throws SQLException {
+        String query = "DELETE FROM Coords";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndex(String typePersonne) throws SQLException {
+        resetIndexPictures();
+        resetIndexCoords();
+
+        String query = "ALTER TABLE " + typePersonne + " AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndexPictures() throws SQLException {
+        String query = "ALTER TABLE Pictures AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndexCoords() throws SQLException {
+        String query = "ALTER TABLE Coords AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    //Stats
+
+    public T getWithAggregatedSalary(String typePersonne, String aggregation) throws SQLException {
         T personne = null;
 
         final String query = "SELECT * FROM " + typePersonne +
-                " WHERE Salary = (SELECT MIN(Salary)" +
+                " WHERE Salary = (SELECT " + aggregation + "(Salary)" +
                 " FROM " + typePersonne + ")";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         ResultSet resultSet = statement.executeQuery();
 
-        if(resultSet.next())
+        if (resultSet.next())
             personne = mapPersonne(typePersonne, resultSet);
 
         resultSet.close();
         statement.close();
 
         if (personne == null)
-            throw new SQLException();
-
+            throw new SQLException("Aucun " + typePersonne + " ne correspond à votre demande");
 
         return personne;
     }
@@ -386,7 +539,7 @@ public class Actions<T extends Personne> {
         return salaryByAge;
     }
 
-    public Map<Integer, T> getRankBySalary(String typePersonne) throws SQLException{
+    public Map<Integer, T> getRankBySalary(String typePersonne) throws SQLException {
         final String query = "SELECT *, DENSE_RANK() OVER (ORDER BY Salary DESC) AS salaryRank" +
                 " FROM " + typePersonne +
                 " ORDER BY Salary DESC";
@@ -397,7 +550,7 @@ public class Actions<T extends Personne> {
 
         ResultSet resultSet = statement.executeQuery();
 
-        while(resultSet.next()){
+        while (resultSet.next()) {
             T personne = mapPersonne(typePersonne, resultSet);
             int ranking = resultSet.getInt("salaryRank");
 
@@ -409,7 +562,7 @@ public class Actions<T extends Personne> {
         return rankBySalary;
     }
 
-    public Map<Float, Integer> getSalaryHistogram(String typePersonne) throws SQLException{
+    public Map<Float, Integer> getSalaryHistogram(String typePersonne) throws SQLException {
         final String query = "SELECT FLOOR(Salary / 1000) * 1000 AS salaryRange, COUNT(*) AS nbPerson" +
                 " FROM " + typePersonne +
                 " GROUP BY salaryRange" +
@@ -456,130 +609,8 @@ public class Actions<T extends Personne> {
         return averageSalaryByGender;
     }
 
-
-    public void deleteById(String typePersonne, int id) throws SQLException{
-        this.getById(typePersonne, id);
-
-        final String query = "DELETE FROM " + typePersonne + " WHERE Id = ?";
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.setLong(1, id);
-        statement.executeUpdate();
-
-        statement.close();
-    }
-
-    public void deleteAll(String typePersonne) throws SQLException {
-        String query = "DELETE FROM " + typePersonne;
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void deleteUtils() throws SQLException{
-        deletePictures();
-        deleteCoords();
-    }
-    private void deletePictures() throws SQLException{
-        String query = "DELETE FROM Pictures";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    private void deleteCoords() throws SQLException{
-        String query = "DELETE FROM Coords";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void resetIndex(String typePersonne) throws SQLException {
-        resetIndexPictures();
-        resetIndexCoords();
-
-        String query = "ALTER TABLE " + typePersonne + " AUTO_INCREMENT = 1";
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void resetIndexPictures() throws SQLException{
-        String query = "ALTER TABLE Pictures AUTO_INCREMENT = 1";
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
-    public void resetIndexCoords() throws SQLException{
-        String query = "ALTER TABLE Coords AUTO_INCREMENT = 1";
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.executeUpdate();
-        statement.close();
-    }
-
     public void exit() {
         this.connexion.close();
     }
 
-
-    public Pictures getPictures(Pictures pictures) throws SQLException{
-        Pictures fullDataPictures = null;
-
-        final String query = "Select * from Pictures WHERE Large = ? " +
-                "AND Medium = ? " +
-                "AND Thumbnail = ?";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.setString(1, pictures.getLarge());
-        statement.setString(2, pictures.getMedium());
-        statement.setString(3, pictures.getThumbnail());
-
-        ResultSet res = statement.executeQuery();
-
-        if (res.next())
-            fullDataPictures = mapPictures(res);
-
-        if (fullDataPictures == null)
-            throw new SQLException("Erreur lors de la récupération des images.");
-
-        res.close();
-        statement.close();
-
-        return fullDataPictures;
-    }
-
-    public Coords getCoords(Coords coords) throws SQLException{
-        Coords fullDataCoords = null;
-
-        final String query = "Select * from Coords WHERE Latitude = ? " +
-                "AND Longitude = ?";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.setString(1, coords.getLatitude());
-        statement.setString(2, coords.getLongitude());
-
-        ResultSet res = statement.executeQuery();
-
-        if (res.next())
-            fullDataCoords = mapCoords(res);
-
-        if (fullDataCoords == null)
-            throw new SQLException("Erreur lors de la récupération des coordonnées.");
-
-        res.close();
-        statement.close();
-
-        return fullDataCoords;
-    }
 }

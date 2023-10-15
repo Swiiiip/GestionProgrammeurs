@@ -11,78 +11,88 @@ DROP TABLE IF EXISTS Manager;
 DROP TABLE IF EXISTS Pictures;
 DROP TABLE IF EXISTS Coords;
 
-CREATE TABLE IF NOT EXISTS Programmeur (
-     Id INT PRIMARY KEY AUTO_INCREMENT,
-     Title VARCHAR(255) NOT NULL,
-     LastName VARCHAR(255) NOT NULL,
-     FirstName VARCHAR(255) NOT NULL,
-     Gender VARCHAR(255) NOT NULL,
-     Id_pictures INT NOT NULL,
-     Address VARCHAR(255),
-     Id_coords INT NOT NULL,
-     Pseudo VARCHAR(255) NOT NULL,
-     Id_manager INT,
-     Hobby VARCHAR(255),
-     BirthYear INT,
-     Salary FLOAT,
-     Prime FLOAT
+CREATE TABLE IF NOT EXISTS Programmeur
+(
+    Id          INT PRIMARY KEY AUTO_INCREMENT,
+    Title       VARCHAR(255) NOT NULL,
+    LastName    VARCHAR(255) NOT NULL,
+    FirstName   VARCHAR(255) NOT NULL,
+    Gender      VARCHAR(255) NOT NULL,
+    Id_pictures INT          NOT NULL,
+    Address     VARCHAR(255),
+    Id_coords   INT          NOT NULL,
+    Pseudo      VARCHAR(255) NOT NULL,
+    Id_manager  INT,
+    Hobby       VARCHAR(255),
+    BirthYear   INT,
+    Salary      FLOAT,
+    Prime       FLOAT
 );
 
-CREATE TABLE IF NOT EXISTS Pictures(
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Large VARCHAR(255) NOT NULL,
-    Medium VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS Pictures
+(
+    Id        INT PRIMARY KEY AUTO_INCREMENT,
+    Large     VARCHAR(255) NOT NULL,
+    Medium    VARCHAR(255) NOT NULL,
     Thumbnail VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Coords(
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Latitude VARCHAR(255) NOT NULL,
+CREATE TABLE IF NOT EXISTS Coords
+(
+    Id        INT PRIMARY KEY AUTO_INCREMENT,
+    Latitude  VARCHAR(255) NOT NULL,
     Longitude VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Manager(
-    Id INT PRIMARY KEY AUTO_INCREMENT,
-    Title VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    Gender VARCHAR(255),
-    Id_pictures INT NOT NULL,
-    Address VARCHAR(255),
-    Id_Coords INT NOT NULL,
-    Hobby VARCHAR(255),
-    Department VARCHAR(255),
-    BirthYear INT,
-    Salary FLOAT,
-    Prime FLOAT
+CREATE TABLE IF NOT EXISTS Manager
+(
+    Id          INT PRIMARY KEY AUTO_INCREMENT,
+    Title       VARCHAR(255) NOT NULL,
+    LastName    VARCHAR(255) NOT NULL,
+    FirstName   VARCHAR(255) NOT NULL,
+    Gender      VARCHAR(255),
+    Id_pictures INT          NOT NULL,
+    Address     VARCHAR(255),
+    Id_Coords   INT          NOT NULL,
+    Hobby       VARCHAR(255),
+    Department  VARCHAR(255),
+    BirthYear   INT,
+    Salary      FLOAT,
+    Prime       FLOAT
 );
 
-ALTER TABLE Programmeur AUTO_INCREMENT = 1;
-ALTER TABLE Manager AUTO_INCREMENT = 1;
+ALTER TABLE Programmeur
+    AUTO_INCREMENT = 1;
+ALTER TABLE Manager
+    AUTO_INCREMENT = 1;
 
-ALTER TABLE Pictures AUTO_INCREMENT = 1;
-ALTER TABLE Coords AUTO_INCREMENT = 1;
+ALTER TABLE Pictures
+    AUTO_INCREMENT = 1;
+ALTER TABLE Coords
+    AUTO_INCREMENT = 1;
 
 ALTER TABLE Programmeur
-    ADD CONSTRAINT FK_Manager FOREIGN KEY(Id_manager) REFERENCES Manager(Id);
+    ADD CONSTRAINT FK_Manager FOREIGN KEY (Id_manager) REFERENCES Manager (Id);
 
 ALTER TABLE Programmeur
-    ADD CONSTRAINT FK_Picture_Prog FOREIGN KEY(Id_pictures) REFERENCES Pictures(Id);
+    ADD CONSTRAINT FK_Picture_Prog FOREIGN KEY (Id_pictures) REFERENCES Pictures (Id);
 
 ALTER TABLE Programmeur
-    ADD CONSTRAINT FK_Coords_Prog FOREIGN KEY(Id_coords) REFERENCES Coords(Id);
+    ADD CONSTRAINT FK_Coords_Prog FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
 
 ALTER TABLE Manager
-    ADD CONSTRAINT FK_Picture_Manager FOREIGN KEY(Id_pictures) REFERENCES Pictures(Id);
+    ADD CONSTRAINT FK_Picture_Manager FOREIGN KEY (Id_pictures) REFERENCES Pictures (Id);
 
 ALTER TABLE Manager
-    ADD CONSTRAINT FK_Coords_Manager FOREIGN KEY(Id_coords) REFERENCES Coords(Id);
+    ADD CONSTRAINT FK_Coords_Manager FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
 
 DROP TRIGGER IF EXISTS SetNewManagerForProgrammeur;
 
 DELIMITER //
 CREATE TRIGGER SetNewManagerForProgrammeur
-    BEFORE DELETE ON Manager FOR EACH ROW
+    BEFORE DELETE
+    ON Manager
+    FOR EACH ROW
 BEGIN
     DECLARE deleted_manager_id INT;
     DECLARE new_manager_id INT;
@@ -95,14 +105,12 @@ BEGIN
     SET Id_manager = NULL
     WHERE Id_manager = deleted_manager_id;
 
-    SET new_manager_id = (
-        SELECT Id
-        FROM Manager
-        WHERE Department = manager_department
-          AND Id != deleted_manager_id
-        ORDER BY (YEAR(NOW()) - BirthYear)
-        LIMIT 1
-    );
+    SET new_manager_id = (SELECT Id
+                          FROM Manager
+                          WHERE Department = manager_department
+                            AND Id != deleted_manager_id
+                          ORDER BY (YEAR(NOW()) - BirthYear)
+                          LIMIT 1);
 
     IF new_manager_id IS NULL THEN
         SET new_manager_id = 0;

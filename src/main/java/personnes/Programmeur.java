@@ -2,8 +2,10 @@ package personnes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import utils.Coords;
-import utils.Pictures;
+import personnes.utils.Coords;
+import personnes.utils.Pictures;
+import utils.Gender;
+import utils.Hobbies;
 
 import java.util.LinkedHashMap;
 
@@ -17,7 +19,7 @@ import java.util.LinkedHashMap;
  * @author Hatoum Jade
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Programmeur extends Personne{
+public class Programmeur extends Personne {
 
     /**
      * Pseudo du programmeur.
@@ -34,20 +36,20 @@ public class Programmeur extends Personne{
      * Constructeur de la classe ProgrammeurBean pour initialiser un objet ProgrammeurBean
      * avec les informations spécifiées.
      *
-     * @param lastName   Le nom du programmeur.
-     * @param firstName  Le prénom du programmeur.
-     * @param gender     Le genre du programmeur
-     * @param address    L'adresse du programmeur.
-     * @param pseudo     Le pseudo du programmeur.
-     * @param manager    Le responsable du programmeur.
-     * @param hobby      Le hobby du programmeur.
-     * @param birthYear  L'année de naissance du programmeur.
-     * @param salary     Le salaire du programmeur.
-     * @param prime      La prime du programmeur.
+     * @param lastName  Le nom du programmeur.
+     * @param firstName Le prénom du programmeur.
+     * @param gender    Le genre du programmeur
+     * @param address   L'adresse du programmeur.
+     * @param pseudo    Le pseudo du programmeur.
+     * @param manager   Le responsable du programmeur.
+     * @param hobby     Le hobby du programmeur.
+     * @param birthYear L'année de naissance du programmeur.
+     * @param salary    Le salaire du programmeur.
+     * @param prime     La prime du programmeur.
      */
-    public Programmeur(String title, String lastName, String firstName, String gender, Pictures pictures, String address, Coords coords, String pseudo,
-                       Manager manager, String hobby, int birthYear, float salary, float prime) {
-        super(title, lastName,firstName,gender, pictures, address, coords, hobby, birthYear, salary, prime);
+    public Programmeur(String title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, String pseudo,
+                       Manager manager, Hobbies hobby, int birthYear, float salary, float prime) {
+        super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.pseudo = pseudo;
         this.manager = manager;
     }
@@ -57,6 +59,7 @@ public class Programmeur extends Personne{
         this.pseudo = null;
         this.manager = null;
     }
+
     /**
      * Obtient le pseudo du programmeur.
      *
@@ -104,4 +107,3 @@ public class Programmeur extends Personne{
     }
 
 }
-
