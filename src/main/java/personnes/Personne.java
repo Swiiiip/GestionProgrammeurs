@@ -10,15 +10,16 @@ import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
-@JsonPropertyOrder({"id", "title", "lastName", "firstName", "pictures", "gender", "age", "address", "coords", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"id", "title", "lastName", "firstName", "pictures", "gender", "age", "address", "coordinates", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
-    private String title;
+    private Title title;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -42,7 +43,7 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(String title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
+    public Personne(Title title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
         this.title = title;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -82,10 +83,10 @@ public abstract class Personne {
      */
     @JsonProperty("title")
     public String getTitle() {
-        return this.title;
+        return this.title.getTitle();
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 
@@ -138,8 +139,8 @@ public abstract class Personne {
      * @return Le genre de la personne.
      */
     @JsonProperty("gender")
-    public Gender getGender() {
-        return this.gender;
+    public String getGender() {
+        return this.gender.getGender();
     }
 
     /**
@@ -195,7 +196,7 @@ public abstract class Personne {
      *
      * @return les coordonnées géographiques de la personne
      */
-    @JsonProperty("coords")
+    @JsonProperty("coordinates")
     public Coords getCoords() {
         return this.coords;
     }
@@ -210,8 +211,8 @@ public abstract class Personne {
      * @return Le hobby de la personne.
      */
     @JsonProperty("hobby")
-    public Hobbies getHobby() {
-        return this.hobby;
+    public String getHobby() {
+        return this.hobby.getHobby();
     }
 
     /**
@@ -285,7 +286,7 @@ public abstract class Personne {
     public LinkedHashMap<String, Object> getColumns() {
         LinkedHashMap<String, Object> columns = new LinkedHashMap<>();
         columns.put("Id", this.id);
-        columns.put("Title", this.title);
+        columns.put("Title", this.title.getTitle());
         columns.put("LastName", this.lastName);
         columns.put("FirstName", this.firstName);
         columns.put("Gender", this.gender.getGender());

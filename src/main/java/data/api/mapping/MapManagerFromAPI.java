@@ -7,6 +7,7 @@ import personnes.utils.Pictures;
 import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.time.LocalDate;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class MapManagerFromAPI extends MapPersonneFromAPI<Manager> {
         pictures = this.managerDAO.getPictures(pictures);
         coords = this.managerDAO.getCoords(coords);
 
-        String title = this.api.parseTitleFromJson();
+        Title title = this.api.parseTitleFromJson();
         String lastName = this.api.parseLastNameFromJson();
         String firstName = this.api.parseFirstNameFromJson();
         Gender gender = this.api.parseGenderFromJson();

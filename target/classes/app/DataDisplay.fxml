@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
-
 <VBox alignment="CENTER" spacing="10.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="app.DataViewController">
 

@@ -11,6 +11,7 @@ import prediction.PredictionModel;
 import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -303,7 +304,7 @@ public class MenuPrincipal {
         Gender gender = (Gender) infosPersonne.get(3);
 
         return new Programmeur(
-                (String) infosPersonne.get(0),
+                (Title) infosPersonne.get(0),
                 (String) infosPersonne.get(1),
                 (String) infosPersonne.get(2),
                 gender,
@@ -323,7 +324,7 @@ public class MenuPrincipal {
     private Manager getManager(List<?> infosPersonne, Departments department) throws SQLException {
         Gender gender = (Gender) infosPersonne.get(3);
         return new Manager(
-                (String) infosPersonne.get(0),
+                (Title) infosPersonne.get(0),
                 (String) infosPersonne.get(1),
                 (String) infosPersonne.get(2),
                 gender,
@@ -613,23 +614,29 @@ public class MenuPrincipal {
     }
 
     private String getTitle() {
-        String title = null;
-        boolean inputValid = false;
-        do {
+        while (true) {
             try {
-                title = scanner.next();
+                String input = scanner.next();
 
-                if (title.equalsIgnoreCase("Mr") || title.equalsIgnoreCase("Mrs") || title.equalsIgnoreCase("Ms"))
-                    inputValid = true;
-                else
-                    throw new InputMismatchException("Le titre de la nouvelle personne doit être : " +
-                            "\"Mr\" ou \"Mrs\" ou \"Ms\"");
+                for (Title title : Title.values()) {
+                    if (title.getTitle().equalsIgnoreCase(input)) {
+                        return title.getTitle();
+                    }
+                }
+
+                StringBuilder validTitle = new StringBuilder("les titres valides : ");
+                for (Title title : Title.values()) {
+                    validTitle.append(title.getTitle()).append(", ");
+                }
+
+                validTitle.setLength(validTitle.length() - 2);
+                throw new InputMismatchException("Département invalide. Choisissez parmi " + validTitle);
+
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
             }
-        } while (!inputValid);
 
-        return title.substring(0, 1).toUpperCase() + title.substring(1).toLowerCase();
+        }
     }
 
     private double getAge() {

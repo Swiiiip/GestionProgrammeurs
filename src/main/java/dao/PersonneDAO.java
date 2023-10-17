@@ -58,11 +58,11 @@ public abstract class PersonneDAO<T extends Personne> {
     }
 
     public Pictures getPictures(Pictures pictures) throws SQLException {
-        return actions.getPictures(pictures);
+        return actions.getFullPictures(pictures);
     }
 
     public Coords getCoords(Coords coords) throws SQLException {
-        return actions.getCoords(coords);
+        return actions.getFullCoords(coords);
     }
 
     public Pictures getPicturesById(int id) throws SQLException {

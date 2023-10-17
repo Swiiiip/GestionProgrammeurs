@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.utils.Coords;
+import utils.Title;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -61,8 +62,8 @@ public class ProfileViewController {
         if (data instanceof Personne p) {
             pictureLink = p.getPictures().getLarge();
 
-            String title = p.getTitle();
-            fullName = title + " " + p.getFullName();
+
+            fullName = p.getTitle() + " " + p.getFullName();
 
             id = p.getId();
         } else {
@@ -213,8 +214,11 @@ public class ProfileViewController {
         double latitude, longitude;
 
         try {
-            latitude = Double.parseDouble(coords.getLatitude());
-            longitude = Double.parseDouble(coords.getLongitude());
+            latitude = coords.getLatitude();
+            longitude = coords.getLongitude();
+
+            if (latitude == 0.0f && longitude == 0.0f)
+                throw new Exception();
         } catch (Exception e) {
             System.err.println("Aucune coordonnée fournie");
             webEngine.load("<h1>Aucune coordonnée fournie</h1>");

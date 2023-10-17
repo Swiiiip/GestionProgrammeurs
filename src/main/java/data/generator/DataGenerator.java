@@ -33,7 +33,7 @@ public class DataGenerator {
             managerDAO.deleteAll();
             programmeurDAO.deleteUtils();
         } catch (SQLException e) {
-            System.err.println("La suppression de toutes les données a échouée." + e.getMessage());
+            System.err.println("La suppression de toutes les données a échouée. " + e.getMessage());
             throw new SecurityException();
         }
 
@@ -41,7 +41,7 @@ public class DataGenerator {
             programmeurDAO.resetIndex();
             managerDAO.resetIndex();
         } catch (SQLException e) {
-            System.err.println("La réinitialisation des index à échouée." + e.getMessage());
+            System.err.println("La réinitialisation des index à échouée. " + e.getMessage());
             throw new SecurityException();
         }
         Pictures defaultFemale = new Pictures("https://www.w3schools.com/howto/img_avatar2.png", "", "");
@@ -50,14 +50,14 @@ public class DataGenerator {
             programmeurDAO.addPictures(defaultMale);
             programmeurDAO.addPictures(defaultFemale);
         } catch (SQLException e) {
-            System.err.println("L'ajout des images par défaut a échouée." + e.getMessage());
+            System.err.println("L'ajout des images par défaut a échouée. " + e.getMessage());
             throw new SecurityException();
         }
-        Coords defaultCoords = new Coords("0.0", "0.0");
+        Coords defaultCoords = new Coords(0.0f, 0.0f);
         try {
             programmeurDAO.addCoords(defaultCoords);
         } catch (SQLException e) {
-            System.err.println("L'ajout des coordonnées par défaut a échouée." + e.getMessage());
+            System.err.println("L'ajout des coordonnées par défaut a échouée. " + e.getMessage());
             throw new SecurityException();
         }
 
@@ -66,14 +66,14 @@ public class DataGenerator {
             try {
                 manager = new MapManagerFromAPI(managerDAO).map();
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le manager " + (i + 1) + " a échouée." + e.getMessage());
+                System.err.println("La récupération des données pour le manager " + (i + 1) + " a échouée. " + e.getMessage());
                 throw new SecurityException();
             }
             try {
                 managerDAO.add(manager);
                 System.out.println("Ajout du manager id : " + (i + 1));
             } catch (SQLException e) {
-                System.err.println("L'ajout du manager " + (i + 1) + " a échouée." + e.getMessage());
+                System.err.println("L'ajout du manager " + (i + 1) + " a échouée. " + e.getMessage());
                 throw new SecurityException();
             }
         }
@@ -84,14 +84,14 @@ public class DataGenerator {
                 prog = new MapProgrammeurFromAPI(NBMANAGERS, programmeurDAO, managerDAO).map();
 
             } catch (Exception e) {
-                System.err.println("La récupération des données pour le programmeur " + (i + 1) + " a échouée." + e.getMessage());
+                System.err.println("La récupération des données pour le programmeur " + (i + 1) + " a échouée. " + e.getMessage());
                 throw new SecurityException();
             }
             try {
                 programmeurDAO.add(prog);
                 System.out.println("Ajout du programmeur id : " + (i + 1));
             } catch (SQLException e) {
-                System.err.println("L'ajout du programmeur " + (i + 1) + " a échouée." + e.getMessage());
+                System.err.println("L'ajout du programmeur " + (i + 1) + " a échouée. " + e.getMessage());
                 throw new SecurityException();
             }
         }

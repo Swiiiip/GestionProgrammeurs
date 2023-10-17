@@ -6,6 +6,7 @@ import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.util.LinkedHashMap;
 
@@ -47,7 +48,7 @@ public class Programmeur extends Personne {
      * @param salary    Le salaire du programmeur.
      * @param prime     La prime du programmeur.
      */
-    public Programmeur(String title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, String pseudo,
+    public Programmeur(Title title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, String pseudo,
                        Manager manager, Hobbies hobby, int birthYear, float salary, float prime) {
         super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.pseudo = pseudo;

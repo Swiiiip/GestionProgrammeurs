@@ -31,7 +31,7 @@ public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
         List<? extends Personne> personnes = personneDAO.getAll();
         for (Personne personne : personnes) {
             double age = personne.getAge();
-            String gender = personne.getGender().getGender();
+            String gender = personne.getGender();
             float salary = personne.getSalary();
 
             DenseInstance instance = new DenseInstance(3);

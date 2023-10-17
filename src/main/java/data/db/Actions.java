@@ -9,6 +9,7 @@ import personnes.utils.Pictures;
 import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,8 +39,8 @@ public class Actions<T extends Personne> {
         Coords coords = new Coords();
 
         coords.setId(res.getInt("Id"));
-        coords.setLatitude(res.getString("Latitude"));
-        coords.setLongitude(res.getString("Longitude"));
+        coords.setLatitude(res.getFloat("Latitude"));
+        coords.setLongitude(res.getFloat("Longitude"));
 
         return coords;
     }
@@ -62,7 +63,7 @@ public class Actions<T extends Personne> {
         statement.close();
 
         if (pictures == null)
-            throw new SQLException();
+            throw new SQLException("L'image avec l'id " + idPictures + " n'existe pas");
 
         return pictures;
     }
@@ -85,17 +86,39 @@ public class Actions<T extends Personne> {
         statement.close();
 
         if (coords == null)
-            throw new SQLException();
+            throw new SQLException("La coordonnée avec l'id " + idCoords + " n'existe pas");
 
         return coords;
     }
 
-    public Pictures getPictures(Pictures pictures) throws SQLException {
+    public Coords getFullCoords(Coords coords) throws SQLException {
+        Coords fullDataCoords = null;
+
+        final String query = "SELECT * FROM Coords WHERE Latitude = ? AND Longitude = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setFloat(1, coords.getLatitude());
+        statement.setFloat(2, coords.getLongitude());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataCoords = mapCoords(res);
+
+        if (fullDataCoords == null)
+            throw new SQLException("La coordonnée (" + coords + ") n'existe pas");
+
+        res.close();
+        statement.close();
+
+        return fullDataCoords;
+    }
+
+    public Pictures getFullPictures(Pictures pictures) throws SQLException {
         Pictures fullDataPictures = null;
 
-        final String query = "Select * from Pictures WHERE Large = ? " +
-                "AND Medium = ? " +
-                "AND Thumbnail = ?";
+        final String query = "SELECT * FROM Pictures WHERE Large = ? AND Medium = ? AND Thumbnail = ?";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
@@ -109,7 +132,7 @@ public class Actions<T extends Personne> {
             fullDataPictures = mapPictures(res);
 
         if (fullDataPictures == null)
-            throw new SQLException("Erreur lors de la récupération des images.");
+            throw new SQLException("L'image (" + pictures + ") n 'existe pas.");
 
         res.close();
         statement.close();
@@ -117,31 +140,7 @@ public class Actions<T extends Personne> {
         return fullDataPictures;
     }
 
-    public Coords getCoords(Coords coords) throws SQLException {
-        Coords fullDataCoords = null;
 
-        final String query = "Select * from Coords WHERE Latitude = ? " +
-                "AND Longitude = ?";
-
-        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
-
-        statement.setString(1, coords.getLatitude());
-        statement.setString(2, coords.getLongitude());
-
-        ResultSet res = statement.executeQuery();
-
-        if (res.next())
-            fullDataCoords = mapCoords(res);
-
-        if (fullDataCoords == null)
-            throw new SQLException("Erreur lors de la récupération des coordonnées.");
-
-        res.close();
-        statement.close();
-
-
-        return fullDataCoords;
-    }
 
     public List<T> getAll(String typePersonne) throws SQLException {
         List<T> personnes = new ArrayList<>();
@@ -180,21 +179,30 @@ public class Actions<T extends Personne> {
         Manager manager = new Manager();
 
         manager.setId(res.getInt("Id"));
-        manager.setTitle(res.getString("Title"));
+
+        String titleStored = res.getString("Title");
+        Title title = null;
+
+        for (Title t : Title.values())
+            if (t.getTitle().equalsIgnoreCase(titleStored)) {
+                title = t;
+                break;
+            }
+        manager.setTitle(title);
+
         manager.setLastName(res.getString("LastName"));
         manager.setFirstName(res.getString("FirstName"));
-        String genderString = res.getString("Gender");
 
-        Gender genderEnum = null;
+        String genderStored = res.getString("Gender");
+        Gender gender = null;
 
-        for (Gender gender : Gender.values()) {
-            if (gender.getGender().equalsIgnoreCase(genderString)) {
-                genderEnum = gender;
+        for (Gender g : Gender.values()) {
+            if (g.getGender().equalsIgnoreCase(genderStored)) {
+                gender = g;
                 break;
             }
         }
-
-        manager.setGender(genderEnum);
+        manager.setGender(gender);
 
         Pictures pictures = this.getPicturesById(res.getInt("Id_pictures"));
         manager.setPictures(pictures);
@@ -204,23 +212,23 @@ public class Actions<T extends Personne> {
 
         manager.setAddress(res.getString("Address"));
 
-        String hobbyString = res.getString("Hobby");
-        Hobbies hobbyEnum = null;
-        for (Hobbies hobby : Hobbies.values())
-            if (hobby.getHobby().equalsIgnoreCase(hobbyString)) {
-                hobbyEnum = hobby;
+        String hobbyStored = res.getString("Hobby");
+        Hobbies hobby = null;
+        for (Hobbies h : Hobbies.values())
+            if (h.getHobby().equalsIgnoreCase(hobbyStored)) {
+                hobby = h;
                 break;
             }
-        manager.setHobby(hobbyEnum);
+        manager.setHobby(hobby);
 
-        String departmentString = res.getString("Department");
-        Departments departmentEnum = null;
-        for (Departments department : Departments.values())
-            if (department.getDepartment().equalsIgnoreCase(departmentString)) {
-                departmentEnum = department;
+        String departmentStored = res.getString("Department");
+        Departments department = null;
+        for (Departments d : Departments.values())
+            if (d.getDepartment().equalsIgnoreCase(departmentStored)) {
+                department = d;
                 break;
             }
-        manager.setDepartment(departmentEnum);
+        manager.setDepartment(department);
 
         manager.setBirthYear(res.getInt("BirthYear"));
         manager.setSalary(res.getFloat("Salary"));
@@ -233,18 +241,27 @@ public class Actions<T extends Personne> {
         Programmeur prog = new Programmeur();
 
         prog.setId(res.getInt("Id"));
-        prog.setTitle(res.getString("Title"));
+
+        String titleStored = res.getString("Title");
+        Title title = null;
+        for (Title t : Title.values())
+            if (t.getTitle().equalsIgnoreCase(titleStored)) {
+                title = t;
+                break;
+            }
+        prog.setTitle(title);
+
         prog.setFirstName(res.getString("FirstName"));
         prog.setLastName(res.getString("LastName"));
 
-        String genderString = res.getString("Gender");
-        Gender genderEnum = null;
-        for (Gender gender : Gender.values())
-            if (gender.getGender().equalsIgnoreCase(genderString)) {
-                genderEnum = gender;
+        String genderStored = res.getString("Gender");
+        Gender gender = null;
+        for (Gender g : Gender.values())
+            if (g.getGender().equalsIgnoreCase(genderStored)) {
+                gender = g;
                 break;
             }
-        prog.setGender(genderEnum);
+        prog.setGender(gender);
 
         prog.setAddress(res.getString("Address"));
         prog.setPseudo(res.getString("Pseudo"));
@@ -258,14 +275,14 @@ public class Actions<T extends Personne> {
         Manager manager = (Manager) this.getById("Manager", res.getInt("Id_manager"));
         prog.setManager(manager);
 
-        String hobbyString = res.getString("Hobby");
-        Hobbies hobbyEnum = null;
-        for (Hobbies hobby : Hobbies.values())
-            if (hobby.getHobby().equalsIgnoreCase(hobbyString)) {
-                hobbyEnum = hobby;
+        String hobbyStored = res.getString("Hobby");
+        Hobbies hobby = null;
+        for (Hobbies h : Hobbies.values())
+            if (h.getHobby().equalsIgnoreCase(hobbyStored)) {
+                hobby = h;
                 break;
             }
-        prog.setHobby(hobbyEnum);
+        prog.setHobby(hobby);
 
         prog.setBirthYear(res.getInt("BirthYear"));
         prog.setSalary(res.getFloat("Salary"));
@@ -382,8 +399,8 @@ public class Actions<T extends Personne> {
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
-        statement.setString(1, coords.getLatitude());
-        statement.setString(2, coords.getLongitude());
+        statement.setFloat(1, coords.getLatitude());
+        statement.setFloat(2, coords.getLongitude());
 
         statement.executeUpdate();
         statement.close();

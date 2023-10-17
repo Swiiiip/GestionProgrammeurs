@@ -8,6 +8,7 @@ import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.time.LocalDate;
 import java.util.Random;
@@ -35,13 +36,14 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
 
         Pictures pictures = this.api.parsePicturesFromJson();
         Coords coords = this.api.parseCoordsFromJson();
+
         this.programmeurDAO.addPictures(pictures);
         this.programmeurDAO.addCoords(coords);
 
         pictures = this.programmeurDAO.getPictures(pictures);
         coords = this.programmeurDAO.getCoords(coords);
 
-        String title = this.api.parseTitleFromJson();
+        Title title = this.api.parseTitleFromJson();
         String lastName = this.api.parseLastNameFromJson();
         String firstName = this.api.parseFirstNameFromJson();
         Gender gender = this.api.parseGenderFromJson();

@@ -7,6 +7,7 @@ import personnes.utils.Pictures;
 import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
+import utils.Title;
 
 import java.util.LinkedHashMap;
 
@@ -19,7 +20,7 @@ public class Manager extends Personne {
         super();
     }
 
-    public Manager(String title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary,
+    public Manager(Title title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary,
                    float prime, Departments department) {
         super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.department = department;

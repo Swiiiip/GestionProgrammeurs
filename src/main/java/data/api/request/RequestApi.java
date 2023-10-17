@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
+import utils.Title;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 
 public class RequestApi {
@@ -104,17 +107,41 @@ public class RequestApi {
         JsonNode locationNode = rootNode.get("results").get(0).get("location");
         JsonNode coordsNode = locationNode.get("coordinates");
 
-        String latitude = coordsNode.get("latitude").asText();
-        String longitude = coordsNode.get("longitude").asText();
+        Float latitude = Float.valueOf(coordsNode.get("latitude").asText());
+        Float longitude = Float.valueOf(coordsNode.get("longitude").asText());
 
-        return new Coords(latitude, longitude);
+        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+
+        String formattedLatitude = decimalFormat.format(latitude);
+        String formattedLongitude = decimalFormat.format(longitude);
+
+        float formattedLatitudeValue;
+        float formattedLongitudeValue;
+
+        try {
+            formattedLatitudeValue = decimalFormat.parse(formattedLatitude).floatValue();
+            formattedLongitudeValue = decimalFormat.parse(formattedLongitude).floatValue();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return new Coords(formattedLatitudeValue,formattedLongitudeValue);
     }
 
 
-    public String parseTitleFromJson() throws IOException {
+    public Title parseTitleFromJson() throws IOException {
         JsonNode rootNode = objectMapper.readTree(data);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
+        String currentTitle = nameNode.get("title").asText();
 
-        return nameNode.get("title").asText();
+        if (currentTitle.equalsIgnoreCase("mr") || currentTitle.equalsIgnoreCase("monsieur"))
+            return Title.MR;
+
+        if (currentTitle.equalsIgnoreCase("mrs") || currentTitle.equalsIgnoreCase("madame"))
+            return Title.MRS;
+
+        if (currentTitle.equalsIgnoreCase("ms") || currentTitle.equalsIgnoreCase("miss") || currentTitle.equalsIgnoreCase("mademoiselle"))
+            return Title.MS;
+
+        return null;
     }
 }
