@@ -4,6 +4,7 @@ import dao.ManagerDAO;
 import dao.ProgrammeurDAO;
 import personnes.Manager;
 import personnes.Programmeur;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
@@ -36,18 +37,20 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
 
         Pictures pictures = this.api.parsePicturesFromJson();
         Coords coords = this.api.parseCoordsFromJson();
+        Address address = this.api.parseAddressFromJson();
 
         this.programmeurDAO.addPictures(pictures);
         this.programmeurDAO.addCoords(coords);
+        this.programmeurDAO.addAddress(address);
 
         pictures = this.programmeurDAO.getPictures(pictures);
         coords = this.programmeurDAO.getCoords(coords);
+        address = this.programmeurDAO.getAddress(address);
 
         Title title = this.api.parseTitleFromJson();
         String lastName = this.api.parseLastNameFromJson();
         String firstName = this.api.parseFirstNameFromJson();
         Gender gender = this.api.parseGenderFromJson();
-        String address = this.api.parseAddressFromJson();
         Hobbies hobby = Hobbies.generateRandomHobby();
         Manager manager = managerDAO.getById(random.nextInt(this.nbManagers) + 1);
         String pseudo = this.api.parsePseudoFromJson();

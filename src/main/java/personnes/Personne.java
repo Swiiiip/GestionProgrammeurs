@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
@@ -24,7 +25,7 @@ public abstract class Personne {
     private String lastName;
     private Gender gender;
     private Pictures pictures;
-    private String address;
+    private Address address;
     private Coords coords;
     private Hobbies hobby;
     private int birthYear;
@@ -43,7 +44,7 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(Title title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
+    public Personne(Title title, String lastName, String firstName, Gender gender, Pictures pictures, Address address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
         this.title = title;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -178,7 +179,7 @@ public abstract class Personne {
      * @return L'adresse de la personne.
      */
     @JsonProperty("address")
-    public String getAddress() {
+    public Address getAddress() {
         return this.address;
     }
 
@@ -187,7 +188,7 @@ public abstract class Personne {
      *
      * @param address L'adresse de la personne.
      */
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

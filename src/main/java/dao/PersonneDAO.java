@@ -2,8 +2,10 @@ package dao;
 
 import data.db.Actions;
 import personnes.Personne;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
+import weka.filters.unsupervised.attribute.Add;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -57,6 +59,10 @@ public abstract class PersonneDAO<T extends Personne> {
         actions.addCoords(coords);
     }
 
+    public void addAddress(Address address) throws SQLException{
+        actions.addAddress(address);
+    }
+
     public Pictures getPictures(Pictures pictures) throws SQLException {
         return actions.getFullPictures(pictures);
     }
@@ -65,12 +71,20 @@ public abstract class PersonneDAO<T extends Personne> {
         return actions.getFullCoords(coords);
     }
 
+    public Address getAddress(Address address) throws SQLException{
+        return actions.getFullAddress(address);
+    }
+
     public Pictures getPicturesById(int id) throws SQLException {
         return actions.getPicturesById(id);
     }
 
     public Coords getCoordsById(int id) throws SQLException {
         return actions.getCoordsById(id);
+    }
+
+    public Address getAddressById(int id) throws SQLException{
+        return actions.getAddressById(id);
     }
 
     public void exit() {

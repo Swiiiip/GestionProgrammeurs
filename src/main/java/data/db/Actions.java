@@ -4,12 +4,14 @@ import connexion.Connexion;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
 import utils.Title;
+import weka.filters.unsupervised.attribute.Add;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +45,18 @@ public class Actions<T extends Personne> {
         coords.setLongitude(res.getFloat("Longitude"));
 
         return coords;
+    }
+
+    private Address mapAddress(ResultSet res) throws SQLException{
+        Address address = new Address();
+
+        address.setId(res.getInt("Id"));
+        address.setStreetNumber(res.getInt("StreetNumber"));
+        address.setStreetName(res.getString("StreetName"));
+        address.setCity(res.getString("City"));
+        address.setCountry(res.getString("Country"));
+
+        return address;
     }
 
     public Pictures getPicturesById(int idPictures) throws SQLException {
@@ -89,6 +103,28 @@ public class Actions<T extends Personne> {
             throw new SQLException("La coordonnée avec l'id " + idCoords + " n'existe pas");
 
         return coords;
+    }
+
+    public Address getAddressById(int idAddress) throws SQLException{
+        Address address = null;
+        final String query = "SELECT * FROM Address WHERE Id = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setInt(1, idAddress);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if (resultSet.next())
+            address = mapAddress(resultSet);
+
+        resultSet.close();
+        statement.close();
+
+        if (address == null)
+            throw new SQLException("L'adresse avec l'id " + idAddress + " n'existe pas");
+
+        return address;
     }
 
     public Coords getFullCoords(Coords coords) throws SQLException {
@@ -138,6 +174,33 @@ public class Actions<T extends Personne> {
         statement.close();
 
         return fullDataPictures;
+    }
+
+    public Address getFullAddress(Address address) throws SQLException {
+        Address fullDataAddress = null;
+
+        final String query = "SELECT * FROM Address WHERE StreetNumber = ? AND StreetName = ?" +
+                " AND City = ? AND Country = ?";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setInt(1, address.getStreetNumber());
+        statement.setString(2, address.getStreetName());
+        statement.setString(3, address.getCity());
+        statement.setString(4, address.getCountry());
+
+        ResultSet res = statement.executeQuery();
+
+        if (res.next())
+            fullDataAddress = mapAddress(res);
+
+        if (fullDataAddress == null)
+            throw new SQLException("L'adresse (" + address + ") n 'existe pas.");
+
+        res.close();
+        statement.close();
+
+        return fullDataAddress;
     }
 
 
@@ -210,7 +273,7 @@ public class Actions<T extends Personne> {
         Coords coords = this.getCoordsById(res.getInt("Id_Coords"));
         manager.setCoords(coords);
 
-        manager.setAddress(res.getString("Address"));
+        manager.setAddress(this.getAddressById(res.getInt("Address")));
 
         String hobbyStored = res.getString("Hobby");
         Hobbies hobby = null;
@@ -263,7 +326,7 @@ public class Actions<T extends Personne> {
             }
         prog.setGender(gender);
 
-        prog.setAddress(res.getString("Address"));
+        prog.setAddress(this.getAddressById(res.getInt("Id_Address")));
         prog.setPseudo(res.getString("Pseudo"));
 
         Pictures pictures = this.getPicturesById(res.getInt("Id_pictures"));
@@ -401,6 +464,21 @@ public class Actions<T extends Personne> {
 
         statement.setFloat(1, coords.getLatitude());
         statement.setFloat(2, coords.getLongitude());
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void addAddress(Address address) throws SQLException{
+        final String query = "INSERT INTO Address(StreetNumber, StreetName, City, Country)" +
+                " VALUES (?, ?, ?, ?)";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.setInt(1, address.getStreetNumber());
+        statement.setString(2, address.getStreetName());
+        statement.setString(3, address.getCity());
+        statement.setString(4, address.getCountry());
 
         statement.executeUpdate();
         statement.close();
@@ -629,5 +707,6 @@ public class Actions<T extends Personne> {
     public void exit() {
         this.connexion.close();
     }
+
 
 }

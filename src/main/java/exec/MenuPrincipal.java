@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
+import personnes.utils.Address;
 import prediction.PredictionModel;
 import utils.Departments;
 import utils.Gender;
@@ -309,7 +310,7 @@ public class MenuPrincipal {
                 (String) infosPersonne.get(2),
                 gender,
                 !gender.isWoman() ? this.programmeurDAO.getPicturesById(1) : this.programmeurDAO.getPicturesById(2),
-                (String) infosPersonne.get(4),
+                (Address) infosPersonne.get(4),
                 this.programmeurDAO.getCoordsById(1),
                 pseudo,
                 manager,
@@ -329,7 +330,7 @@ public class MenuPrincipal {
                 (String) infosPersonne.get(2),
                 gender,
                 !gender.isWoman() ? this.managerDAO.getPicturesById(1) : this.managerDAO.getPicturesById(2),
-                (String) infosPersonne.get(4),
+                (Address) infosPersonne.get(4),
                 this.managerDAO.getCoordsById(1),
                 (Hobbies) infosPersonne.get(5),
                 (Integer) infosPersonne.get(6),

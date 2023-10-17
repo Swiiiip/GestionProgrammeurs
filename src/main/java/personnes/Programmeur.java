@@ -2,6 +2,7 @@ package personnes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
@@ -48,7 +49,7 @@ public class Programmeur extends Personne {
      * @param salary    Le salaire du programmeur.
      * @param prime     La prime du programmeur.
      */
-    public Programmeur(Title title, String lastName, String firstName, Gender gender, Pictures pictures, String address, Coords coords, String pseudo,
+    public Programmeur(Title title, String lastName, String firstName, Gender gender, Pictures pictures, Address address, Coords coords, String pseudo,
                        Manager manager, Hobbies hobby, int birthYear, float salary, float prime) {
         super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.pseudo = pseudo;

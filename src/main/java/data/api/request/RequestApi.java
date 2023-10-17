@@ -3,6 +3,7 @@ package data.api.request;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
@@ -59,7 +60,7 @@ public class RequestApi {
         return nameNode.get("first").asText();
     }
 
-    public String parseAddressFromJson() throws IOException {
+    public Address parseAddressFromJson() throws IOException {
         JsonNode rootNode = objectMapper.readTree(data);
         JsonNode locationNode = rootNode.get("results").get(0).get("location");
         int streetNumber = locationNode.get("street").get("number").asInt();
@@ -67,7 +68,7 @@ public class RequestApi {
         String city = locationNode.get("city").asText();
         String country = locationNode.get("country").asText();
 
-        return streetNumber + " " + streetName + ", " + city + ", " + country;
+        return new Address(streetNumber, streetName, city, country);
     }
 
     public int parseBirthYearFromJson() throws IOException {

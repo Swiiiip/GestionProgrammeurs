@@ -2,6 +2,7 @@ package data.api.mapping;
 
 import dao.ManagerDAO;
 import personnes.Manager;
+import personnes.utils.Address;
 import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Departments;
@@ -27,17 +28,19 @@ public class MapManagerFromAPI extends MapPersonneFromAPI<Manager> {
 
         Pictures pictures = this.api.parsePicturesFromJson();
         Coords coords = this.api.parseCoordsFromJson();
+        Address address = this.api.parseAddressFromJson();
         managerDAO.addPictures(pictures);
         managerDAO.addCoords(coords);
+        managerDAO.addAddress(address);
 
         pictures = this.managerDAO.getPictures(pictures);
         coords = this.managerDAO.getCoords(coords);
+        address = this.managerDAO.getAddress(address);
 
         Title title = this.api.parseTitleFromJson();
         String lastName = this.api.parseLastNameFromJson();
         String firstName = this.api.parseFirstNameFromJson();
         Gender gender = this.api.parseGenderFromJson();
-        String address = this.api.parseAddressFromJson();
         int birthYear = this.api.parseBirthYearFromJson();
 
         Hobbies hobby = Hobbies.generateRandomHobby();
