@@ -203,15 +203,15 @@ public class MenuPrincipal {
     private List<?> collecterInfosPersonne() {
         List<Object> infosPersonne = new ArrayList<>();
         System.out.print("\nEntrez le titre : ");
-        String title = this.getTitle();
+        Title title = this.getTitle();
         infosPersonne.add(title);
 
         System.out.print("\nEntrez le nom de famille : ");
-        String lastName = scanner.next();
+        String lastName = this.getName();
         infosPersonne.add(lastName);
 
         System.out.print("\nEntrez le prénom : ");
-        String firstName = scanner.next();
+        String firstName = this.getName();
         infosPersonne.add(firstName);
 
         System.out.print("\nEntrez le genre : ");
@@ -219,8 +219,8 @@ public class MenuPrincipal {
         infosPersonne.add(gender);
 
         scanner.nextLine();
-        System.out.print("\nEntrez l'adresse : ");
-        String address = scanner.nextLine();
+        System.out.print("\nEntrez votre Adresse : ");
+        Address address = this.getAddress();
         infosPersonne.add(address);
 
         System.out.print("\nEntrez le hobby : ");
@@ -536,6 +536,12 @@ public class MenuPrincipal {
         return input;
     }
 
+    private String getName(){
+        String name = scanner.next();
+
+        return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+    }
+
     private Gender getGender() {
         while (true) {
             try {
@@ -561,6 +567,34 @@ public class MenuPrincipal {
 
         }
     }
+
+    private Address getAddress() {
+        System.out.print("Entrez votre numéro de rue : ");
+        int streetNum = getInt();
+
+        scanner.nextLine();
+        System.out.print("Entrez votre nom de rue : ");
+        String streetName = scanner.nextLine();
+
+        System.out.print("Entrez votre ville : ");
+        String city = scanner.next();
+
+        System.out.print("Entrez votre pays : ");
+        String country = scanner.next();
+
+        Address address = new Address(streetNum, streetName, city, country);
+
+        try{
+            programmeurDAO.addAddress(address);
+            address = programmeurDAO.getAddress(address);
+        } catch (SQLException e){
+            System.err.println("L'ajout de l'adresse a échouée.");
+        }
+
+        return address;
+    }
+
+
 
     private Hobbies getHobby() {
         while (true) {
@@ -614,14 +648,14 @@ public class MenuPrincipal {
         }
     }
 
-    private String getTitle() {
+    private Title getTitle() {
         while (true) {
             try {
                 String input = scanner.next();
 
                 for (Title title : Title.values()) {
                     if (title.getTitle().equalsIgnoreCase(input)) {
-                        return title.getTitle();
+                        return title;
                     }
                 }
 

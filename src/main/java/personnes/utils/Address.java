@@ -76,9 +76,6 @@ public class Address {
 
     @Override
     public String toString(){
-        return "->streetNumber : " + this.streetNumber +
-                ", streetName : " + this.streetName +
-                ", city : " + this.city +
-                ", country : " + this.country;
+        return this.streetNumber + " " + this.streetName + ", " + this.city + ", " + this.country;
     }
 }

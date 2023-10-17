@@ -293,7 +293,7 @@ public abstract class Personne {
         columns.put("Gender", this.gender.getGender());
         columns.put("Id_pictures", this.pictures.getId());
         columns.put("Id_Coords", this.coords.getId());
-        columns.put("Address", this.address);
+        columns.put("Id_Address", this.address.getId());
         columns.put("Hobby", this.hobby.getHobby());
         columns.put("BirthYear", this.birthYear);
         columns.put("Salary", this.salary);

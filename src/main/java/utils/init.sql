@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS Programmeur;
 DROP TABLE IF EXISTS Manager;
 DROP TABLE IF EXISTS Pictures;
 DROP TABLE IF EXISTS Coords;
+DROP TABLE IF EXISTS Address;
 
 CREATE TABLE IF NOT EXISTS Programmeur
 (
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Programmeur
     FirstName   VARCHAR(255) NOT NULL,
     Gender      VARCHAR(255) NOT NULL,
     Id_pictures INT          NOT NULL,
-    Address     VARCHAR(255),
+    Id_Address  INT NOT NULL,
     Id_coords   INT          NOT NULL,
     Pseudo      VARCHAR(255) NOT NULL,
     Id_manager  INT,
@@ -44,6 +45,16 @@ CREATE TABLE IF NOT EXISTS Coords
     Longitude DECIMAL(7,4) NOT NULL
 );
 
+
+CREATE TABLE IF NOT EXISTS Address
+(
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    StreetNumber INT NOT NULL,
+    StreetName VARCHAR(255),
+    City VARCHAR(255),
+    Country VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS Manager
 (
     Id          INT PRIMARY KEY AUTO_INCREMENT,
@@ -52,7 +63,7 @@ CREATE TABLE IF NOT EXISTS Manager
     FirstName   VARCHAR(255) NOT NULL,
     Gender      VARCHAR(255),
     Id_pictures INT          NOT NULL,
-    Address     VARCHAR(255),
+    Id_Address  INT NOT NULL,
     Id_Coords   INT          NOT NULL,
     Hobby       VARCHAR(255),
     Department  VARCHAR(255),
@@ -70,6 +81,8 @@ ALTER TABLE Pictures
     AUTO_INCREMENT = 1;
 ALTER TABLE Coords
     AUTO_INCREMENT = 1;
+ALTER TABLE Address
+    AUTO_INCREMENT = 1;
 
 ALTER TABLE Programmeur
     ADD CONSTRAINT FK_Manager FOREIGN KEY (Id_manager) REFERENCES Manager (Id);
@@ -80,11 +93,17 @@ ALTER TABLE Programmeur
 ALTER TABLE Programmeur
     ADD CONSTRAINT FK_Coords_Prog FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
 
+ALTER TABLE Programmeur
+    ADD CONSTRAINT FK_Address_Prog FOREIGN KEY (Id_Address) REFERENCES Address (Id);
+
 ALTER TABLE Manager
     ADD CONSTRAINT FK_Picture_Manager FOREIGN KEY (Id_pictures) REFERENCES Pictures (Id);
 
 ALTER TABLE Manager
     ADD CONSTRAINT FK_Coords_Manager FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
+
+ALTER TABLE Manager
+    ADD CONSTRAINT FK_Address_Manager FOREIGN KEY (Id_Address) REFERENCES Pictures (Id);
 
 DROP TRIGGER IF EXISTS SetNewManagerForProgrammeur;
 

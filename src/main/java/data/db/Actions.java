@@ -273,7 +273,7 @@ public class Actions<T extends Personne> {
         Coords coords = this.getCoordsById(res.getInt("Id_Coords"));
         manager.setCoords(coords);
 
-        manager.setAddress(this.getAddressById(res.getInt("Address")));
+        manager.setAddress(this.getAddressById(res.getInt("Id_Address")));
 
         String hobbyStored = res.getString("Hobby");
         Hobbies hobby = null;
@@ -539,6 +539,7 @@ public class Actions<T extends Personne> {
     public void deleteUtils() throws SQLException {
         deletePictures();
         deleteCoords();
+        deleteAddress();
     }
 
     private void deletePictures() throws SQLException {
@@ -559,9 +560,19 @@ public class Actions<T extends Personne> {
         statement.close();
     }
 
+    private void deleteAddress() throws SQLException {
+        String query = "DELETE FROM Address";
+
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
     public void resetIndex(String typePersonne) throws SQLException {
         resetIndexPictures();
         resetIndexCoords();
+        resetIndexAddress();
 
         String query = "ALTER TABLE " + typePersonne + " AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
@@ -580,6 +591,14 @@ public class Actions<T extends Personne> {
 
     public void resetIndexCoords() throws SQLException {
         String query = "ALTER TABLE Coords AUTO_INCREMENT = 1";
+        PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
+
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void resetIndexAddress() throws SQLException {
+        String query = "ALTER TABLE Address AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.executeUpdate();

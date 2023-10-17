@@ -28,8 +28,8 @@ public class Manager extends Personne {
     }
 
     @JsonProperty("department")
-    public Departments getDepartment() {
-        return department;
+    public String getDepartment() {
+        return department.getDepartment();
     }
 
     public void setDepartment(Departments department) {
