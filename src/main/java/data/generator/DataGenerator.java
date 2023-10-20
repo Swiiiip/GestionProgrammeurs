@@ -53,13 +53,6 @@ public class DataGenerator {
             System.err.println("L'ajout des images par défaut a échouée. " + e.getMessage());
             throw new SecurityException();
         }
-        Coords defaultCoords = new Coords(0.0f, 0.0f);
-        try {
-            programmeurDAO.addCoords(defaultCoords);
-        } catch (SQLException e) {
-            System.err.println("L'ajout des coordonnées par défaut a échouée. " + e.getMessage());
-            throw new SecurityException();
-        }
 
         for (int i = 0; i < NBMANAGERS; i++) {
             Manager manager;

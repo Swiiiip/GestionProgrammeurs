@@ -67,7 +67,7 @@ public class ManagerDAO extends PersonneDAO<Manager> {
 
     @Override
     public Map<String, Float> getAverageSalaryByGender() throws SQLException {
-        return actions.getAverageSalaryByGender("Manageur");
+        return actions.getAverageSalaryByGender("Manager");
     }
 
     @Override

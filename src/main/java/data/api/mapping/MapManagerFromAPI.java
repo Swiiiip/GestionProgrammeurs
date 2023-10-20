@@ -26,9 +26,10 @@ public class MapManagerFromAPI extends MapPersonneFromAPI<Manager> {
     public Manager map() throws Exception {
         super.map();
 
-        Pictures pictures = this.api.parsePicturesFromJson();
-        Coords coords = this.api.parseCoordsFromJson();
-        Address address = this.api.parseAddressFromJson();
+        Pictures pictures = this.api.getPictures();
+        Address address = this.api.getAddress();
+        Coords coords = new Coords(address.getCity(), address.getCountry());
+
         managerDAO.addPictures(pictures);
         managerDAO.addCoords(coords);
         managerDAO.addAddress(address);
@@ -37,11 +38,11 @@ public class MapManagerFromAPI extends MapPersonneFromAPI<Manager> {
         coords = this.managerDAO.getCoords(coords);
         address = this.managerDAO.getAddress(address);
 
-        Title title = this.api.parseTitleFromJson();
-        String lastName = this.api.parseLastNameFromJson();
-        String firstName = this.api.parseFirstNameFromJson();
-        Gender gender = this.api.parseGenderFromJson();
-        int birthYear = this.api.parseBirthYearFromJson();
+        Title title = this.api.getTitle();
+        String lastName = this.api.getLastName();
+        String firstName = this.api.getFirstName();
+        Gender gender = this.api.getGender();
+        int birthYear = this.api.getBirthYear();
 
         Hobbies hobby = Hobbies.generateRandomHobby();
         Departments department = Departments.generateRandomDepartment();

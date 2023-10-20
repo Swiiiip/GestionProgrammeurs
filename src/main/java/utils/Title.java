@@ -6,7 +6,9 @@ public enum Title {
 
     MRS("Madame"),
 
-    MS("Mademoiselle");
+    MS("Mademoiselle"),
+
+    DEFAULT("Inconnu");
 
     private final String title;
 

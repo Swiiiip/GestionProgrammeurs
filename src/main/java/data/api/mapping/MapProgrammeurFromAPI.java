@@ -35,9 +35,9 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
 
         Random random = new Random();
 
-        Pictures pictures = this.api.parsePicturesFromJson();
-        Coords coords = this.api.parseCoordsFromJson();
-        Address address = this.api.parseAddressFromJson();
+        Pictures pictures = this.api.getPictures();
+        Address address = this.api.getAddress();
+        Coords coords = new Coords(address.getCity(), address.getCountry());
 
         this.programmeurDAO.addPictures(pictures);
         this.programmeurDAO.addCoords(coords);
@@ -47,15 +47,15 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
         coords = this.programmeurDAO.getCoords(coords);
         address = this.programmeurDAO.getAddress(address);
 
-        Title title = this.api.parseTitleFromJson();
-        String lastName = this.api.parseLastNameFromJson();
-        String firstName = this.api.parseFirstNameFromJson();
-        Gender gender = this.api.parseGenderFromJson();
+        Title title = this.api.getTitle();
+        String lastName = this.api.getLastName();
+        String firstName = this.api.getFirstName();
+        Gender gender = this.api.getGender();
         Hobbies hobby = Hobbies.generateRandomHobby();
         Manager manager = managerDAO.getById(random.nextInt(this.nbManagers) + 1);
-        String pseudo = this.api.parsePseudoFromJson();
+        String pseudo = this.api.getPseudo();
 
-        int birthYear = this.api.parseBirthYearFromJson();
+        int birthYear = this.api.getBirthYear();
         int age = LocalDate.now().getYear() - birthYear;
         float salary = 2000.0f + (age * 75.0f);
         float prime = random.nextFloat() * 500.0f;

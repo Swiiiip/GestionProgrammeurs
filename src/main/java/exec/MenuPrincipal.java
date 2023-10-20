@@ -3,11 +3,13 @@ package exec;
 import dao.ManagerDAO;
 import dao.PersonneDAO;
 import dao.ProgrammeurDAO;
+import data.api.request.GetUserFromAPI;
 import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.Programmeur;
 import personnes.utils.Address;
+import personnes.utils.Coords;
 import prediction.PredictionModel;
 import utils.Departments;
 import utils.Gender;
@@ -219,7 +221,7 @@ public class MenuPrincipal {
         infosPersonne.add(gender);
 
         scanner.nextLine();
-        System.out.print("\nEntrez votre Adresse : ");
+        System.out.println("\nEntrez votre Adresse : ");
         Address address = this.getAddress();
         infosPersonne.add(address);
 
@@ -238,6 +240,16 @@ public class MenuPrincipal {
         System.out.print("\nEntrez la prime : ");
         float prime = getFloat();
         infosPersonne.add(prime);
+
+        try {
+            Coords coords = new Coords(address.getCity(), address.getCountry());
+            this.programmeurDAO.addCoords(coords);
+            coords = this.programmeurDAO.getCoords(coords);
+
+            infosPersonne.add(coords);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         return infosPersonne;
     }
@@ -311,7 +323,7 @@ public class MenuPrincipal {
                 gender,
                 !gender.isWoman() ? this.programmeurDAO.getPicturesById(1) : this.programmeurDAO.getPicturesById(2),
                 (Address) infosPersonne.get(4),
-                this.programmeurDAO.getCoordsById(1),
+                (Coords) infosPersonne.get(9),
                 pseudo,
                 manager,
                 (Hobbies) infosPersonne.get(5),
@@ -331,7 +343,7 @@ public class MenuPrincipal {
                 gender,
                 !gender.isWoman() ? this.managerDAO.getPicturesById(1) : this.managerDAO.getPicturesById(2),
                 (Address) infosPersonne.get(4),
-                this.managerDAO.getCoordsById(1),
+                (Coords) infosPersonne.get(9),
                 (Hobbies) infosPersonne.get(5),
                 (Integer) infosPersonne.get(6),
                 (Float) infosPersonne.get(7),
@@ -387,8 +399,7 @@ public class MenuPrincipal {
                 System.out.println(personneDAO.getTypeLabel() + " supprimé avec succès.");
 
             } catch (SQLException e) {
-                System.err.println("Le " + personneDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
-                id = 0;
+                System.err.println(e.getMessage());
             }
         } while (id == 0);
     }
@@ -577,17 +588,23 @@ public class MenuPrincipal {
         String streetName = scanner.nextLine();
 
         System.out.print("Entrez votre ville : ");
-        String city = scanner.next();
+        String city = scanner.nextLine();
+
+        System.out.print("Entrez votre région : ");
+        String state = scanner.nextLine();
 
         System.out.print("Entrez votre pays : ");
-        String country = scanner.next();
+        String country = scanner.nextLine();
 
-        Address address = new Address(streetNum, streetName, city, country);
+        System.out.print("Entrez votre code postale : ");
+        String postcode = scanner.next();
+
+        Address address = new Address(streetNum, streetName, city, state, country, postcode);
 
         try{
             programmeurDAO.addAddress(address);
             address = programmeurDAO.getAddress(address);
-        } catch (SQLException e){
+        } catch (Exception e){
             System.err.println("L'ajout de l'adresse a échouée.");
         }
 
@@ -665,7 +682,7 @@ public class MenuPrincipal {
                 }
 
                 validTitle.setLength(validTitle.length() - 2);
-                throw new InputMismatchException("Département invalide. Choisissez parmi " + validTitle);
+                throw new InputMismatchException("Titre invalide. Choisissez parmi " + validTitle);
 
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import personnes.utils.Address;
-import personnes.utils.Coords;
 import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Title;
@@ -15,64 +14,69 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 
-public class RequestApi {
+public class GetUserFromAPI {
 
-    private static final String APIURL = "https://randomuser.me/api";
+    private static final String USERAPI = "https://randomuser.me/api";
+
+    private static final String MAPSAPI = "https://nominatim.openstreetmap.org/search?format=json&q=";
     private final ObjectMapper objectMapper;
 
-    private String data;
+    private String userData;
 
-    public RequestApi() {
+    public GetUserFromAPI() {
         objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public void getJsonDataFromApi() throws Exception {
-        URI uri = new URI(APIURL);
+    public void generateData() throws Exception {
+        URI uri = new URI(USERAPI);
         URL url = uri.toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
+        StringBuilder response;
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            StringBuilder response = new StringBuilder();
+            response = new StringBuilder();
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
-            this.data = response.toString();
+
         }
+        conn.disconnect();
+        this.userData = response.toString();
     }
 
-    public String parseLastNameFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
-        JsonNode nameNode = rootNode.path("results").get(0).path("name");
-        return nameNode.path("last").asText();
+    public String getLastName() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode nameNode = rootNode.path("results").get(0).get("name");
+        return nameNode.get("last").asText();
     }
 
-    public String parseFirstNameFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public String getFirstName() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
 
         return nameNode.get("first").asText();
     }
 
-    public Address parseAddressFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public Address getAddress() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode locationNode = rootNode.get("results").get(0).get("location");
         int streetNumber = locationNode.get("street").get("number").asInt();
         String streetName = locationNode.get("street").get("name").asText();
         String city = locationNode.get("city").asText();
+        String state = locationNode.get("state").asText();
         String country = locationNode.get("country").asText();
+        String postcode = locationNode.get("postcode").asText();
 
-        return new Address(streetNumber, streetName, city, country);
+        return new Address(streetNumber, streetName, city, state, country, postcode);
     }
 
-    public int parseBirthYearFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public int getBirthYear() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode birthYearNode = rootNode.get("results").get(0).get("dob");
 
         int age = birthYearNode.get("age").asInt();
@@ -80,22 +84,22 @@ public class RequestApi {
         return LocalDate.now().getYear() - age;
     }
 
-    public String parsePseudoFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public String getPseudo() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode loginNode = rootNode.get("results").get(0).get("login");
 
         return loginNode.get("username").asText();
     }
 
-    public Gender parseGenderFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public Gender getGender() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode genderNode = rootNode.get("results").get(0).get("gender");
 
         return genderNode.asText().equalsIgnoreCase(Gender.MALE.getGender()) ? Gender.MALE : Gender.FEMALE;
     }
 
-    public Pictures parsePicturesFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public Pictures getPictures() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode picturesNode = rootNode.get("results").get(0).get("picture");
 
         return new Pictures(picturesNode.get("large").asText(),
@@ -103,34 +107,8 @@ public class RequestApi {
                 picturesNode.get("thumbnail").asText());
     }
 
-    public Coords parseCoordsFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
-        JsonNode locationNode = rootNode.get("results").get(0).get("location");
-        JsonNode coordsNode = locationNode.get("coordinates");
-
-        Float latitude = Float.valueOf(coordsNode.get("latitude").asText());
-        Float longitude = Float.valueOf(coordsNode.get("longitude").asText());
-
-        DecimalFormat decimalFormat = new DecimalFormat("#.####");
-
-        String formattedLatitude = decimalFormat.format(latitude);
-        String formattedLongitude = decimalFormat.format(longitude);
-
-        float formattedLatitudeValue;
-        float formattedLongitudeValue;
-
-        try {
-            formattedLatitudeValue = decimalFormat.parse(formattedLatitude).floatValue();
-            formattedLongitudeValue = decimalFormat.parse(formattedLongitude).floatValue();
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return new Coords(formattedLatitudeValue,formattedLongitudeValue);
-    }
-
-
-    public Title parseTitleFromJson() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(data);
+    public Title getTitle() throws IOException {
+        JsonNode rootNode = objectMapper.readTree(userData);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
         String currentTitle = nameNode.get("title").asText();
 
@@ -143,6 +121,6 @@ public class RequestApi {
         if (currentTitle.equalsIgnoreCase("ms") || currentTitle.equalsIgnoreCase("miss") || currentTitle.equalsIgnoreCase("mademoiselle"))
             return Title.MS;
 
-        return null;
+        return Title.DEFAULT;
     }
 }

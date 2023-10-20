@@ -4,7 +4,9 @@ public enum Gender {
 
     MALE("male"),
 
-    FEMALE("female");
+    FEMALE("female"),
+
+    DEFAULT("unknown");
 
     private final String gender;
 

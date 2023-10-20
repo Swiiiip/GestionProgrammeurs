@@ -1,6 +1,6 @@
 package data.api.mapping;
 
-import data.api.request.RequestApi;
+import data.api.request.GetUserFromAPI;
 import personnes.Personne;
 
 import java.util.ArrayList;
@@ -8,19 +8,19 @@ import java.util.List;
 
 public abstract class MapPersonneFromAPI<T extends Personne> {
 
-    protected final RequestApi api;
+    protected final GetUserFromAPI api;
 
     public MapPersonneFromAPI() {
-        api = new RequestApi();
+        api = new GetUserFromAPI();
     }
 
     public T map() throws Exception {
         String lastName;
         String firstName;
         do {
-            api.getJsonDataFromApi();
-            lastName = api.parseLastNameFromJson();
-            firstName = api.parseFirstNameFromJson();
+            api.generateData();
+            lastName = api.getLastName();
+            firstName = api.getFirstName();
         } while (isNotEuropean(lastName) && isNotEuropean(firstName));
 
         return null;

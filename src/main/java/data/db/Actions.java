@@ -11,7 +11,6 @@ import utils.Departments;
 import utils.Gender;
 import utils.Hobbies;
 import utils.Title;
-import weka.filters.unsupervised.attribute.Add;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,7 +53,9 @@ public class Actions<T extends Personne> {
         address.setStreetNumber(res.getInt("StreetNumber"));
         address.setStreetName(res.getString("StreetName"));
         address.setCity(res.getString("City"));
+        address.setState(res.getString("State"));
         address.setCountry(res.getString("Country"));
+        address.setPostcode(res.getString("Postcode"));
 
         return address;
     }

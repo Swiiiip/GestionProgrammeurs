@@ -52,7 +52,9 @@ CREATE TABLE IF NOT EXISTS Address
     StreetNumber INT NOT NULL,
     StreetName VARCHAR(255),
     City VARCHAR(255),
-    Country VARCHAR(255)
+    State VARCHAR(255),
+    Country VARCHAR(255),
+    Postcode VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS Manager
