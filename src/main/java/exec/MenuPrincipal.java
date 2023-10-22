@@ -10,14 +10,12 @@ import personnes.Programmeur;
 import personnes.utils.Address;
 import personnes.utils.Coords;
 import prediction.PredictionModel;
-import utils.Departments;
-import utils.Gender;
-import utils.Hobbies;
-import utils.Title;
+import utils.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,111 +35,102 @@ public class MenuPrincipal {
         menuPrincipal();
     }
 
-    private void menuPrincipal() {
+    public void menuPrincipal() {
         while (true) {
-            System.out.println("\n\n********* Menu Principal *********\n");
-            System.out.println("1. Menu Programmeurs");
-            System.out.println("2. Menu Managers");
-            System.out.println("3. Quitter");
+            displayMainMenu();
 
-            System.out.print("\nChoisissez une option : ");
-            int choix = this.getInt();
+            int choix = getInt();
 
-            switch (choix) {
-                case 1:
-                    this.menu(programmeurDAO);
-                    break;
-                case 2:
-                    this.menu(managerDAO);
-                    break;
-                case 3:
-                    this.exit();
-                    return;
-                default:
-                    System.out.println("Option invalide. Veuillez choisir à nouveau.");
+            Map<Integer, Consumer<PersonneDAO<?>>> menuActions = new HashMap<>();
+            menuActions.put(1, this::menuProgrammeurs);
+            menuActions.put(2, this::menuManagers);
+            menuActions.put(3, this::exit);
+
+            Consumer<PersonneDAO<?>> action = menuActions.get(choix);
+            if (action != null) {
+                action.accept(null);
+            } else {
+                System.out.println("Option invalide. Veuillez choisir à nouveau.");
             }
         }
     }
 
+    private void displayMainMenu() {
+        System.out.println("\n\n********* Menu Principal *********\n");
+        System.out.println("1. Menu Programmeurs");
+        System.out.println("2. Menu Managers");
+        System.out.println("3. Quitter");
+        System.out.print("\nChoisissez une option : ");
+    }
+
+    private void menuProgrammeurs(PersonneDAO<?> personneDAO) {
+        menu(programmeurDAO);
+    }
+
+    private void menuManagers(PersonneDAO<?> personneDAO) {
+        menu(managerDAO);
+    }
+
     private void menu(PersonneDAO<?> personneDAO) {
         while (true) {
-            System.out.println("\n\n********* Menu " + personneDAO.getTypeLabel() + " *********\n");
-            System.out.println("99. Prédire le salaire d'un " + personneDAO.getTypeLabel());
-            System.out.println("1. Afficher tous les " + personneDAO.getTypeLabel());
-            System.out.println("2. Afficher un " + personneDAO.getTypeLabel() + " par ID");
-            System.out.println("3. Afficher un " + personneDAO.getTypeLabel() + " par nom complet");
-            System.out.println("4. Ajouter un nouveau " + personneDAO.getTypeLabel());
-            System.out.println("5. Supprimer un " + personneDAO.getTypeLabel() + " par ID");
-            System.out.println("6. Supprimer tous les " + personneDAO.getTypeLabel() + "s");
-            System.out.println("7. Mettre à jour le salaire d'un " + personneDAO.getTypeLabel() + " par ID");
-            System.out.println("8. Afficher le nombre total de " + personneDAO.getTypeLabel() + "s");
-            System.out.println("9. Afficher le " + personneDAO.getTypeLabel() + " avec le salaire le plus élevé");
-            System.out.println("10. Afficher le " + personneDAO.getTypeLabel() + " avec le salaire le plus bas");
-            System.out.println("11. Afficher la moyenne des salaires des " + personneDAO.getTypeLabel() + "s par âge");
-            System.out.println("12. Afficher le classement des " + personneDAO.getTypeLabel() + "s par salaire");
-            System.out.println("13. Afficher l'histogramme des salaires des " + personneDAO.getTypeLabel() + "s");
-            System.out.println("14. Afficher le salaire moyen des " + personneDAO.getTypeLabel() + "s par genre");
-            System.out.println("15. Revenir au menu principal");
-            System.out.println("16. Quitter");
-            System.out.print("\nChoisissez une option : ");
+            displaySubMenu(personneDAO.getTypeLabel());
+            int choix = getInt();
 
-            int choix = this.getInt();
+            Map<Integer, Consumer<PersonneDAO<?>>> submenuActions = new HashMap<>();
+            submenuActions.put(99, this::predictSalary);
+            submenuActions.put(1, this::displayAll);
+            submenuActions.put(2, this::displayById);
+            submenuActions.put(3, this::displayByFullName);
+            submenuActions.put(4, this::add);
+            submenuActions.put(5, this::deleteById);
+            submenuActions.put(6, this::deleteAll);
+            submenuActions.put(7, this::setSalaryById);
+            submenuActions.put(8, this::displayCount);
+            submenuActions.put(9, this::displayPersonWithMaxSalary);
+            submenuActions.put(10, this::displayPersonWithMinSalary);
+            submenuActions.put(11, this::displayAvgSalaryByAge);
+            submenuActions.put(12, this::displayRankBySalary);
+            submenuActions.put(13, this::displaySalaryHistogram);
+            submenuActions.put(14, this::displayAverageSalaryByGender);
+            submenuActions.put(15, x -> {
+                System.out.println("Retour au menu principal...");
+                throw new ReturnToMainMenuException();
+            });
+            submenuActions.put(16, this::exit);
 
-            switch (choix) {
-                case 99:
-                    this.predictSalary(personneDAO);
+            Consumer<PersonneDAO<?>> action = submenuActions.get(choix);
+            if (action != null)
+                try {
+                    action.accept(personneDAO);
+                } catch (ReturnToMainMenuException e) {
                     break;
-                case 1:
-                    this.displayAll(personneDAO);
-                    break;
-                case 2:
-                    this.displayById(personneDAO);
-                    break;
-                case 3:
-                    this.displayByFullName(personneDAO);
-                    break;
-                case 4:
-                    this.add(personneDAO);
-                    break;
-                case 5:
-                    this.deleteById(personneDAO);
-                    break;
-                case 6:
-                    this.deleteAll(personneDAO);
-                    break;
-                case 7:
-                    this.setSalaryById(personneDAO);
-                    break;
-                case 8:
-                    this.displayCount(personneDAO);
-                    break;
-                case 9:
-                    this.displayPersonWithMaxSalary(personneDAO);
-                    break;
-                case 10:
-                    this.displayPersonWithMinSalary(personneDAO);
-                    break;
-                case 11:
-                    this.displayAvgSalaryByAge(personneDAO);
-                    break;
-                case 12:
-                    this.displayRankBySalary(personneDAO);
-                    break;
-                case 13:
-                    this.displaySalaryHistogram(personneDAO);
-                    break;
-                case 14:
-                    this.displayAverageSalaryByGender(personneDAO);
-                    break;
-                case 15:
-                    return;
-                case 16:
-                    personneDAO.exit();
-                    this.exit();
-                default:
-                    System.out.println("Option invalide. Veuillez choisir à nouveau.");
-            }
+                }
+            else
+                System.out.println("Option invalide. Veuillez choisir à nouveau.");
+
         }
+    }
+
+    private void displaySubMenu(String typeLabel) {
+        System.out.println("\n\n********* Menu " + typeLabel + " *********\n");
+        System.out.println("99. Prédire le salaire d'un " + typeLabel);
+        System.out.println("1. Afficher tous les " + typeLabel);
+        System.out.println("2. Afficher un " + typeLabel + " par ID");
+        System.out.println("3. Afficher un " + typeLabel + " par nom complet");
+        System.out.println("4. Ajouter un nouveau " + typeLabel);
+        System.out.println("5. Supprimer un " + typeLabel + " par ID");
+        System.out.println("6. Supprimer tous les " + typeLabel + "s");
+        System.out.println("7. Mettre à jour le salaire d'un " + typeLabel + " par ID");
+        System.out.println("8. Afficher le nombre total de " + typeLabel + "s");
+        System.out.println("9. Afficher le " + typeLabel + " avec le salaire le plus élevé");
+        System.out.println("10. Afficher le " + typeLabel + " avec le salaire le plus bas");
+        System.out.println("11. Afficher la moyenne des salaires des " + typeLabel + "s par âge");
+        System.out.println("12. Afficher le classement des " + typeLabel + "s par salaire");
+        System.out.println("13. Afficher l'histogramme des salaires des " + typeLabel + "s");
+        System.out.println("14. Afficher le salaire moyen des " + typeLabel + "s par genre");
+        System.out.println("15. Revenir au menu principal");
+        System.out.println("16. Quitter");
+        System.out.print("\nChoisissez une option : ");
     }
 
     private void predictSalary(PersonneDAO<?> personneDAO) {
@@ -754,7 +743,7 @@ public class MenuPrincipal {
         return birthYear;
     }
 
-    private void exit() {
+    private void exit(PersonneDAO<?> personneDAO) {
         scanner.close();
         System.out.println("Au revoir !");
         System.exit(0);
