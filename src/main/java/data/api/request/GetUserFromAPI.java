@@ -1,69 +1,36 @@
 package data.api.request;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import personnes.utils.Address;
 import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Title;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.time.LocalDate;
 
-public class GetUserFromAPI {
+public class GetUserFromAPI extends Request{
 
-    private static final String USERAPI = "https://randomuser.me/api";
-
-    private static final String MAPSAPI = "https://nominatim.openstreetmap.org/search?format=json&q=";
-    private final ObjectMapper objectMapper;
-
-    private String userData;
 
     public GetUserFromAPI() {
-        objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
-    public void generateData() throws Exception {
-        URI uri = new URI(USERAPI);
-        URL url = uri.toURL();
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-
-        StringBuilder response;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-        }
-        conn.disconnect();
-        this.userData = response.toString();
+        super();
     }
 
     public String getLastName() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode nameNode = rootNode.path("results").get(0).get("name");
         return nameNode.get("last").asText();
     }
 
     public String getFirstName() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
 
         return nameNode.get("first").asText();
     }
 
     public Address getAddress() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode locationNode = rootNode.get("results").get(0).get("location");
         int streetNumber = locationNode.get("street").get("number").asInt();
         String streetName = locationNode.get("street").get("name").asText();
@@ -76,7 +43,7 @@ public class GetUserFromAPI {
     }
 
     public int getBirthYear() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode birthYearNode = rootNode.get("results").get(0).get("dob");
 
         int age = birthYearNode.get("age").asInt();
@@ -85,21 +52,21 @@ public class GetUserFromAPI {
     }
 
     public String getPseudo() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode loginNode = rootNode.get("results").get(0).get("login");
 
         return loginNode.get("username").asText();
     }
 
     public Gender getGender() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode genderNode = rootNode.get("results").get(0).get("gender");
 
         return genderNode.asText().equalsIgnoreCase(Gender.MALE.getGender()) ? Gender.MALE : Gender.FEMALE;
     }
 
     public Pictures getPictures() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode picturesNode = rootNode.get("results").get(0).get("picture");
 
         return new Pictures(picturesNode.get("large").asText(),
@@ -108,7 +75,7 @@ public class GetUserFromAPI {
     }
 
     public Title getTitle() throws IOException {
-        JsonNode rootNode = objectMapper.readTree(userData);
+        JsonNode rootNode = objectMapper.readTree(data);
         JsonNode nameNode = rootNode.get("results").get(0).get("name");
         String currentTitle = nameNode.get("title").asText();
 
@@ -122,5 +89,9 @@ public class GetUserFromAPI {
             return Title.MS;
 
         return Title.DEFAULT;
+    }
+
+    public String getUserapi() {
+        return "https://randomuser.me/api";
     }
 }

@@ -3,7 +3,6 @@ package exec;
 import dao.ManagerDAO;
 import dao.PersonneDAO;
 import dao.ProgrammeurDAO;
-import data.api.request.GetUserFromAPI;
 import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
@@ -181,6 +180,12 @@ public class MenuPrincipal {
     }
 
     private void displayById(PersonneDAO<?> personneDAO) {
+        try {
+            personneDAO.getAll();
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+            return;
+        }
         int id;
         do {
             try {
@@ -198,6 +203,12 @@ public class MenuPrincipal {
 
 
     private void displayByFullName(PersonneDAO<?> personneDAO) {
+        try {
+            personneDAO.getAll();
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+            return;
+        }
         Personne personne = getPersonneByFullName(personneDAO);
         displayAPerson(personne);
     }
@@ -255,6 +266,7 @@ public class MenuPrincipal {
     }
 
     private Personne getPersonneByFullName(PersonneDAO<?> personneDAO) {
+
         String fullName;
         Personne personne = null;
         scanner.nextLine();
@@ -288,7 +300,7 @@ public class MenuPrincipal {
         return personne;
     }
 
-    private void addProgrammeur(ProgrammeurDAO programmeurDAO) {
+    private void addProgrammeur() {
         System.out.println("Ajout d'un nouveau Programmeur :");
 
         List<?> infosPersonne = collecterInfosPersonne();
@@ -352,7 +364,7 @@ public class MenuPrincipal {
         );
     }
 
-    private void addManager(ManagerDAO managerDAO) {
+    private void addManager() {
         System.out.println("Ajout d'un nouveau Manager :");
 
         List<?> infosPersonne = collecterInfosPersonne();
@@ -379,53 +391,56 @@ public class MenuPrincipal {
     private void add(PersonneDAO<?> personneDAO) {
         switch (personneDAO.getTypeLabel()) {
             case "programmeur":
-                addProgrammeur((ProgrammeurDAO) personneDAO);
+                addProgrammeur();
                 break;
             case "manager":
-                addManager((ManagerDAO) personneDAO);
+                addManager();
                 break;
             default:
                 System.err.println(personneDAO.getTypeLabel() + " n'est pas reconnu.");
         }
     }
 
-    private void deleteById(PersonneDAO<?> personneDAO) {
+    private int isReal(){
         int id = 0;
         do {
             try {
-                System.out.print("Entrez l'ID du " + personneDAO.getTypeLabel() + " à supprimer : ");
                 id = getInt();
-                personneDAO.deleteById(id);
-                System.out.println(personneDAO.getTypeLabel() + " supprimé avec succès.");
-
+                programmeurDAO.getById(id);
             } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-        } while (id == 0);
-    }
-
-    private void deleteAll(PersonneDAO<?> personneDAO) {
-        try {
-            personneDAO.deleteAll();
-            System.out.println("Tous les " + personneDAO.getTypeLabel() + "s ont été supprimés avec succès.");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression de tous les " + personneDAO.getTypeLabel() + "s.");
-        }
-    }
-
-    private void setSalaryById(PersonneDAO<?> personneDAO) {
-        int id = 0;
-        do {
-            try {
-                System.out.print("Entrez l'ID du " + personneDAO.getTypeLabel() + " à mettre à jour : ");
-                id = getInt();
-                personneDAO.getById(id);
-            } catch (SQLException e) {
-                System.err.println("Le " + personneDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
+                System.err.println("Le " + programmeurDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
                 id = 0;
             }
         } while (id == 0);
 
+        return id;
+    }
+    private void deleteById(PersonneDAO<?> personneDAO) {
+        try {
+            personneDAO.getAll();
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+            return;
+        }
+        System.out.print("Entrez l'ID du " + programmeurDAO.getTypeLabel() + " à supprimer : ");
+        int id = isReal();
+        try {
+            personneDAO.deleteById(id);
+            System.out.println(personneDAO.getTypeLabel() + " supprimé avec succès!");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private void setSalaryById(PersonneDAO<?> personneDAO) {
+        try {
+            personneDAO.getAll();
+        } catch (SQLException e){
+            System.err.println(e.getMessage());
+            return;
+        }
+        System.out.print("Entrez l'ID du " + programmeurDAO.getTypeLabel() + " à mettre à jour le salaire : ");
+        int id = isReal();
         try {
             System.out.print("Entrez le nouveau salaire : ");
             float newSalary = getFloat();
@@ -436,6 +451,16 @@ public class MenuPrincipal {
             System.err.println("Erreur lors de la mise à jour du salaire du " + personneDAO.getTypeLabel() + " : " + e.getMessage());
         }
 
+    }
+
+
+    private void deleteAll(PersonneDAO<?> personneDAO) {
+        try {
+            personneDAO.deleteAll();
+            System.out.println("Tous les " + personneDAO.getTypeLabel() + "s ont été supprimés avec succès.");
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression de tous les " + personneDAO.getTypeLabel() + "s.");
+        }
     }
 
     private void displayCount(PersonneDAO<?> personneDAO) {

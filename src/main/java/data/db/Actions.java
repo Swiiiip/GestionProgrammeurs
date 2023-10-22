@@ -374,7 +374,7 @@ public class Actions<T extends Personne> {
         resultSet.close();
         statement.close();
 
-        if (personne == null && id != 0)
+        if (personne == null)
             throw new SQLException("Le " + typePersonne + " avec l'id " + id + " n'existe pas");
 
         return personne;

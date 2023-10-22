@@ -18,7 +18,7 @@ public abstract class MapPersonneFromAPI<T extends Personne> {
         String lastName;
         String firstName;
         do {
-            api.generateData();
+            api.generateData(api.getUserapi());
             lastName = api.getLastName();
             firstName = api.getFirstName();
         } while (isNotEuropean(lastName) && isNotEuropean(firstName));
