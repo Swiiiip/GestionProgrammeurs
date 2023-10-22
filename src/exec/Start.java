@@ -1,5 +1,7 @@
 package exec;
 
+import data.generator.DataGenerator;
+
 /**
  * La classe de démarrage de l'application.
  * Cette classe contient la méthode principale (main) qui initialise et lance le menu de l'application.
@@ -16,8 +18,8 @@ public class Start {
      * @param args Les arguments de la ligne de commande (non utilisés dans notre cas).
      */
     public static void main(String[] args) {
-        Menu menu = new Menu();
-        menu.start();
+        new DataGenerator(1,1);
+        new MenuPrincipal();
     }
 }
 

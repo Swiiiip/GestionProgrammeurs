@@ -8,65 +8,138 @@ FLUSH PRIVILEGES;
 
 DROP TABLE IF EXISTS Programmeur;
 DROP TABLE IF EXISTS Manager;
+DROP TABLE IF EXISTS Pictures;
+DROP TABLE IF EXISTS Coords;
+DROP TABLE IF EXISTS Address;
 
-CREATE TABLE IF NOT EXISTS Programmeur (
-     Id INT PRIMARY KEY AUTO_INCREMENT,
-     LastName VARCHAR(255) NOT NULL,
-     FirstName VARCHAR(255) NOT NULL,
-     Address VARCHAR(255),
-     Pseudo VARCHAR(255) NOT NULL,
-     Id_manager INT,
-     Hobby VARCHAR(255),
-     BirthYear INT,
-     Salary FLOAT,
-     Prime FLOAT
+CREATE TABLE IF NOT EXISTS Programmeur
+(
+    Id          INT PRIMARY KEY AUTO_INCREMENT,
+    Title       VARCHAR(255) NOT NULL,
+    LastName    VARCHAR(255) NOT NULL,
+    FirstName   VARCHAR(255) NOT NULL,
+    Gender      VARCHAR(255) NOT NULL,
+    Id_pictures INT          NOT NULL,
+    Id_Address  INT NOT NULL,
+    Id_coords   INT          NOT NULL,
+    Pseudo      VARCHAR(255) NOT NULL,
+    Id_manager  INT,
+    Hobby       VARCHAR(255),
+    BirthYear   INT,
+    Salary      FLOAT,
+    Prime       FLOAT
 );
 
-CREATE TABLE IF NOT EXISTS Manager(
+CREATE TABLE IF NOT EXISTS Pictures
+(
+    Id        INT PRIMARY KEY AUTO_INCREMENT,
+    Large     VARCHAR(255) NOT NULL,
+    Medium    VARCHAR(255) NOT NULL,
+    Thumbnail VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Coords
+(
+    Id        INT PRIMARY KEY AUTO_INCREMENT,
+    Latitude  DECIMAL(7,4) NOT NULL,
+    Longitude DECIMAL(7,4) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Address
+(
     Id INT PRIMARY KEY AUTO_INCREMENT,
-    LastName VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    Address VARCHAR(255),
-    Hobby VARCHAR(255),
-    Department VARCHAR(255),
-    BirthYear INT,
-    Salary FLOAT,
-    Prime FLOAT
+    StreetNumber INT NOT NULL,
+    StreetName VARCHAR(255),
+    City VARCHAR(255),
+    State VARCHAR(255),
+    Country VARCHAR(255),
+    Postcode VARCHAR(255)
 );
 
-ALTER TABLE Programmeur AUTO_INCREMENT = 1;
-ALTER TABLE Manager AUTO_INCREMENT = 1;
+CREATE TABLE IF NOT EXISTS Manager
+(
+    Id          INT PRIMARY KEY AUTO_INCREMENT,
+    Title       VARCHAR(255) NOT NULL,
+    LastName    VARCHAR(255) NOT NULL,
+    FirstName   VARCHAR(255) NOT NULL,
+    Gender      VARCHAR(255),
+    Id_pictures INT          NOT NULL,
+    Id_Address  INT NOT NULL,
+    Id_Coords   INT          NOT NULL,
+    Hobby       VARCHAR(255),
+    Department  VARCHAR(255),
+    BirthYear   INT,
+    Salary      FLOAT,
+    Prime       FLOAT
+);
 
 ALTER TABLE Programmeur
-ADD CONSTRAINT FK_programmeur FOREIGN KEY(Id_manager) REFERENCES Manager(Id) ON DELETE NO ACTION;
+    AUTO_INCREMENT = 1;
+ALTER TABLE Manager
+    AUTO_INCREMENT = 1;
+
+ALTER TABLE Pictures
+    AUTO_INCREMENT = 1;
+ALTER TABLE Coords
+    AUTO_INCREMENT = 1;
+ALTER TABLE Address
+    AUTO_INCREMENT = 1;
 
 ALTER TABLE Programmeur
-ADD CONSTRAINT U_Prog_fullName UNIQUE(LastName, FirstName);
+    ADD CONSTRAINT FK_Manager FOREIGN KEY (Id_manager) REFERENCES Manager (Id);
+
+ALTER TABLE Programmeur
+    ADD CONSTRAINT FK_Picture_Prog FOREIGN KEY (Id_pictures) REFERENCES Pictures (Id);
+
+ALTER TABLE Programmeur
+    ADD CONSTRAINT FK_Coords_Prog FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
+
+ALTER TABLE Programmeur
+    ADD CONSTRAINT FK_Address_Prog FOREIGN KEY (Id_Address) REFERENCES Address (Id);
 
 ALTER TABLE Manager
-ADD CONSTRAINT U_Manager_fullName UNIQUE(LastName, FirstName);
+    ADD CONSTRAINT FK_Picture_Manager FOREIGN KEY (Id_pictures) REFERENCES Pictures (Id);
+
+ALTER TABLE Manager
+    ADD CONSTRAINT FK_Coords_Manager FOREIGN KEY (Id_coords) REFERENCES Coords (Id);
+
+ALTER TABLE Manager
+    ADD CONSTRAINT FK_Address_Manager FOREIGN KEY (Id_Address) REFERENCES Pictures (Id);
+
+DROP TRIGGER IF EXISTS SetNewManagerForProgrammeur;
 
 DELIMITER //
-
-INSERT INTO Manager (LastName, FirstName, Address, Hobby, Department, BirthYear, Salary, Prime)
-    VALUES
-        ('Achvar', 'Didier', '2 rue de la théorie du signal', 'les signaux', 'Théorie du signal', 1976, 3470, 123),
-        ('Prof', 'Com', '294 rue de la communication', 'parler', 'Communication', 1970, 4233, 322);
-
-INSERT INTO Programmeur (LastName, FirstName, Address, Pseudo, Id_manager, Hobby, BirthYear, Salary, Prime)
-    VALUES
-        ('Torvalds', 'Linus', '2 avenue Linux Git', 'linuxroot', 1, 'Salsa', 1969, 2170, 50),
-        ('Strastrup', 'Bjarne', '294 rue C++', 'c++1', 2, 'Voyages', 1950, 2466, 80),
-        ('Golsing', 'James', '3 bvd JVM', 'javapapa', 2, 'Peinture', 1955, 1987, 10);
-
-CREATE TRIGGER CheckManagerIDExists
-    BEFORE INSERT ON Programmeur FOR EACH ROW
+CREATE TRIGGER SetNewManagerForProgrammeur
+    BEFORE DELETE
+    ON Manager
+    FOR EACH ROW
 BEGIN
-    DECLARE manager_count INT;
-    SELECT COUNT(*) INTO manager_count FROM Manager WHERE Id = NEW.Id;
+    DECLARE deleted_manager_id INT;
+    DECLARE new_manager_id INT;
+    DECLARE manager_department VARCHAR(255);
 
-    IF manager_count = 0 THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'L\' Id du manager spécifié n\'existe pas.';
+    SET deleted_manager_id = OLD.Id;
+    SET manager_department = OLD.Department;
+
+    UPDATE Programmeur
+    SET Id_manager = NULL
+    WHERE Id_manager = deleted_manager_id;
+
+    SET new_manager_id = (SELECT Id
+                          FROM Manager
+                          WHERE Department = manager_department
+                            AND Id != deleted_manager_id
+                          ORDER BY (YEAR(NOW()) - BirthYear)
+                          LIMIT 1);
+
+    IF new_manager_id IS NULL THEN
+        SET new_manager_id = 0;
     END IF;
+
+    UPDATE Programmeur
+    SET Id_manager = new_manager_id
+    WHERE Id_manager = deleted_manager_id;
 END;
+//
+DELIMITER ;

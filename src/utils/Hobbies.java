@@ -10,20 +10,22 @@ public enum Hobbies {
     PEINTURE("Peinture"),
     PROGRAMMATION("Programmation"),
     JARDINAGE("Jardinage"),
-    LECTURE("Lecture");
+    LECTURE("Lecture"),
+    ESCALADE("Escalade");
 
-    private final String hobby;
     private static final Random RANDOM = new Random();
+    private final String hobby;
 
     Hobbies(String hobby) {
         this.hobby = hobby;
     }
 
-    public String getHobby(){
-        return this.hobby;
+    public static Hobbies generateRandomHobby() {
+        return values()[RANDOM.nextInt(values().length)];
     }
-    public static String generateRandomHobby() {
-        return values()[RANDOM.nextInt(values().length)].getHobby();
+
+    public String getHobby() {
+        return this.hobby;
     }
 }
 

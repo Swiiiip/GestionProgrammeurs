@@ -2,6 +2,14 @@ package personnes;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import personnes.utils.Address;
+import personnes.utils.Coords;
+import personnes.utils.Pictures;
+import utils.Gender;
+import utils.Hobbies;
+import utils.Title;
+
+import java.util.LinkedHashMap;
 
 /**
  * La classe ProgrammeurBean représente un programmeur avec ses attributs tels que
@@ -13,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Hatoum Jade
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProgrammeurBean extends Personne{
+public class Programmeur extends Personne {
 
     /**
      * Pseudo du programmeur.
@@ -23,35 +31,37 @@ public class ProgrammeurBean extends Personne{
     /**
      * Responsable du programmeur.
      */
-    private ManagerBean manager;
+    private Manager manager;
 
 
     /**
      * Constructeur de la classe ProgrammeurBean pour initialiser un objet ProgrammeurBean
      * avec les informations spécifiées.
      *
-     * @param lastName   Le nom du programmeur.
-     * @param firstName  Le prénom du programmeur.
-     * @param address    L'adresse du programmeur.
-     * @param pseudo     Le pseudo du programmeur.
-     * @param manager    Le responsable du programmeur.
-     * @param hobby      Le hobby du programmeur.
-     * @param birthYear  L'année de naissance du programmeur.
-     * @param salary     Le salaire du programmeur.
-     * @param prime      La prime du programmeur.
+     * @param lastName  Le nom du programmeur.
+     * @param firstName Le prénom du programmeur.
+     * @param gender    Le genre du programmeur
+     * @param address   L'adresse du programmeur.
+     * @param pseudo    Le pseudo du programmeur.
+     * @param manager   Le responsable du programmeur.
+     * @param hobby     Le hobby du programmeur.
+     * @param birthYear L'année de naissance du programmeur.
+     * @param salary    Le salaire du programmeur.
+     * @param prime     La prime du programmeur.
      */
-    public ProgrammeurBean(String lastName, String firstName, String address, String pseudo,
-                           ManagerBean manager, String hobby, int birthYear, float salary, float prime) {
-        super(lastName,firstName,address,hobby,birthYear,salary,prime);
+    public Programmeur(Title title, String lastName, String firstName, Gender gender, Pictures pictures, Address address, Coords coords, String pseudo,
+                       Manager manager, Hobbies hobby, int birthYear, float salary, float prime) {
+        super(title, lastName, firstName, gender, pictures, address, coords, hobby, birthYear, salary, prime);
         this.pseudo = pseudo;
         this.manager = manager;
     }
 
-    public ProgrammeurBean() {
+    public Programmeur() {
         super();
         this.pseudo = null;
         this.manager = null;
     }
+
     /**
      * Obtient le pseudo du programmeur.
      *
@@ -77,7 +87,7 @@ public class ProgrammeurBean extends Personne{
      * @return Le responsable du programmeur.
      */
     @JsonProperty("manager")
-    public ManagerBean getManager() {
+    public Manager getManager() {
         return manager;
     }
 
@@ -86,9 +96,16 @@ public class ProgrammeurBean extends Personne{
      *
      * @param manager Le responsable du programmeur.
      */
-    public void setManager(ManagerBean manager) {
+    public void setManager(Manager manager) {
         this.manager = manager;
     }
 
-}
+    @Override
+    public LinkedHashMap<String, Object> getColumns() {
+        LinkedHashMap<String, Object> columns = super.getColumns();
+        columns.put("Pseudo", this.pseudo);
+        columns.put("Id_manager", this.manager.getId());
+        return columns;
+    }
 
+}

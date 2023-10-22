@@ -1,21 +1,33 @@
 package personnes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import personnes.utils.Address;
+import personnes.utils.Coords;
+import personnes.utils.Pictures;
+import utils.Gender;
+import utils.Hobbies;
+import utils.Title;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 
-@JsonPropertyOrder({"id", "firstName", "lastName", "age", "address", "hobby", "birthYear", "salary", "prime"})
+@JsonPropertyOrder({"id", "title", "lastName", "firstName", "pictures", "gender", "age", "address", "coordinates", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
     private int id;
+    private Title title;
     private String firstName;
     private String lastName;
-    private String address;
-    private String hobby;
+    private Gender gender;
+    private Pictures pictures;
+    private Address address;
+    private Coords coords;
+    private Hobbies hobby;
     private int birthYear;
     private float salary;
     private float prime;
@@ -23,6 +35,8 @@ public abstract class Personne {
     public Personne() {
         this.lastName = null;
         this.firstName = null;
+        this.gender = null;
+        this.pictures = null;
         this.address = null;
         this.hobby = null;
         this.birthYear = 0;
@@ -30,10 +44,14 @@ public abstract class Personne {
         this.prime = 0;
     }
 
-    public Personne(String lastName, String firstName, String address, String hobby, int birthYear, float salary, float prime) {
+    public Personne(Title title, String lastName, String firstName, Gender gender, Pictures pictures, Address address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
+        this.title = title;
         this.lastName = lastName;
         this.firstName = firstName;
+        this.gender = gender;
+        this.pictures = pictures;
         this.address = address;
+        this.coords = coords;
         this.hobby = hobby;
         this.birthYear = birthYear;
         this.salary = salary;
@@ -47,7 +65,7 @@ public abstract class Personne {
      */
     @JsonProperty("id")
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -64,9 +82,23 @@ public abstract class Personne {
      *
      * @return Le nom de la personne.
      */
+    @JsonProperty("title")
+    public String getTitle() {
+        return this.title.getTitle();
+    }
+
+    public void setTitle(Title title) {
+        this.title = title;
+    }
+
+    /**
+     * Obtient le nom de la personne.
+     *
+     * @return Le nom de la personne.
+     */
     @JsonProperty("lastName")
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     /**
@@ -85,7 +117,7 @@ public abstract class Personne {
      */
     @JsonProperty("firstName")
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     /**
@@ -98,13 +130,41 @@ public abstract class Personne {
     }
 
     /**
+     * Obtient le genre de la personne.
+     *
+     * @return Le genre de la personne.
+     */
+    @JsonProperty("gender")
+    public String getGender() {
+        return this.gender.getGender();
+    }
+
+    /**
+     * Définit le genre de la personne.
+     *
+     * @param gender Le genre de la personne.
+     */
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    @JsonProperty("pictures")
+    public Pictures getPictures() {
+        return this.pictures;
+    }
+
+    public void setPictures(Pictures pictures) {
+        this.pictures = pictures;
+    }
+
+    /**
      * Définit l'âge de la personne en fonction de sa date de naissance
+     *
      * @return L'âge de la personne
      */
     @JsonProperty("age")
-    public int getAge(){
+    public int getAge() {
         return LocalDate.now().getYear() - this.birthYear;
-
     }
 
 
@@ -114,8 +174,8 @@ public abstract class Personne {
      * @return L'adresse de la personne.
      */
     @JsonProperty("address")
-    public String getAddress() {
-        return address;
+    public Address getAddress() {
+        return this.address;
     }
 
     /**
@@ -123,8 +183,22 @@ public abstract class Personne {
      *
      * @param address L'adresse de la personne.
      */
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+
+    /**
+     * Obtient les coordonnées géographiques de la personne (latitude et longitude).
+     *
+     * @return les coordonnées géographiques de la personne
+     */
+    @JsonProperty("coordinates")
+    public Coords getCoords() {
+        return this.coords;
+    }
+
+    public void setCoords(Coords coords) {
+        this.coords = coords;
     }
 
     /**
@@ -134,7 +208,7 @@ public abstract class Personne {
      */
     @JsonProperty("hobby")
     public String getHobby() {
-        return hobby;
+        return this.hobby.getHobby();
     }
 
     /**
@@ -142,7 +216,7 @@ public abstract class Personne {
      *
      * @param hobby Le hobby de la personne.
      */
-    public void setHobby(String hobby) {
+    public void setHobby(Hobbies hobby) {
         this.hobby = hobby;
     }
 
@@ -153,7 +227,7 @@ public abstract class Personne {
      */
     @JsonProperty("birthYear")
     public int getBirthYear() {
-        return birthYear;
+        return this.birthYear;
     }
 
 
@@ -173,7 +247,7 @@ public abstract class Personne {
      */
     @JsonProperty("salary")
     public float getSalary() {
-        return salary;
+        return this.salary;
     }
 
     /**
@@ -192,7 +266,7 @@ public abstract class Personne {
      */
     @JsonProperty("prime")
     public float getPrime() {
-        return prime;
+        return this.prime;
     }
 
     /**
@@ -204,6 +278,23 @@ public abstract class Personne {
         this.prime = prime;
     }
 
+    @JsonIgnore
+    public LinkedHashMap<String, Object> getColumns() {
+        LinkedHashMap<String, Object> columns = new LinkedHashMap<>();
+        columns.put("Id", this.id);
+        columns.put("Title", this.title.getTitle());
+        columns.put("LastName", this.lastName);
+        columns.put("FirstName", this.firstName);
+        columns.put("Gender", this.gender.getGender());
+        columns.put("Id_pictures", this.pictures.getId());
+        columns.put("Id_Coords", this.coords.getId());
+        columns.put("Id_Address", this.address.getId());
+        columns.put("Hobby", this.hobby.getHobby());
+        columns.put("BirthYear", this.birthYear);
+        columns.put("Salary", this.salary);
+        columns.put("Prime", this.prime);
+        return columns;
+    }
 
     @Override
     public String toString() {
@@ -217,7 +308,9 @@ public abstract class Personne {
 
             return objectMapper.writeValueAsString(this);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "{}";
         }
     }
+
 }
