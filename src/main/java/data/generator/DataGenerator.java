@@ -122,7 +122,7 @@ public class DataGenerator {
             }
             try {
                 managerDAO.add(manager);
-                System.out.println("Ajout du manager id : " + (i + 1) + " dans la base de données.");
+                System.out.println("Ajout du manager id " + (i + 1) + " dans la base de données.");
             } catch (SQLException e) {
                 System.err.println("L'ajout du manager " + (i + 1) + " dans la base de données a échoué. " + e.getMessage());
                 throw new SecurityException();
@@ -144,7 +144,7 @@ public class DataGenerator {
             }
             try {
                 programmeurDAO.add(prog);
-                System.out.println("Ajout du programmeur id : " + (i + 1) + " dans la base de données.");
+                System.out.println("Ajout du programmeur id " + (i + 1) + " dans la base de données.");
             } catch (SQLException e) {
                 System.err.println("L'ajout du programmeur " + (i + 1) + " dans la base de données a échoué. " + e.getMessage());
                 throw new SecurityException();
