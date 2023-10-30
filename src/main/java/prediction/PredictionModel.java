@@ -12,11 +12,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Cette classe représente un modèle de prédiction de salaire basé sur des données de personnes.
+ *
+ * @param <T> Le type de DAO (Data Access Object) utilisé pour accéder aux données de personnes.
+ *
+ * @version 4.7
+ * @author Alonso Cédric
+ * @author Hatoum Jade
+ */
 public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
 
+    /**
+     * Représente un ensemble de données (Instances) utilisé pour construire et évaluer le modèle de prédiction.
+     */
     private final Instances data;
+
+    /**
+     * Le modèle de régression linéaire utilisé pour prédire les salaires en fonction des données.
+     */
     private final LinearRegression model;
 
+
+    /**
+     * Construit un modèle de prédiction de salaire à partir des données extraites à l'aide d'un DAO de personnes.
+     *
+     * @param personneDAO Le DAO de personnes pour accéder aux données.
+     * @throws Exception Si le nombre de données est insuffisant (moins de 20) pour construire le modèle.
+     */
     public PredictionModel(T personneDAO) throws Exception {
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("age"));
@@ -50,6 +73,14 @@ public class PredictionModel<T extends PersonneDAO<? extends Personne>> {
         model.buildClassifier(data);
     }
 
+    /**
+     * Prédit le salaire en fonction de l'âge et du genre fournis.
+     *
+     * @param predictAge    L'âge pour lequel prédire le salaire.
+     * @param predictGender Le genre pour lequel prédire le salaire.
+     * @return Le salaire prédit en fonction des données du modèle.
+     * @throws Exception Si la prédiction échoue pour une raison quelconque.
+     */
     public float predictSalary(double predictAge, String predictGender) throws Exception {
         DenseInstance nouvelleInstance = new DenseInstance(3);
         nouvelleInstance.setDataset(data);

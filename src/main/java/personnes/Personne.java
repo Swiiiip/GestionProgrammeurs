@@ -16,22 +16,82 @@ import utils.Title;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 
+/**
+ * Cette classe représente une personne avec des informations personnelles telles que le nom, le prénom,
+ * le genre, la date de naissance, l'adresse, les coordonnées géographiques, les photos, les loisirs,
+ * le salaire et la prime.
+ *
+ * @author Alonso Cédric
+ * @author Hatoum Jade
+ * @version 4.7
+ */
 @JsonPropertyOrder({"id", "title", "lastName", "firstName", "pictures", "gender", "age", "address", "coordinates", "hobby", "birthYear", "salary", "prime"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Personne {
+    /**
+     * Identifiant unique de la personne.
+     */
     private int id;
+
+    /**
+     * Le titre de la personne.
+     */
     private Title title;
+
+    /**
+     * Le prénom de la personne.
+     */
     private String firstName;
+
+    /**
+     * Le nom de famille de la personne.
+     */
     private String lastName;
+
+    /**
+     * Le genre de la personne.
+     */
     private Gender gender;
+
+    /**
+     * Les photos de la personne.
+     */
     private Pictures pictures;
+
+    /**
+     * L'adresse de la personne.
+     */
     private Address address;
+
+    /**
+     * Les coordonnées géographiques de la personne.
+     */
     private Coords coords;
+
+    /**
+     * Les loisirs de la personne.
+     */
     private Hobbies hobby;
+
+    /**
+     * L'année de naissance de la personne.
+     */
     private int birthYear;
+
+    /**
+     * Le salaire de la personne.
+     */
     private float salary;
+
+    /**
+     * La prime de la personne.
+     */
     private float prime;
 
+
+    /**
+     * Constructeur par défaut de la classe Personne. Initialise tous les attributs à des valeurs par défaut.
+     */
     public Personne() {
         this.lastName = null;
         this.firstName = null;
@@ -44,6 +104,21 @@ public abstract class Personne {
         this.prime = 0;
     }
 
+    /**
+     * Constructeur paramétré de la classe Personne. Initialise les attributs de la personne avec les valeurs spécifiées.
+     *
+     * @param title     Le titre de la personne.
+     * @param lastName  Le nom de famille de la personne.
+     * @param firstName Le prénom de la personne.
+     * @param gender    Le genre de la personne.
+     * @param pictures  Les photos de la personne.
+     * @param address   L'adresse de la personne.
+     * @param coords    Les coordonnées géographiques de la personne.
+     * @param hobby     Les loisirs de la personne.
+     * @param birthYear L'année de naissance de la personne.
+     * @param salary    Le salaire de la personne.
+     * @param prime     La prime de la personne.
+     */
     public Personne(Title title, String lastName, String firstName, Gender gender, Pictures pictures, Address address, Coords coords, Hobbies hobby, int birthYear, float salary, float prime) {
         this.title = title;
         this.lastName = lastName;
@@ -283,6 +358,11 @@ public abstract class Personne {
         this.prime = prime;
     }
 
+    /**
+     * Obtient un mapping de noms de colonnes et de valeurs pour cette personne, utile pour la représentation tabulaire.
+     *
+     * @return Un mapping de noms de colonnes et de valeurs associées à cette personne.
+     */
     @JsonIgnore
     public LinkedHashMap<String, Object> getColumns() {
         LinkedHashMap<String, Object> columns = new LinkedHashMap<>();
@@ -301,11 +381,21 @@ public abstract class Personne {
         return columns;
     }
 
+    /**
+     * Renvoie une représentation sous forme de chaîne de caractères de cette personne.
+     *
+     * @return La représentation de cette personne au format JSON.
+     */
     @Override
     public String toString() {
         return this.toJson();
     }
 
+    /**
+     * Convertit cette personne en une chaîne de caractères JSON formatée.
+     *
+     * @return Une chaîne de caractères JSON représentant cette personne.
+     */
     public String toJson() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -317,5 +407,6 @@ public abstract class Personne {
             return "{}";
         }
     }
+
 
 }

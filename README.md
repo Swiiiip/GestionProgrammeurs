@@ -41,17 +41,6 @@ Ceci dit, vérifiez que vous ayez bien téléchargé :
 ### Sur IntelliJ : 
 + Cloner le projet localement : `git clone`
 + Importer le projet sur IntelliJ
-+ Pour les drivers JDBC :
-  + **Pour Windows :** [Ici](https://dev.mysql.com/downloads/connector/j/) > Select OS > "Platform Independent" > Download ZIP Archive
-  + Sur IntelliJ, ouvrir le projet, puis File > Project Structure > Libraries > "+" > Java
-  + Sélectionner le fichier .jar dans le dossier dézippé : mysql-connector-java-[version].jar
-  + IntelliJ vous propose d'implémenter les drivers JDBC sur le projet / module
-  + Vos drivers sont installés !
-+ Pour les librairies Jackson :
-  + **Pour Windows:** [Ici](https://jar-download.com/artifacts/com.fasterxml.jackson.core) > Download > Clique droit > 7-zip > Extraire ici
-  + Sur IntelliJ, ouvrir le projet, puis File > Project Structure > Libraries > "+" > Java
-  + Sélectionner les fichiers .jar dans le dossier dézippé : jackson-annotations-2.15.2.jar, jackson-core-2.15.2.jar et jackson-databind-2.15.2.jar
-  + Vous pouvez utiliser Jacskon !
 
 + *[OPTIONNEL]* : Pour manipuler la BDD depuis IntelliJ :
   + Cliquer sur Database (en haut à droite par défaut)
@@ -68,9 +57,9 @@ Ceci dit, vérifiez que vous ayez bien téléchargé :
 ----------
 
 <p>
-    <img src="https://img.shields.io/badge/Java-11.0.11-orange?style=for-the-badge"/>
-    <img src="https://img.shields.io/badge/IntelliJ-2021.1.2-blue?style=for-the-badge&logo=intellij-idea"/>
-    <img src="https://img.shields.io/badge/MySQL-8.0.25-blue?style=for-the-badge&logo=mysql"/>
+    <img src="https://img.shields.io/badge/Java-11.0.11-orange?style=for-the-badge" alt=""/>
+    <img src="https://img.shields.io/badge/IntelliJ-2021.1.2-blue?style=for-the-badge&logo=intellij-idea" alt=""/>
+    <img src="https://img.shields.io/badge/MySQL-8.0.25-blue?style=for-the-badge&logo=mysql" alt=""/>
 </p>
 
 > **Cédric A.  | Jade H.** <br>

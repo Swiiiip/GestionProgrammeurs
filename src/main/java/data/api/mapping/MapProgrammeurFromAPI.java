@@ -10,18 +10,25 @@ import personnes.utils.Pictures;
 import utils.Gender;
 import utils.Hobbies;
 import utils.Title;
-
 import java.time.LocalDate;
 import java.util.Random;
 
+/**
+ * Cette classe est utilisée pour mapper des données de l'API vers des objets de type {@link Programmeur}.
+ */
 public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
 
     private final ProgrammeurDAO programmeurDAO;
-
     private final ManagerDAO managerDAO;
-
     private final int nbManagers;
 
+    /**
+     * Constructeur de la classe.
+     *
+     * @param nbManagers Le nombre de managers disponibles pour l'attribution.
+     * @param programmeurDAO Le DAO utilisé pour gérer les objets de type {@link Programmeur} dans la base de données.
+     * @param managerDAO Le DAO utilisé pour gérer les objets de type {@link Manager} dans la base de données.
+     */
     public MapProgrammeurFromAPI(int nbManagers, ProgrammeurDAO programmeurDAO, ManagerDAO managerDAO) {
         super();
         this.programmeurDAO = programmeurDAO;
@@ -29,6 +36,12 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
         this.nbManagers = nbManagers;
     }
 
+    /**
+     * Cette méthode permet de mapper des données de l'API vers un objet de type {@link Programmeur}.
+     *
+     * @return L'objet de type {@link Programmeur} mappé depuis les données de l'API.
+     * @throws Exception En cas d'erreur lors de la récupération ou du mapping des données.
+     */
     @Override
     public Programmeur map() throws Exception {
         super.map();
@@ -77,6 +90,4 @@ public class MapProgrammeurFromAPI extends MapPersonneFromAPI<Programmeur> {
                 salary,
                 prime);
     }
-
-
 }

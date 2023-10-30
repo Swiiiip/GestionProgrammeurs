@@ -2,16 +2,28 @@ package exec;
 
 import java.util.Scanner;
 
+/**
+ * Cette classe représente une application de gestion et d'initialisation.
+ *
+ * @version 4.7
+ * @author Alonso Cédric
+ * @author Hatoum Jade
+ *
+ */
 public class AppliManagement extends Application {
 
+    /**
+     * Constructeur par défaut de l'application de gestion.
+     */
     public AppliManagement() {
     }
 
     /**
-     * Validates the arguments
-     * If no argument is given the menu is loaded
+     * Valide les arguments passés à l'application.
+     * Si aucun argument n'est fourni, le menu est chargé.
      *
-     * @param args the arguments
+     * @param args les arguments passés à l'application.
+     * @throws IllegalArgumentException si les arguments sont invalides.
      */
     private static void validationArgs(String[] args) throws IllegalArgumentException {
         for (int i = 0; i < args.length; i++) {
@@ -22,10 +34,10 @@ public class AppliManagement extends Application {
                         nbProgs = Integer.parseInt(args[i]);
 
                         if (nbProgs <= 0)
-                            throw new IllegalArgumentException("I need a positiv int");
+                            throw new IllegalArgumentException("J'ai besoin d'un entier positif");
 
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid format : I need a int");
+                        throw new IllegalArgumentException("Format invalide : j'ai besoin d'un entier");
                     }
                     NBPROGS = nbProgs;
                     break;
@@ -36,10 +48,10 @@ public class AppliManagement extends Application {
                         nbManagers = Integer.parseInt(args[i]);
 
                         if (nbManagers <= 0)
-                            throw new IllegalArgumentException("I need a positiv int");
+                            throw new IllegalArgumentException("J'ai besoin d'un entier positif");
 
                     } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("Invalid format : I need a int");
+                        throw new IllegalArgumentException("Format invalide : j'ai besoin d'un entier");
                     }
                     NBMANAGERS = nbManagers;
                     break;
@@ -49,12 +61,12 @@ public class AppliManagement extends Application {
             }
         }
         if (args.length < 2) {
-            String msg = "Missing arguments : ";
+            String msg = "Arguments manquants : ";
             switch (args.length) {
                 case 0:
-                    msg += "nb progs ";
+                    msg += "nb de programmeurs ";
                 case 1:
-                    msg += "nb managers ";
+                    msg += "nb de managers ";
                     break;
                 default:
                     break;
@@ -64,18 +76,18 @@ public class AppliManagement extends Application {
     }
 
     /**
-     * Allows you to display an error message
+     * Permet d'afficher un message d'erreur.
      *
-     * @param msg the message to display
+     * @param msg le message à afficher.
      */
     public static void displayError(String msg) {
         System.err.println(msg);
     }
 
     /**
-     * Allows to launch the program and to manage potential errors
+     * Permet de lancer le programme et de gérer les erreurs éventuelles.
      *
-     * @param args the arguments provided by the user
+     * @param args les arguments fournis par l'utilisateur.
      */
     public void start(String[] args) {
         try {
@@ -89,84 +101,82 @@ public class AppliManagement extends Application {
     }
 
     /**
-     * loads the initialization menu
+     * Charge le menu d'initialisation.
      */
     private void loadMenu() {
         Scanner scanner = new Scanner(System.in);
-        displaySuccess("MAIN MENU");
-        System.out.println("[0] - Exit\n");
+        displaySuccess("MENU PRINCIPAL");
+        System.out.println("[0] - Quitter\n");
 
         if (NBPROGS == 0) {
             int nbProgs;
 
             do {
-                System.out.print("Choose number of programmeurs: ");
+                System.out.print("Choisissez le nombre de programmeurs : ");
                 try {
                     nbProgs = Integer.parseInt(scanner.next());
                     exit(String.valueOf(nbProgs));
 
                     if (nbProgs <= 0)
-                        displayError("The minimum number is 1.");
+                        displayError("Le nombre minimum est 1.");
                 } catch (Exception e) {
                     nbProgs = 0;
-                    displayError("The minimum number is 1.");
+                    displayError("Le nombre minimum est 1.");
                 }
             } while (nbProgs <= 0);
             NBPROGS = nbProgs;
         } else
-            System.out.println("\nFor this instance, you set up : " + NBPROGS + " programmeurs\n");
+            System.out.println("\nPour cette instance, vous avez configuré : " + NBPROGS + " programmeurs\n");
 
         if (NBMANAGERS == 0) {
-            int nbManager;
+            int nbManagers;
             do {
-                System.out.print("Choose number of managers: ");
+                System.out.print("Choisissez le nombre de managers : ");
                 try {
-                    nbManager = Integer.parseInt(scanner.next());
-                    exit(String.valueOf(nbManager));
+                    nbManagers = Integer.parseInt(scanner.next());
+                    exit(String.valueOf(nbManagers));
 
-                    if (nbManager <= 0)
-                        displayError("The minimum number is 1.");
+                    if (nbManagers <= 0)
+                        displayError("Le nombre minimum est 1.");
                 } catch (Exception e) {
-                    nbManager = 0;
-                    displayError("The minimum number is 1.");
+                    nbManagers = 0;
+                    displayError("Le nombre minimum est 1.");
                 }
-            } while (nbManager <= 0);
-            NBMANAGERS = nbManager;
+            } while (nbManagers <= 0);
+            NBMANAGERS = nbManagers;
             System.out.println();
         } else
-            System.out.println("\nFor this instance, you set up : " + NBMANAGERS + " managers\n");
-
+            System.out.println("\nPour cette instance, vous avez configuré : " + NBMANAGERS + " managers\n");
     }
 
     /**
-     * Displays a success message
+     * Affiche un message de réussite.
      *
-     * @param msg the message to display
+     * @param msg le message à afficher.
      */
     private void displaySuccess(String msg) {
         System.out.println(msg + "\n");
     }
 
     /**
-     * Allows you to display the error message of an exception
+     * Permet d'afficher le message d'erreur d'une exception.
      *
-     * @param e Exception to handle
+     * @param e l'exception à gérer.
      */
     public void displayError(Exception e) {
         displayError(e.getMessage());
     }
 
     /**
-     * allows you to exit the program
+     * Permet de quitter le programme.
      *
-     * @param exit the string typed
+     * @param exit la chaîne de caractères entrée.
      */
     private void exit(String exit) {
         if (exit.equals("0")) {
-            System.out.println("You exited the program");
+            System.out.println("Vous avez quitté le programme");
             System.exit(0);
         }
     }
-
-
 }
+

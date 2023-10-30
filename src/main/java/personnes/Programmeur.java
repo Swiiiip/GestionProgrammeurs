@@ -12,11 +12,12 @@ import utils.Title;
 import java.util.LinkedHashMap;
 
 /**
- * La classe ProgrammeurBean représente un programmeur avec ses attributs tels que
+ * La classe Programmeur représente un programmeur avec ses attributs tels que
  * le nom, le prénom, l'adresse, le pseudo, le responsable, le hobby, l'année de
  * naissance, le salaire et la prime. Cette classe est utilisée pour stocker et manipuler
  * les données des programmeurs.
  *
+ * @version 4.7
  * @author Alonso Cédric
  * @author Hatoum Jade
  */
@@ -29,13 +30,13 @@ public class Programmeur extends Personne {
     private String pseudo;
 
     /**
-     * Responsable du programmeur.
+     * Manager du programmeur.
      */
     private Manager manager;
 
 
     /**
-     * Constructeur de la classe ProgrammeurBean pour initialiser un objet ProgrammeurBean
+     * Constructeur de la classe Programmeur pour initialiser un objet Programmeur
      * avec les informations spécifiées.
      *
      * @param lastName  Le nom du programmeur.
@@ -56,6 +57,9 @@ public class Programmeur extends Personne {
         this.manager = manager;
     }
 
+    /**
+     * Constructeur par défaut de la classe Programmeur. Initialise tous les attributs à des valeurs par défaut.
+     */
     public Programmeur() {
         super();
         this.pseudo = null;
@@ -100,6 +104,11 @@ public class Programmeur extends Personne {
         this.manager = manager;
     }
 
+    /**
+     * Obtient un mapping de noms de colonnes et de valeurs pour ce manager, y compris les attributs hérités de Personne.
+     *
+     * @return Un mapping de noms de colonnes et de valeurs associées à ce manager.
+     */
     @Override
     public LinkedHashMap<String, Object> getColumns() {
         LinkedHashMap<String, Object> columns = super.getColumns();

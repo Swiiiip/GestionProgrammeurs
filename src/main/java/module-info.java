@@ -14,6 +14,8 @@ module moduleInfo {
     requires annotations;
     requires org.fusesource.jansi;
     requires org.slf4j;
+    requires itextpdf;
+    requires com.opencsv;
 
     opens app to javafx.fxml;
     exports app;
