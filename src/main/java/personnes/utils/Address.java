@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.Objects;
+
 /**
  * Cette classe représente une adresse physique. Elle peut être utilisée pour stocker des informations sur l'emplacement d'une personne.
  *
@@ -214,6 +216,27 @@ public class Address {
     public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
+
+    /**
+     * Compare cet objet Address avec un autre objet pour déterminer s'ils sont égaux.
+     *
+     * @param o L'objet à comparer avec cet objet Address.
+     * @return true si les objets sont égaux en termes de numéro de rue, de nom de rue, de ville, d'État,
+     * de pays et de code postale, false sinon.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() != o.getClass())
+            return false;
+
+        return this.streetNumber == ((Address) o).getStreetNumber()
+                && this.streetName.equals(((Address) o).getStreetName())
+                && this.city.equals(((Address) o).getCity())
+                && this.state.equals(((Address) o).getState())
+                && this.country.equals(((Address) o).getCountry())
+                && this.postcode.equals(((Address) o).getPostcode());
+    }
+
 
     /**
      * Fournit une représentation textuelle de l'adresse, incluant tous les détails.

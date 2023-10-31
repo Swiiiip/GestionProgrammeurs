@@ -45,7 +45,7 @@ public class Actions<T extends Personne> {
     /**
      * La connexion à la base de données utilisée pour interagir avec les données des personnes.
      */
-    private final Connexion connexion;
+    public final Connexion connexion;
 
 
     /**
@@ -284,14 +284,16 @@ public class Actions<T extends Personne> {
         Address fullDataAddress = null;
 
         final String query = "SELECT * FROM Address WHERE StreetNumber = ? AND StreetName = ?" +
-                " AND City = ? AND Country = ?";
+                " AND City = ? AND State = ? AND Country = ? AND Postcode = ?";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setInt(1, address.getStreetNumber());
         statement.setString(2, address.getStreetName());
         statement.setString(3, address.getCity());
-        statement.setString(4, address.getCountry());
+        statement.setString(4, address.getState());
+        statement.setString(5, address.getCountry());
+        statement.setString(6, address.getPostcode());
 
         ResultSet res = statement.executeQuery();
 
@@ -703,15 +705,17 @@ public class Actions<T extends Personne> {
      * @throws SQLException Si une erreur SQL survient lors de l'ajout.
      */
     public void addAddress(Address address) throws SQLException {
-        final String query = "INSERT INTO Address(StreetNumber, StreetName, City, Country)" +
-                " VALUES (?, ?, ?, ?)";
+        final String query = "INSERT INTO Address(StreetNumber, StreetName, City, State, Country, Postcode)" +
+                " VALUES (?, ?, ?, ?, ?, ?)";
 
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
         statement.setInt(1, address.getStreetNumber());
         statement.setString(2, address.getStreetName());
         statement.setString(3, address.getCity());
-        statement.setString(4, address.getCountry());
+        statement.setString(4, address.getState());
+        statement.setString(5, address.getCountry());
+        statement.setString(6, address.getPostcode());
 
         statement.executeUpdate();
         statement.close();
@@ -881,7 +885,7 @@ public class Actions<T extends Personne> {
      *
      * @throws SQLException Si une erreur SQL survient lors de la réinitialisation de l'index ou de la suppression des données de la table Pictures.
      */
-    public void resetIndexPictures() throws SQLException {
+    private void resetIndexPictures() throws SQLException {
         String query = "ALTER TABLE Pictures AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
@@ -894,7 +898,7 @@ public class Actions<T extends Personne> {
      *
      * @throws SQLException Si une erreur SQL survient lors de la réinitialisation de l'index ou de la suppression des données de la table Coords.
      */
-    public void resetIndexCoords() throws SQLException {
+    private void resetIndexCoords() throws SQLException {
         String query = "ALTER TABLE Coords AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
@@ -907,7 +911,7 @@ public class Actions<T extends Personne> {
      *
      * @throws SQLException Si une erreur SQL survient lors de la réinitialisation de l'index ou de la suppression des données de la table Address.
      */
-    public void resetIndexAddress() throws SQLException {
+    private void resetIndexAddress() throws SQLException {
         String query = "ALTER TABLE Address AUTO_INCREMENT = 1";
         PreparedStatement statement = this.connexion.getConnexion().prepareStatement(query);
 
@@ -957,6 +961,10 @@ public class Actions<T extends Personne> {
      * @throws SQLException Si une erreur SQL survient lors de la recherche des données.
      */
     public Map<Integer, Float> getAvgSalaryByAge(String typePersonne) throws SQLException {
+        if (this.getCount(typePersonne) == 0)
+            throw new SQLException("Impossible de faire des statistiques avec 0 " +
+                    typePersonne + " dans la base de donnée");
+
         final String query = "SELECT YEAR(CURRENT_DATE) - BirthYear AS Age, AVG(Salary) AS AverageSalary " +
                 "FROM " + typePersonne +
                 " GROUP BY Age" +
@@ -987,6 +995,10 @@ public class Actions<T extends Personne> {
      * @throws SQLException Si une erreur SQL survient lors de la recherche des données.
      */
     public Map<Integer, T> getRankBySalary(String typePersonne) throws SQLException {
+        if (this.getCount(typePersonne) == 0)
+            throw new SQLException("Impossible de faire des statistiques avec 0 " +
+                    typePersonne + " dans la base de donnée");
+
         final String query = "SELECT *, DENSE_RANK() OVER (ORDER BY Salary DESC) AS salaryRank" +
                 " FROM " + typePersonne +
                 " ORDER BY Salary DESC";
@@ -1017,6 +1029,10 @@ public class Actions<T extends Personne> {
      * @throws SQLException Si une erreur SQL survient lors de la recherche des données.
      */
     public Map<Float, Integer> getSalaryHistogram(String typePersonne) throws SQLException {
+        if (this.getCount(typePersonne) == 0)
+            throw new SQLException("Impossible de faire des statistiques avec 0 " +
+                    typePersonne + " dans la base de donnée");
+
         final String query = "SELECT FLOOR(Salary / 1000) * 1000 AS salaryRange, COUNT(*) AS nbPerson" +
                 " FROM " + typePersonne +
                 " GROUP BY salaryRange" +
@@ -1050,6 +1066,10 @@ public class Actions<T extends Personne> {
      * @throws SQLException Si une erreur SQL survient lors de la recherche des données.
      */
     public Map<String, Float> getAverageSalaryByGender(String typePersonne) throws SQLException {
+        if (this.getCount(typePersonne) == 0)
+            throw new SQLException("Impossible de faire des statistiques avec 0 " +
+                    typePersonne + " dans la base de donnée");
+
         final String query = "SELECT Gender, AVG(Salary) AS AverageSalary " +
                 "FROM " + typePersonne +
                 " GROUP BY Gender";
@@ -1077,7 +1097,4 @@ public class Actions<T extends Personne> {
     public void exit() {
         this.connexion.close();
     }
-
-
-
 }

@@ -382,6 +382,21 @@ public abstract class Personne {
     }
 
     /**
+     * Compare cet objet Personne avec un autre objet pour déterminer s'ils sont égaux.
+     *
+     * @param o L'objet à comparer avec cet objet Personne.
+     * @return true si les objets sont égaux en termes d'ID, false sinon.
+     */
+    @Override
+    public boolean equals(Object o){
+        if (this.getClass() != o.getClass())
+            return false;
+
+        return this.id == ((Personne) o).getId();
+
+    }
+
+    /**
      * Renvoie une représentation sous forme de chaîne de caractères de cette personne.
      *
      * @return La représentation de cette personne au format JSON.

@@ -135,6 +135,23 @@ public class Pictures {
     }
 
     /**
+     * Compare cet objet Pictures avec un autre objet pour déterminer s'ils sont égaux.
+     *
+     * @param o L'objet à comparer avec cet objet Pictures.
+     * @return true si les objets sont égaux en termes de chemins "large", "medium" et "thumbnail", false sinon.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() != o.getClass())
+            return false;
+
+        return this.large.equals(((Pictures) o).getLarge())
+                && this.medium.equals(((Pictures) o).getMedium())
+                && this.thumbnail.equals(((Pictures) o).getThumbnail());
+    }
+
+
+    /**
      * Fournit une représentation textuelle des URLs des images de profil, incluant les URL en grande taille (large), taille moyenne (medium) et petite taille (thumbnail).
      *
      * @return Une chaîne de caractères représentant les URLs des images de profil.

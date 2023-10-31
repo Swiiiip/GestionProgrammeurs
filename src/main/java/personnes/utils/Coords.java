@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import data.api.request.GetCoordsFromAPI;
 
+import java.util.Objects;
+
 /**
  * Cette classe représente les coordonnées géographiques (latitude et longitude) d'un emplacement. Elle peut être utilisée pour stocker des informations sur la position géographique d'une personne.
  *
@@ -116,6 +118,22 @@ public class Coords {
     public void setLongitude(Float longitude) {
         this.longitude = longitude;
     }
+
+    /**
+     * Compare cet objet Coords avec un autre objet pour déterminer s'ils sont égaux.
+     *
+     * @param o L'objet à comparer avec cet objet Coords.
+     * @return true si les objets sont égaux en termes de latitude et de longitude, false sinon.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this.getClass() != o.getClass())
+            return false;
+
+        return this.latitude.equals(((Coords) o).getLatitude())
+                && this.longitude.equals(((Coords) o).getLongitude());
+    }
+
 
     /**
      * Fournit une représentation textuelle des coordonnées, incluant la latitude et la longitude.

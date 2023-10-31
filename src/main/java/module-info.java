@@ -22,9 +22,11 @@ module moduleInfo {
     exports personnes;
     exports dao;
     exports utils;
+    exports data.db;
 
     opens exec to javafx.graphics;
     exports exec;
     exports loadingscreen;
     exports personnes.utils;
+    exports data.generator;
 }
