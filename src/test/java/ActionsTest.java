@@ -17,14 +17,23 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Cette classe contient des tests unitaires pour la classe Actions.
+ * Elle couvre diverses méthodes de la classe Actions en vérifiant les résultats attendus.
+ *
+ * @author Alonso Cédric
+ * @author Hatoum Jade
+ * @version 4.7
+ */
 public class ActionsTest {
 
     private static Actions<Programmeur> actions;
 
-    private void createFakePersonne() {
-        new DataGenerator(2, 1);
-    }
-
+    /**
+     * Méthode d'initialisation exécutée avant chaque test. Elle configure l'objet Actions
+     * et effectue certaines opérations de nettoyage, comme la suppression des données et la réinitialisation
+     * des index.
+     */
     @BeforeEach
     void setUp() {
         actions = new Actions<>();
@@ -62,6 +71,15 @@ public class ActionsTest {
             throw new SecurityException();
         }
     }
+
+    /**
+     * Crée 2 programmeurs et 1 manager dans la base de données.
+     * @see DataGenerator
+     */
+    private void createFakePersonne() {
+        new DataGenerator(2, 1);
+    }
+
 
     @Test
     void testGetAllPersonnesTrouvees() throws SQLException {
@@ -414,6 +432,9 @@ public class ActionsTest {
         assertThrows(SQLException.class, () -> actions.getAverageSalaryByGender("Programmeur"));
     }
 
+    /**
+     * Méthode de nettoyage exécutée après tous les tests. Elle permet de fermer les ressources.
+     */
     @AfterAll
     public static void tearDown() {
         actions.exit();

@@ -3,6 +3,8 @@ package exec;
 import dao.ManagerDAO;
 import dao.PersonneDAO;
 import dao.ProgrammeurDAO;
+import data.export.CSVExporter;
+import data.export.PDFExporter;
 import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
@@ -19,11 +21,28 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * La classe MenuPrincipal représente le menu principal de l'application de gestion de type de personne,
+ * ici [{@link Programmeur}, {@link Manager}]
+ * Elle permet aux utilisateurs d'accéder à diverses fonctionnalités pour interagir avec les données du type de personne spécifiée.
+ * Les actions disponibles incluent l'affichage des données, l'ajout, la suppression et la mise à jour des informations des individus.
+ * Elle offre la possibilité d'afficher des statistiques, ainsi que d'afficher la prédiction de salaire pour un âge et sexe donné.
+ * Tous les affichages se font dans la console.
+ *
+ * @version 4.7
+ * @author Alonso Cédric
+ * @author Hatoum Jade
+ */
 public class MenuPrincipal {
     private final Scanner scanner;
     private final ProgrammeurDAO programmeurDAO;
     private final ManagerDAO managerDAO;
 
+    /**
+     * Constructeur de la classe MenuPrincipal. Il initialise les composants essentiels de l'application, tels que le scanner
+     * pour la saisie utilisateur, les objets `ProgrammeurDAO` et `ManagerDAO` pour la gestion des données, et configure le
+     * logger pour afficher uniquement les messages de niveau `SEVERE`.
+     */
     public MenuPrincipal() {
         this.scanner = new Scanner(System.in);
         this.programmeurDAO = new ProgrammeurDAO();
@@ -35,6 +54,10 @@ public class MenuPrincipal {
         menuPrincipal();
     }
 
+    /**
+     * Méthode principale du menu. Affiche le menu principal de l'application, permet à l'utilisateur de faire un choix,
+     * puis exécute l'action correspondante en fonction de ce choix.
+     */
     public void menuPrincipal() {
         while (true) {
             displayMainMenu();
@@ -55,6 +78,9 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Affiche le menu principal de l'application, listant les différentes options disponibles.
+     */
     private void displayMainMenu() {
         System.out.println("\n\n********* Menu Principal *********\n");
         System.out.println("1. Menu Programmeurs");
@@ -63,14 +89,29 @@ public class MenuPrincipal {
         System.out.print("\nChoisissez une option : ");
     }
 
+    /**
+     * Affiche le menu pour la gestion des Programmeurs.
+     *
+     * @param personneDAO Le DAO correspondant aux Programmeurs.
+     */
     private void menuProgrammeurs(PersonneDAO<?> personneDAO) {
         menu(programmeurDAO);
     }
 
+    /**
+     * Affiche le menu pour la gestion des Managers.
+     *
+     * @param personneDAO Le DAO correspondant aux Managers.
+     */
     private void menuManagers(PersonneDAO<?> personneDAO) {
         menu(managerDAO);
     }
 
+    /**
+     * Affiche un sous-menu pour la gestion des personnes (Programmeurs ou Managers).
+     *
+     * @param personneDAO Le DAO correspondant aux personnes.
+     */
     private void menu(PersonneDAO<?> personneDAO) {
         while (true) {
             displaySubMenu(personneDAO.getTypeLabel());
@@ -78,6 +119,7 @@ public class MenuPrincipal {
 
             Map<Integer, Consumer<PersonneDAO<?>>> submenuActions = new HashMap<>();
             submenuActions.put(99, this::predictSalary);
+            submenuActions.put(98, this::exportData);
             submenuActions.put(1, this::displayAll);
             submenuActions.put(2, this::displayById);
             submenuActions.put(3, this::displayByFullName);
@@ -111,9 +153,70 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Exporte les données des personnes au format CSV ou PDF.
+     * Cette méthode récupère les données des personnes à partir de l'objet PersonneDAO spécifié,
+     * puis propose à l'utilisateur de choisir le format d'export (CSV ou PDF). Les données
+     * sont ensuite exportées dans le format choisi.
+     * @param personneDAO L'objet PersonneDAO qui permet d'accéder aux données des personnes.
+     */
+    private void exportData(PersonneDAO<?> personneDAO) {
+        List<? extends Personne> personnes;
+        try {
+            personnes = personneDAO.getAll();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return;
+        }
+
+        List<Map<String, Object>> data = new ArrayList<>();
+
+        for (Personne personne : personnes)
+            data.add(personne.getColumns());
+
+        boolean formatChoisi = false;
+        String input = null;
+        System.out.print("Choisissez le format (CSV ou PDF) : ");
+
+        while(!formatChoisi) {
+            try {
+            input = scanner.next().toLowerCase();
+
+            switch (input){
+                case "csv":
+                    new CSVExporter(data).export(personneDAO.getTypeLabel() + 's');
+                    formatChoisi = true;
+                    break;
+
+                case "pdf":
+                    new PDFExporter(data).export(personneDAO.getTypeLabel() + 's');
+                    formatChoisi = true;
+                    break;
+
+                default:
+                    throw new InputMismatchException(input);
+
+            }
+
+            } catch (InputMismatchException e){
+                System.err.println("Le format choisi '" + e.getMessage() + "' ne correspond pas. Veuillez réessayer." +
+                        "\nChoix possibles : CSV ou PDF.");
+            }
+        }
+        
+        System.out.println("\nLes données des " + personneDAO.getTypeLabel() + "s ont été téléchargées au format "
+                + input + " dans votre dossier 'Downloads'.");
+    }
+
+    /**
+     * Affiche le sous-menu pour la gestion des personnes, telles que Programmeurs ou Managers.
+     *
+     * @param typeLabel Le libellé du type de personne (Programmeurs ou Managers).
+     */
     private void displaySubMenu(String typeLabel) {
         System.out.println("\n\n********* Menu " + typeLabel + " *********\n");
         System.out.println("99. Prédire le salaire d'un " + typeLabel);
+        System.out.println("98. Exportez les données des " + typeLabel + "s");
         System.out.println("1. Afficher tous les " + typeLabel);
         System.out.println("2. Afficher un " + typeLabel + " par ID");
         System.out.println("3. Afficher un " + typeLabel + " par nom complet");
@@ -133,6 +236,11 @@ public class MenuPrincipal {
         System.out.print("\nChoisissez une option : ");
     }
 
+    /**
+     * Prédit le salaire d'une personne en fonction de son âge et de son genre.
+     *
+     * @param personneDAO Le DAO correspondant à la personne (Programmeur ou Manager).
+     */
     private void predictSalary(PersonneDAO<?> personneDAO) {
         System.out.print("\nEntrez votre age : ");
         double age = this.getAge();
@@ -151,11 +259,21 @@ public class MenuPrincipal {
 
     }
 
+    /**
+     * Affiche les détails d'une personne.
+     *
+     * @param personne La personne à afficher.
+     */
     private void displayAPerson(Personne personne) {
         System.out.println(personne);
         System.out.println("---------------------------");
     }
 
+    /**
+     * Affiche tous les Programmeurs ou Managers.
+     *
+     * @param personneDAO Le DAO correspondant aux personnes.
+     */
     private void displayAll(PersonneDAO<?> personneDAO) {
         try {
             List<? extends Personne> personnes = personneDAO.getAll();
@@ -168,6 +286,12 @@ public class MenuPrincipal {
         }
     }
 
+
+    /**
+     * Affiche une personne par son ID.
+     *
+     * @param personneDAO Le DAO correspondant à la personne (Programmeur ou Manager).
+     */
     private void displayById(PersonneDAO<?> personneDAO) {
         try {
             personneDAO.getAll();
@@ -191,6 +315,11 @@ public class MenuPrincipal {
     }
 
 
+    /**
+     * Affiche une personne par son nom complet.
+     *
+     * @param personneDAO Le DAO correspondant à la personne (Programmeur ou Manager).
+     */
     private void displayByFullName(PersonneDAO<?> personneDAO) {
         try {
             personneDAO.getAll();
@@ -202,6 +331,11 @@ public class MenuPrincipal {
         displayAPerson(personne);
     }
 
+    /**
+     * Méthode pour collecter les informations communes à une personne.
+     * Demande à l'utilisateur de fournir diverses informations sur la personne.
+     * @return Une liste d'informations sur la personne.
+     */
     private List<?> collecterInfosPersonne() {
         List<Object> infosPersonne = new ArrayList<>();
         System.out.print("\nEntrez le titre : ");
@@ -254,6 +388,12 @@ public class MenuPrincipal {
         return infosPersonne;
     }
 
+    /**
+     * Méthode pour obtenir une personne en recherchant par nom complet.
+     * Demande à l'utilisateur de saisir le nom complet de la personne.
+     * @param personneDAO L'objet DAO associé.
+     * @return La personne correspondant au nom complet saisi.
+     */
     private Personne getPersonneByFullName(PersonneDAO<?> personneDAO) {
 
         String fullName;
@@ -289,6 +429,10 @@ public class MenuPrincipal {
         return personne;
     }
 
+    /**
+     * Méthode pour ajouter un nouveau Programmeur.
+     * Demande à l'utilisateur de fournir des informations et crée un objet {@link Programmeur}.
+     */
     private void addProgrammeur() {
         System.out.println("Ajout d'un nouveau Programmeur :");
 
@@ -313,6 +457,14 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour créer un objet {@link Programmeur} à partir des informations saisies.
+     * @param infosPersonne Les informations personnelles de la personne.
+     * @param pseudo Le pseudo du Programmeur.
+     * @param manager Le Manager associé au Programmeur.
+     * @return Un objet {@link Programmeur} créé avec les informations fournies.
+     * @throws SQLException En cas d'erreur liée à la base de données.
+     */
     @NotNull
     private Programmeur getProgrammeur(List<?> infosPersonne, String pseudo, Manager manager) throws SQLException {
         Gender gender = (Gender) infosPersonne.get(3);
@@ -334,6 +486,13 @@ public class MenuPrincipal {
         );
     }
 
+    /**
+     * Méthode pour créer un objet {@link Manager} à partir des informations saisies.
+     * @param infosPersonne Les informations personnelles de la personne.
+     * @param department Le département du Manager.
+     * @return Un objet {@link Manager} créé avec les informations fournies.
+     * @throws SQLException En cas d'erreur liée à la base de données.
+     */
     @NotNull
     private Manager getManager(List<?> infosPersonne, Departments department) throws SQLException {
         Gender gender = (Gender) infosPersonne.get(3);
@@ -353,6 +512,10 @@ public class MenuPrincipal {
         );
     }
 
+    /**
+     * Méthode pour ajouter un nouveau Manager.
+     * Demande à l'utilisateur de fournir des informations et crée un objet {@link Manager}.
+     */
     private void addManager() {
         System.out.println("Ajout d'un nouveau Manager :");
 
@@ -377,6 +540,12 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour ajouter une personne en fonction du type défini par le DAO.
+     * Cette méthode utilise un DAO pour déterminer le type de personne à ajouter.
+     * Appelle ensuite la méthode appropriée ({@link #addProgrammeur} ou {@link #addManager}) en fonction du type.
+     * @param personneDAO Le DAO spécifiant le type de personne à ajouter.
+     */
     private void add(PersonneDAO<?> personneDAO) {
         switch (personneDAO.getTypeLabel()) {
             case "programmeur":
@@ -386,24 +555,34 @@ public class MenuPrincipal {
                 addManager();
                 break;
             default:
-                System.err.println(personneDAO.getTypeLabel() + " n'est pas reconnu.");
+                System.err.println(personneDAO.getTypeLabel() + " n'est pas reconnu. Veuillez réessayer.");
         }
     }
 
+    /**
+     * Méthode pour vérifier si un ID correspond à une personne existante dans la base de données.
+     * @return L'ID d'une personne existante.
+     */
     private int isReal(){
-        int id = 0;
+        int id;
         do {
             try {
                 id = getInt();
                 programmeurDAO.getById(id);
             } catch (SQLException e) {
-                System.err.println("Le " + programmeurDAO.getTypeLabel() + " avec l'id " + id + " n'existe pas");
+                System.err.println(e.getMessage() + ". Veuillez réessayer.");
                 id = 0;
             }
         } while (id == 0);
 
         return id;
     }
+
+    /**
+     * Méthode pour supprimer une personne par ID en utilisant un DAO spécifié.
+     * Demande à l'utilisateur l'ID de la personne à supprimer et effectue la suppression.
+     * @param personneDAO Le DAO spécifiant le type de personne à supprimer.
+     */
     private void deleteById(PersonneDAO<?> personneDAO) {
         try {
             personneDAO.getAll();
@@ -417,10 +596,15 @@ public class MenuPrincipal {
             personneDAO.deleteById(id);
             System.out.println(personneDAO.getTypeLabel() + " supprimé avec succès!");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + ". Veuillez réessayer.");
         }
     }
 
+    /**
+     * Méthode pour mettre à jour le salaire d'une personne par ID en utilisant un DAO spécifié.
+     * Demande à l'utilisateur l'ID de la personne et le nouveau salaire, puis effectue la mise à jour.
+     * @param personneDAO Le DAO spécifiant le type de personne à mettre à jour.
+     */
     private void setSalaryById(PersonneDAO<?> personneDAO) {
         try {
             personneDAO.getAll();
@@ -437,12 +621,16 @@ public class MenuPrincipal {
             System.out.println("Salaire du " + personneDAO.getTypeLabel() + " mis à jour avec succès.");
 
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour du salaire du " + personneDAO.getTypeLabel() + " : " + e.getMessage());
+            System.err.println("Erreur lors de la mise à jour du salaire du " + personneDAO.getTypeLabel()
+                    + " : " + e.getMessage() + ". Veuillez réessayer.");
         }
 
     }
 
-
+    /**
+     * Méthode pour supprimer toutes les personnes en utilisant un DAO spécifié.
+     * @param personneDAO Le DAO spécifiant le type de personne à supprimer.
+     */
     private void deleteAll(PersonneDAO<?> personneDAO) {
         try {
             personneDAO.deleteAll();
@@ -452,6 +640,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher le nombre total de personnes d'un type spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayCount(PersonneDAO<?> personneDAO) {
         try {
             System.out.println("Nombre total de " + personneDAO.getTypeLabel() + "s : " + personneDAO.getCount());
@@ -460,6 +652,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher la personne avec le salaire le plus élevé d'un type spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayPersonWithMaxSalary(PersonneDAO<?> personneDAO) {
         try {
             System.out.println(personneDAO.getTypeLabel() + " avec le salaire le plus élevé : " + personneDAO.getWithMaxSalary());
@@ -468,6 +664,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher la personne avec le salaire le plus bas d'un type spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayPersonWithMinSalary(PersonneDAO<?> personneDAO) {
         try {
             System.out.println(personneDAO.getTypeLabel() + " avec le salaire le plus bas : " + personneDAO.getWithMinSalary());
@@ -476,6 +676,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher la moyenne des salaires par âge pour un type de personne spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayAvgSalaryByAge(PersonneDAO<?> personneDAO) {
         try {
             Map<Integer, Float> avgSalaryByAge = personneDAO.getAvgSalaryByAge();
@@ -486,6 +690,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher le classement des personnes par salaire pour un type de personne spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayRankBySalary(PersonneDAO<?> personneDAO) {
         try {
             Map<Integer, ? extends Personne> rankBySalary = personneDAO.getRankBySalary();
@@ -496,6 +704,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher un histogramme des salaires pour un type de personne spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displaySalaryHistogram(PersonneDAO<?> personneDAO) {
         try {
             Map<Float, Integer> salaryHistogram = personneDAO.getSalaryHistogram();
@@ -506,6 +718,10 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Méthode pour afficher le salaire moyen par genre pour un type de personne spécifique.
+     * @param personneDAO Le DAO spécifiant le type de personne.
+     */
     private void displayAverageSalaryByGender(PersonneDAO<?> personneDAO) {
         try {
             Map<String, Float> avgSalaryByGender = personneDAO.getAverageSalaryByGender();
@@ -516,6 +732,12 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Récupère un entier valide depuis la console.
+     *
+     * @return L'entier positif récupéré depuis l'entrée de l'utilisateur.
+     * @throws InputMismatchException Si l'entrée n'est pas un entier valide.
+     */
     private int getInt() {
         int input = 0;
         boolean inputValid = false;
@@ -530,7 +752,7 @@ public class MenuPrincipal {
                     System.err.println("Le choix doit être strictement positif. Veuillez réessayer.");
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Entrez un nombre entier valide.");
+                System.err.println("Entrez un nombre entier valide. Veuillez réessayer.\"");
                 scanner.nextLine();
             }
         } while (!inputValid);
@@ -539,6 +761,12 @@ public class MenuPrincipal {
     }
 
 
+    /**
+     * Récupère un nombre réel positif depuis la console.
+     *
+     * @return Le nombre réel positif récupéré depuis l'entrée de l'utilisateur.
+     * @throws InputMismatchException Si l'entrée n'est pas un nombre réel valide.
+     */
     private float getFloat() {
         float input = 0;
         boolean inputValid = false;
@@ -553,7 +781,7 @@ public class MenuPrincipal {
                     System.err.println("Le choix doit être strictement positif. Veuillez réessayer.");
                 }
             } catch (InputMismatchException e) {
-                System.err.println("Entrez un nombre réel valide. (2323,55)");
+                System.err.println("Entrez un nombre réel valide. (2323,55). Veuillez réessayer.\"");
                 scanner.nextLine();
             }
         } while (!inputValid);
@@ -561,12 +789,23 @@ public class MenuPrincipal {
         return input;
     }
 
+    /**
+     * Récupère un nom depuis la console en format "Nom" (première lettre en majuscule, le reste en minuscules).
+     *
+     * @return Le nom formaté récupéré depuis l'entrée de l'utilisateur.
+     */
     private String getName(){
         String name = scanner.next();
 
         return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
+    /**
+     * Récupère le genre depuis la console en utilisant les valeurs valides de l'énumération Gender.
+     *
+     * @return Le genre récupéré depuis l'entrée de l'utilisateur.
+     * @throws InputMismatchException Si l'entrée n'est pas un genre valide.
+     */
     private Gender getGender() {
         while (true) {
             try {
@@ -584,7 +823,8 @@ public class MenuPrincipal {
                 }
 
                 validGender.setLength(validGender.length() - 2);
-                throw new InputMismatchException("Genre invalide. Choisissez parmi " + validGender);
+                throw new InputMismatchException("Genre invalide. Choisissez parmi " + validGender
+                        + ". Veuillez réessayer.");
 
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
@@ -593,6 +833,12 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Récupère une adresse complète depuis la console en demandant différents détails tels que le numéro de rue,
+     * le nom de rue, la ville, etc.
+     *
+     * @return L'adresse complète récupérée depuis l'entrée de l'utilisateur.
+     */
     private Address getAddress() {
         System.out.print("Entrez votre numéro de rue : ");
         int streetNum = getInt();
@@ -627,6 +873,11 @@ public class MenuPrincipal {
 
 
 
+    /**
+     * Récupère un loisir depuis la console en demandant à l'utilisateur de choisir parmi les loisirs valides.
+     *
+     * @return Le loisir sélectionné par l'utilisateur.
+     */
     private Hobbies getHobby() {
         while (true) {
             try {
@@ -644,7 +895,8 @@ public class MenuPrincipal {
                 }
 
                 validHobbies.setLength(validHobbies.length() - 2);
-                throw new InputMismatchException("Hobby invalide. Choisissez parmi " + validHobbies);
+                throw new InputMismatchException("Hobby invalide. Choisissez parmi " + validHobbies
+                        + ". Veuillez réessayer.");
 
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
@@ -653,6 +905,11 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Récupère un département depuis la console en demandant à l'utilisateur de choisir parmi les départements valides.
+     *
+     * @return Le département sélectionné par l'utilisateur.
+     */
     private Departments getDepartment() {
         while (true) {
             try {
@@ -670,7 +927,8 @@ public class MenuPrincipal {
                 }
 
                 validDepartments.setLength(validDepartments.length() - 2);
-                throw new InputMismatchException("Département invalide. Choisissez parmi " + validDepartments);
+                throw new InputMismatchException("Département invalide. Choisissez parmi " + validDepartments
+                        + ". Veuillez réessayer.");
 
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
@@ -679,6 +937,11 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Récupère un titre depuis la console en demandant à l'utilisateur de choisir parmi les titres valides.
+     *
+     * @return Le titre sélectionné par l'utilisateur.
+     */
     private Title getTitle() {
         while (true) {
             try {
@@ -696,7 +959,8 @@ public class MenuPrincipal {
                 }
 
                 validTitle.setLength(validTitle.length() - 2);
-                throw new InputMismatchException("Titre invalide. Choisissez parmi " + validTitle);
+                throw new InputMismatchException("Titre invalide. Choisissez parmi " + validTitle
+                        + ". Veuillez réessayer.");
 
             } catch (InputMismatchException e) {
                 System.err.println(e.getMessage());
@@ -705,6 +969,11 @@ public class MenuPrincipal {
         }
     }
 
+    /**
+     * Demande à l'utilisateur de saisir son âge et le valide.
+     *
+     * @return L'âge de l'utilisateur.
+     */
     private double getAge() {
         double age;
         do {
@@ -714,7 +983,7 @@ public class MenuPrincipal {
                     throw new InputMismatchException();
 
             } catch (InputMismatchException e) {
-                System.err.println("L'âge doit être compris entre 1 et 100");
+                System.err.println("L'âge doit être compris entre 1 et 100. Veuillez réessayer.");
                 age = 0.0;
                 scanner.nextLine();
             }
@@ -723,6 +992,11 @@ public class MenuPrincipal {
         return age;
     }
 
+    /**
+     * Demande à l'utilisateur de saisir son année de naissance et la valide.
+     *
+     * @return L'année de naissance de l'utilisateur.
+     */
     private int getDoB() {
         int birthYear;
         do {
@@ -734,7 +1008,7 @@ public class MenuPrincipal {
 
             } catch (InputMismatchException e) {
                 System.err.println("L'année de naissance doit être comprise entre " +
-                        (currentYear - 100) + " et " + currentYear);
+                        (currentYear - 100) + " et " + (currentYear - 1) + ". Veuillez réessayer.");
                 birthYear = 0;
                 scanner.nextLine();
             }
@@ -743,6 +1017,9 @@ public class MenuPrincipal {
         return birthYear;
     }
 
+    /**
+     * Termine proprement le programme en fermant le scanner.
+     */
     private void exit(PersonneDAO<?> personneDAO) {
         scanner.close();
         System.out.println("Au revoir !");
