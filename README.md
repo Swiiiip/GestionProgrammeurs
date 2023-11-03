@@ -13,7 +13,7 @@ Depuis un menu, il permet d'afficher différents types de données, de les modif
 
 ## Prérequis :
 
->⚠️ Ce guide est destiné aux utilisateurs de Windows, IntelliJ et MySQL et une connexion Internet.
+>⚠️ Ce guide est destiné aux utilisateurs de Windows, IntelliJ et MySQL et une connexion Internet est requise.
 
 Ceci dit, vérifiez que vous ayez bien téléchargé :
 + [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=windows)
