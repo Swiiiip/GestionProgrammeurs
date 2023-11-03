@@ -9,8 +9,7 @@
 
   <Button onAction="#handleButtonAction" text="Afficher tous les programmeurs" />
   <Button onAction="#handleButtonAction" text="Afficher un programmeur" />
-  <Button onAction="#handleButtonAction" text="Supprimer un programmeur" />
   <Button onAction="#handleButtonAction" text="Ajouter un programmeur" />
-  <Button onAction="#handleButtonAction" text="Modifier le salaire" />
+  <Button onAction="#handleButtonAction" text="Générer plusieurs profiles" />
   <Button onAction="#handleButtonAction" text="Quitter le programme" />
 </VBox>

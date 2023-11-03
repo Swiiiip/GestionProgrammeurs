@@ -15,7 +15,7 @@ import static app.GestionBddApp.getContentOverlay;
 
 public class MessageBar extends StackPane {
 
-    private static final double MESSAGE_DISPLAY_TIME = 2.0;
+    private static final double MESSAGE_DISPLAY_TIME = 5.0;
     private final Label messageLabel = new Label();
     public Pane containerPane = new Pane();
 
@@ -74,9 +74,9 @@ public class MessageBar extends StackPane {
 
         Timeline startTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(0),
-                        new KeyValue(translateYProperty(), getHeight())),
+                        new KeyValue(translateYProperty(), 0)),
                 new KeyFrame(Duration.seconds(0.3),
-                        new KeyValue(translateYProperty(), 0))
+                        new KeyValue(translateYProperty(), getHeight()))
         );
         startTimeline.playFromStart();
 
@@ -86,7 +86,6 @@ public class MessageBar extends StackPane {
         );
         hideTimeline.playFromStart();
 
-        //logger.info("BEFORE Current containerPane : " + getContainerMessageBar() + " | " +getContentOverlay().getChildren().toString() + " " + getContentOverlay().getChildren().size());
         getContentOverlay().getChildren().remove(getContainerMessageBar());
     }
 
@@ -95,7 +94,7 @@ public class MessageBar extends StackPane {
                 new KeyFrame(Duration.seconds(0),
                         new KeyValue(translateYProperty(), 0)),
                 new KeyFrame(Duration.seconds(0.3),
-                        new KeyValue(translateYProperty(), getHeight()))
+                        new KeyValue(translateYProperty(), -getHeight()))
         );
 
         timeline.setOnFinished(event -> setVisible(false));

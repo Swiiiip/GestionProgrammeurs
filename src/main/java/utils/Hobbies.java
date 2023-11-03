@@ -58,4 +58,17 @@ public enum Hobbies {
     public String getHobby() {
         return this.hobby;
     }
+
+    /**
+     * Obtient le hobby à partir d'une chaîne de caractères.
+     *
+     * @param hobbyString Le hobby.
+     * @return La valeur du hobby.
+     */
+    public static Hobbies getHobbyFromString(String hobbyString) {
+        for (Hobbies hobbies : Hobbies.values())
+            if (hobbies.getHobby().equals(hobbyString)) return hobbies;
+
+        return Hobbies.CUISINE;
+    }
 }

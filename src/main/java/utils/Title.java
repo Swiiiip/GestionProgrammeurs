@@ -1,7 +1,7 @@
 package utils;
 
 /**
- * Cette énumération représente les titres de civilité d'une personne, tels que "Monsieur," "Madame," "Mademoiselle," et "Inconnu."
+ * Cette énumération représente les titres de civilité d'une personne, tels que "Monsieur," "Madame," "Mademoiselle," et "Unknown."
  *
  * @version 4.7
  * @author Alonso Cédric
@@ -11,7 +11,7 @@ public enum Title {
     MR("Monsieur"),
     MRS("Madame"),
     MS("Mademoiselle"),
-    DEFAULT("Inconnu");
+    DEFAULT("Unknown");
 
     /**
      * Le titre de civilité
@@ -35,5 +35,19 @@ public enum Title {
     public String getTitle() {
         return title;
     }
+
+    /**
+     * Obtient le titre de civilité à partir d'une chaîne de caractères.
+     *
+     * @param titleString Le titre de civilité.
+     * @return Le titre de civilité.
+     */
+    public static Title getTitleFromString(String titleString) {
+        for (Title title : Title.values())
+            if (title.getTitle().equals(titleString)) return title;
+
+        return Title.DEFAULT;
+    }
+
 }
 

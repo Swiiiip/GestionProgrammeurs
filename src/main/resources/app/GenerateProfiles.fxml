@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="400.0" prefWidth="600.0" styleClass="root" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.GenerateProfilesController">
+
+    <Label styleClass="title-label" text="Random profiles gneerator" />
+    <Label text="Number of Managers:" />
+    <TextField fx:id="managersTextField" prefWidth="390.0" promptText="Enter a positive integer" />
+    <Label text="Number of Programmers:" />
+    <TextField fx:id="programmersTextField" promptText="Enter a positive integer" />
+    <Button onAction="#submitButtonClicked" text="Generate" />
+
+</VBox>

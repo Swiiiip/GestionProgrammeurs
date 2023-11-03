@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import personnes.Programmeur;
 import utils.MessageBar;
 
 import java.util.Objects;
@@ -19,12 +20,13 @@ import java.util.Objects;
 public class GestionBddApp extends Application {
 
     public static final Logger logger = LoggerFactory.getLogger(GestionBddApp.class);
+    public static Class menuMode = Programmeur.class;
     private static final StackPane contentOverlay = new StackPane();
     private static final Pane containerPane = new Pane();
     protected static Stage primaryStage;
     protected static BorderPane rootLayout;
-    protected static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
-    protected static ManagerDAO managerDAO = new ManagerDAO();
+    private static ProgrammeurDAO programmeurDAO = new ProgrammeurDAO();
+    private static ManagerDAO managerDAO = new ManagerDAO();
 
     public static void main(String[] args) {
         launch(args);
@@ -38,10 +40,18 @@ public class GestionBddApp extends Application {
         return containerPane;
     }
 
+    public static ProgrammeurDAO getProgrammeurDAO() {
+        return programmeurDAO;
+    }
+
+    public static ManagerDAO getManagerDAO() {
+        return managerDAO;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         GestionBddApp.primaryStage = primaryStage;
-        primaryStage.setTitle("Gestion BDD");
+        primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName());
 
         initRootLayout();
     }
@@ -57,7 +67,7 @@ public class GestionBddApp extends Application {
             contentOverlay.getChildren().add(containerPane);
             containerPane.setMouseTransparent(true);
 
-            Scene scene = new Scene(rootLayout, 400, 400);
+            Scene scene = new Scene(rootLayout, 600, 430);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
 
             primaryStage.setScene(scene);

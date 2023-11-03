@@ -56,4 +56,17 @@ public enum Departments {
     public String getDepartment() {
         return department;
     }
+
+    /**
+     * Obtient le département à partir d'une chaîne de caractères.
+     *
+     * @param departmentString Le département.
+     * @return La valeur du département.
+     */
+    public static Departments getDepartmentFromString(String departmentString) {
+        for (Departments department : Departments.values())
+            if (department.getDepartment().equals(departmentString)) return department;
+
+        return generateRandomDepartment();
+    }
 }

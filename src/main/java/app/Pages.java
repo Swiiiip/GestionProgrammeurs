@@ -1,19 +1,20 @@
 package app;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import utils.Carousel;
 
 import java.io.IOException;
 import java.util.List;
 
-import static app.GestionBddApp.logger;
-import static app.GestionBddApp.primaryStage;
+import static app.GestionBddApp.*;
 
 public class Pages {
 
     public static VBox getMenuPage() {
         try {
-            primaryStage.setTitle("Gestion BDD | Menu");
+            primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName()+" | Menu ");
 
             FXMLLoader loader = new FXMLLoader(Pages.class.getResource("Menu.fxml"));
 
@@ -27,7 +28,7 @@ public class Pages {
 
     public static VBox getDataDisplayPage(List<?> data) {
         try {
-            primaryStage.setTitle("Gestion BDD | Data Display");
+            primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName()+" | Data Display");
 
             FXMLLoader loader = new FXMLLoader(DataViewController.class.getResource("DataDisplay.fxml"));
             VBox dataPageLayout = loader.load();
@@ -37,8 +38,6 @@ public class Pages {
             dataViewController.initializeTableView(data);
             dataViewController.updateTableView(data);
 
-            //dataPageLayout.getChildren().add( [add in here VBox to split the window in half and add statistics if needed !] );
-
             return dataPageLayout;
 
         } catch (IOException e) {
@@ -47,23 +46,49 @@ public class Pages {
         }
     }
 
-    public static VBox getProfileData(Object data) {
+    public static HBox getProfileDataPage(Object data) {
+        primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName()+" | Profile View");
+        Carousel carousel = new Carousel(data);
+
+        return carousel.getCarouselLayout();
+    }
+
+    public static VBox getAddProfilePage(){
         try {
-            primaryStage.setTitle("Gestion BDD | Data Display");
+            boolean isManager = false;
 
-            FXMLLoader loader = new FXMLLoader(ProfileViewController.class.getResource("ProfileView.fxml"));
-            VBox profileLayout = loader.load();
+            primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName()+" | Add "+(isManager ? "Manager" : "Programmeur"));
 
-            ProfileViewController profileViewController = loader.getController();
-            profileViewController.initialize(data);
+            FXMLLoader loader = new FXMLLoader(AddProfileController.class.getResource("AddProfile.fxml"));
+            VBox addProfileLayout = loader.load();
 
-            return profileLayout;
+            AddProfileController addProfileController = loader.getController();
+            addProfileController.initialize(isManager);
+
+            return addProfileLayout;
 
         } catch (IOException e) {
             logger.error(e.getMessage());
             return null;
         }
 
+    }
+
+    public static VBox getGenerateProfilesPage() {
+        try {
+            primaryStage.setTitle("Gestion BDD | "+menuMode.getSimpleName()+" | Generate Profiles");
+
+            FXMLLoader loader = new FXMLLoader(GenerateProfilesController.class.getResource("GenerateProfiles.fxml"));
+            VBox addProfileLayout = loader.load();
+
+            GenerateProfilesController addProfileController = loader.getController();
+
+            return addProfileLayout;
+
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return null;
+        }
     }
 }
 

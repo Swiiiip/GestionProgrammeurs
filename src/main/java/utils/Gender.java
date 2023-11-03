@@ -45,5 +45,18 @@ public enum Gender {
     public boolean isWoman() {
         return getGender().equalsIgnoreCase("female");
     }
+
+    /**
+     * Obtient le gendre à partir d'une chaîne de caractères.
+     *
+     * @param genderString Le gendre.
+     * @return La valeur du gendre.
+     */
+    public static Gender getGenderFromString(String genderString) {
+        for (Gender gender : Gender.values())
+            if (gender.getGender().equals(genderString)) return gender;
+
+        return Gender.DEFAULT;
+    }
 }
 

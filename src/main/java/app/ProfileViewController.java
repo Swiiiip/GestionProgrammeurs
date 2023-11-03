@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -15,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import personnes.Manager;
 import personnes.Personne;
 import personnes.utils.Coords;
-import utils.Title;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -46,13 +46,17 @@ public class ProfileViewController {
     @FXML
     private VBox profileContent;
 
-    public void initialize(Object data) {
+    public VBox createProfileBlock(Object data) {
         logger.info("Profile data : " + data);
 
         setupProfileHeader(data);
         setupProfileContent(data);
-        //TODO tmp setups ^, these are the building blocks for each profile view
-        //maybe we'll be able to implement the carousel effect after that 👀
+
+        return profileBlock;
+    }
+
+    public void setProfileBlock(VBox profileBlock) {
+        this.profileBlock = profileBlock;
     }
 
     public void setupProfileHeader(Object data) {
@@ -61,7 +65,6 @@ public class ProfileViewController {
 
         if (data instanceof Personne p) {
             pictureLink = p.getPictures().getLarge();
-
 
             fullName = p.getTitle() + " " + p.getFullName();
 
@@ -195,7 +198,7 @@ public class ProfileViewController {
 
         textLabel.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                VBox box = Pages.getProfileData(managerData);
+                HBox box = Pages.getProfileDataPage(managerData);
                 getContentOverlay().getChildren().add(box);
             }
         });

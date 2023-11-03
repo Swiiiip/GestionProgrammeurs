@@ -64,14 +64,24 @@
     -fx-text-fill: black;
 }
 
-.profiles-background {
+/* Profile styling */
+.carousel {
     -fx-background-color: #f2f2f2;
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
+}
+
+.selected-profile {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-opacity: 1.0;
+    -fx-scale-z: 2.0;
 }
 
 .profile-block {
     -fx-background-color: #d7d7d7;
     -fx-max-width: 300px;
-    -fx-min-height: 140px;
+    -fx-max-height: 100px;
 }
 
 .profile-header {
@@ -144,4 +154,17 @@
 .message-label {
     -fx-font-size: 14px;
     -fx-text-fill: #000; /* Text color */
+}
+
+/* Add Profile */
+.add-profile {
+    -fx-background-color: #d7d7d7;
+    -fx-pref-width: 600px;
+    -fx-pref-height: 400px;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
 }
